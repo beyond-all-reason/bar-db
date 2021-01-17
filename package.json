@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/Jazcash/bar-db.git"
   },
-  "author": "",
+  "author": "Jazcash",
   "license": "mit",
   "dependencies": {
     "@types/node": "^14.14.21",
