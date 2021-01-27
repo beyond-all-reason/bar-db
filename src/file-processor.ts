@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import { delay } from "jaz-ts-utils";
 import * as path from "path";
+
 import { Database } from "./database";
 
 export interface FileProcessorConfig {
@@ -14,7 +15,7 @@ export interface FileProcessorConfig {
 const defaultFileProcessorConfig: Partial<FileProcessorConfig> = {
     verbose: false,
     filePollMs: 5000
-}
+};
 
 export abstract class FileProcessor {
     protected config: FileProcessorConfig;

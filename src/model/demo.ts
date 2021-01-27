@@ -1,8 +1,8 @@
-import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
-import { SpectatorCreationAttributes, SpectatorInstance } from "./spectator";
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model } from "sequelize";
 
+import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
 import { MapCreationAttributes, MapInstance } from "./map";
+import { SpectatorCreationAttributes, SpectatorInstance } from "./spectator";
 
 export interface Demo {
     id: string;

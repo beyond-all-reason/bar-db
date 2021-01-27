@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
 import { MapParser } from "spring-map-parser";
-import { Database } from "./database";
 
-import { FileProcessorConfig, FileProcessor } from "./file-processor";
+import { Database } from "./database";
+import { FileProcessor, FileProcessorConfig } from "./file-processor";
 
 export class MapProcessor extends FileProcessor {
     protected mapParser: MapParser;

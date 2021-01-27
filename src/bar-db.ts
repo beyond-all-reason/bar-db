@@ -2,28 +2,28 @@ import { Database, DatabaseConfig } from "./database";
 import { DemoProcessor } from "./demo-processor";
 import { MapProcessor } from "./map-processor";
 
-export interface DataProcessorConfig extends DatabaseConfig {
-
+export interface BARDBConfig extends DatabaseConfig {
+    apiPort?: number;
 }
 
-export class DataProcessor {
-    protected config: DataProcessorConfig;
+export class BARDB {
+    protected config: BARDBConfig;
     protected db: Database;
     protected mapProcessor: MapProcessor;
     protected demoProcessor: DemoProcessor;
 
-    constructor(config: DataProcessorConfig) {
+    constructor(config: BARDBConfig) {
         this.config = config;
 
         this.db = new Database({
-            host: this.config.host,
-            port: this.config.port,
-            username: this.config.username,
-            password: this.config.password,
+            dbHost: this.config.dbHost,
+            dbPort: this.config.dbPort,
+            dbUsername: this.config.dbUsername,
+            dbPassword: this.config.dbPassword,
             verbose: this.config.verbose,
             createSchemaDiagram: this.config.createSchemaDiagram
         });
-    
+
         this.mapProcessor = new MapProcessor({ db: this.db, dir: "maps", fileExt: ".sd7", verbose: this.config.verbose });
         this.demoProcessor = new DemoProcessor({ db: this.db, dir: "demos", fileExt: ".sdfz", verbose: this.config.verbose });
     }

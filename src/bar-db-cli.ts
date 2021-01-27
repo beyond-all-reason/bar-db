@@ -8,17 +8,19 @@ const args = yargs(process.argv.slice(2))
     .option("pgusername", { type: "string", description: "Run with verbose logging", default: "postgres" })
     .option("pgpassword", { type: "string", description: "Run with verbose logging", default: "test" })
     .option("diagram", { type: "boolean", description: "Create an SVG diagram of the database schema", default: false })
+    .option("apiport", { type: "number", description: "Port API server should serve on", default: 3005 })
     .argv;
 
-import { DataProcessor } from "./data-processor";
+import { BARDB } from "./bar-db";
 
-const dataProcessor = new DataProcessor({
-    host: args.pghost,
-    port: args.pgport,
-    username: args.pgusername,
-    password: args.pgpassword,
+const barDb = new BARDB({
+    dbHost: args.pghost,
+    dbPort: args.pgport,
+    dbUsername: args.pgusername,
+    dbPassword: args.pgpassword,
     verbose: args.verbose,
-    createSchemaDiagram: args.diagram
+    createSchemaDiagram: args.diagram,
+    apiPort: args.apiport
 });
 
-dataProcessor.init();
+barDb.init();

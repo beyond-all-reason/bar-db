@@ -1,8 +1,8 @@
 import * as path from "path";
 import { DemoModel, DemoParser } from "sdfz-demo-parser";
-import { Database } from "./database";
 
-import { FileProcessorConfig, FileProcessor as FileProcessor } from "./file-processor";
+import { Database } from "./database";
+import { FileProcessor as FileProcessor, FileProcessorConfig } from "./file-processor";
 
 export class DemoProcessor extends FileProcessor {
     protected demoParser: DemoParser;

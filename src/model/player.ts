@@ -1,6 +1,7 @@
+import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, Model, Optional } from "sequelize";
+
 import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
 import { UserCreationAttributes, UserInstance } from "./user";
-import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, Model, Optional } from "sequelize";
 
 export interface Player {
     id: number;

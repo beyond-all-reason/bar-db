@@ -3,3 +3,5 @@ node_modules
 config.json
 demos
 maps
+/start.sh
+/working-files

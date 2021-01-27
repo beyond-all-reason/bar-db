@@ -6,7 +6,6 @@
   "types": "dist/index.d.ts",
   "bin": "dist/bar-db-cli.js",
   "scripts": {
-    "start": "node ./dist/bar-db-cli.js",
     "prepublish": "./node_modules/.bin/tsc",
     "build": "./node_modules/.bin/tsc",
     "dev": "./node_modules/.bin/tsc --watch",
@@ -21,7 +20,7 @@
   "license": "mit",
   "dependencies": {
     "@types/node": "^14.14.21",
-    "jaz-ts-utils": "^0.3.0",
+    "jaz-ts-utils": "^0.3.1",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sdfz-demo-parser": "^2.2.0",

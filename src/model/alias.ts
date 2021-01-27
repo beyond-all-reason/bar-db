@@ -1,5 +1,6 @@
-import { UserCreationAttributes, UserInstance } from "./user";
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, Model, Optional } from "sequelize/types";
+
+import { UserCreationAttributes, UserInstance } from "./user";
 
 export interface Alias {
     id: number;

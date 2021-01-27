@@ -1,5 +1,6 @@
-import { DemoCreationAttributes, DemoInstance } from "./demo";
 import { HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional } from "sequelize";
+
+import { DemoCreationAttributes, DemoInstance } from "./demo";
 
 export interface Map {
     id: number;

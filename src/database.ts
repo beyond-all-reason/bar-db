@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import { Optionals } from "jaz-ts-utils";
 import pg from "pg";
 import { DataTypes, ModelCtor, Sequelize } from "sequelize";
+
 import { AIInstance } from "./model/ai";
 import { AliasInstance } from "./model/alias";
 import { AllyTeamInstance } from "./model/ally-team";
@@ -14,10 +15,10 @@ import { UserInstance } from "./model/user";
 const sequelizeErd = require("sequelize-erd");
 
 export interface DatabaseConfig {
-    host: string;
-    port: number;
-    username: string;
-    password: string;
+    dbHost: string;
+    dbPort: number;
+    dbUsername: string;
+    dbPassword: string;
     verbose?: boolean;
     createSchemaDiagram?: boolean;
 }
@@ -25,7 +26,7 @@ export interface DatabaseConfig {
 const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
     verbose: false,
     createSchemaDiagram: false
-}
+};
 
 export interface DatabaseSchema {
     demo: ModelCtor<DemoInstance>;
@@ -55,7 +56,7 @@ export class Database {
     }
 
     protected async initDatabase() {
-        const pgClient = new pg.Client({ host: this.config.host, port: this.config.port, user: this.config.username, password: this.config.password });
+        const pgClient = new pg.Client({ host: this.config.dbHost, port: this.config.dbPort, user: this.config.dbUsername, password: this.config.dbPassword });
         await pgClient.connect();
         const dbExistsQuery = await pgClient.query("SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = 'bar';");
         const dbExists = dbExistsQuery.rowCount > 0;
@@ -71,10 +72,10 @@ export class Database {
             //logging: console.log,
             logging: false,
             dialect: "postgres",
-            host: this.config.host,
-            port: this.config.port,
-            username: this.config.username,
-            password: this.config.password,
+            host: this.config.dbHost,
+            port: this.config.dbPort,
+            username: this.config.dbUsername,
+            password: this.config.dbPassword,
             database: "bar"
         });
 

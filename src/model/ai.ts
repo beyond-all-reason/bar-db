@@ -1,5 +1,6 @@
-import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, Model, Optional } from "sequelize";
+
+import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
 
 export interface AI {
     id: number;
