@@ -95,6 +95,11 @@ export class DemoProcessor extends FileProcessor {
                             }
                         });
 
+                        if (user.username !== playerData.name) {
+                            user.username = playerData.name;
+                            await user.save();
+                        }
+
                         const [ alias ] = await user.getAliases({
                             where: { alias: playerData.name }
                         });
