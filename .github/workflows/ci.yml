@@ -1,59 +1,59 @@
 name: ci
 
 on:
-push:
+  push:
     branches:
     - main
     - master
-pull_request:
+  pull_request:
     branches:
     - main
     - master
 
 jobs:
-ci:
+  ci:
     runs-on: ${{ matrix.os }}
 
     strategy:
-    matrix:
+      matrix:
         os: [ubuntu-latest]
         node: [12]
 
     steps:
     - name: Checkout 🛎
-        uses: actions/checkout@master
+      uses: actions/checkout@master
 
     - name: Setup node env 🏗
-        uses: actions/setup-node@v2.1.2
-        with:
+      uses: actions/setup-node@v2.1.2
+      with:
         node-version: ${{ matrix.node }}
 
     - name: Cache node_modules 📦
-        uses: actions/cache@v2
-        with:
+      uses: actions/cache@v2
+      with:
         path: ~/.npm
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-            ${{ runner.os }}-node-
+          ${{ runner.os }}-node-
 
     - name: Install dependencies 👨🏻‍💻
-        run: npm ci
+      run: npm ci
 
     - name: Run linter 👀
-        run: npm run lint
+      run: npm run lint
 
     - name: Run build 🔨
-        run: npm run build
+      run: npm run build
 
     - name: Run tests 🧪
-        run: npm run test
+      run: npm run test
 
     - name: Deploy 🚀
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-            SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-            SOURCE: "dist/"
-            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-            REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
-            REMOTE_USER: ${{ secrets.REMOTE_USER }}
-            TARGET: ${{ secrets.REMOTE_TARGET }}
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        SOURCE: "dist/"
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        TARGET: ${{ secrets.REMOTE_TARGET }}
