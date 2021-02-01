@@ -56,5 +56,5 @@ jobs:
         ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 21344
         local_path: './dist/*'
-        remote_path: '/home/github/bardb'
+        remote_path: '/var/www/bardb'
         args: '-o ConnectTimeout=5'
