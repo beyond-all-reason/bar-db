@@ -39,22 +39,11 @@ jobs:
     - name: Install dependencies 👨🏻‍💻
       run: npm ci
 
-    - name: Run linter 👀
+    - name: Lint 👀
       run: npm run lint
 
-    - name: Run build 🔨
+    - name: Build 🔨
       run: npm run build
 
-    - name: Run tests 🧪
+    - name: Test 🧪
       run: npm run test
-
-    - name: FTP Deploy
-      uses: wlixcc/SFTP-Deploy-Action@v1.0
-      with:
-        username: 'github'
-        server: 'bar-rts.com'
-        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 21344
-        local_path: './dist/*'
-        remote_path: '/var/www/bardb'
-        args: '-o ConnectTimeout=5'
