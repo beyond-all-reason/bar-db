@@ -51,9 +51,10 @@ jobs:
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
+        protocol: ftps
         server: ${{ secrets.ftp_host }}
         port: ${{ secrets.ftp_port }}
         username: ${{ secrets.ftp_user }}
         password: ${{ secrets.ftp_password }}
         local-dir: ./dist/
-        server-dir: /home/github/bardb/
+        server-dir: /home/${{ secrets.ftp_user }}/bardb/
