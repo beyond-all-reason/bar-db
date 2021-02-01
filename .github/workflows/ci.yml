@@ -49,12 +49,12 @@ jobs:
       run: npm run test
 
     - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
-        protocol: ftps
-        server: ${{ secrets.ftp_host }}
-        port: ${{ secrets.ftp_port }}
-        username: ${{ secrets.ftp_user }}
-        password: ${{ secrets.ftp_password }}
-        local-dir: ./dist/
-        server-dir: /home/${{ secrets.ftp_user }}/bardb/
+        username: 'github'
+        server: 'bar-rts.com'
+        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 21344
+        local_path: './dist/*'
+        remote_path: '/home/github/bardb'
+        args: '-o ConnectTimeout=5'
