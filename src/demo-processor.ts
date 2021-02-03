@@ -79,7 +79,7 @@ export class DemoProcessor extends FileProcessor {
                             countryCode: playerData.countryCode,
                             rgbColor: { r: teamData.rgbColor[0], g: teamData.rgbColor[1], b: teamData.rgbColor[2] },
                             rank: playerData.rank,
-                            skillUncertainty: playerData.skillUncertainty,
+                            skillUncertainty: playerData.skillUncertainty || null,
                             skill: playerData.skill
                         });
 

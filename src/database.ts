@@ -148,8 +148,8 @@ export class Database {
             countryCode: { type: DataTypes.STRING },
             rgbColor: { type: DataTypes.JSON },
             rank: { type: DataTypes.INTEGER },
-            skillUncertainty: { type: DataTypes.INTEGER },
-            skill: { type: DataTypes.STRING },
+            skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
+            skill: { type: DataTypes.STRING, allowNull: true },
         });
 
         const spectatorModel = this.sequelize.define<SpectatorInstance>("Spectator", {
