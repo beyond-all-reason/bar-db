@@ -9,8 +9,8 @@ export interface User {
     username: string;
     countryCode: string;
     rank: number;
-    skill: string;
-    skillUncertainty: number;
+    skillUncertainty?: number;
+    skill?: string;
 }
 
 export interface UserCreationAttributes extends User { }

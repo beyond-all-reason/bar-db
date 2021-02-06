@@ -150,6 +150,7 @@ export class Database {
             rank: { type: DataTypes.INTEGER },
             skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
             skill: { type: DataTypes.STRING, allowNull: true },
+            startPos: { type: DataTypes.JSON, allowNull: true }
         });
 
         const spectatorModel = this.sequelize.define<SpectatorInstance>("Spectator", {
@@ -167,7 +168,8 @@ export class Database {
             aiId: { type: DataTypes.INTEGER },
             shortName: { type: DataTypes.STRING },
             name: { type: DataTypes.STRING },
-            host: { type: DataTypes.BOOLEAN }
+            host: { type: DataTypes.BOOLEAN },
+            startPos: { type: DataTypes.JSON, allowNull: true }
         });
 
         const userModel = this.sequelize.define<UserInstance>("User", {

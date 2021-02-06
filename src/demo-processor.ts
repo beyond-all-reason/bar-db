@@ -67,7 +67,8 @@ export class DemoProcessor extends FileProcessor {
                             aiId: playerData.id,
                             name: playerData.name,
                             shortName: playerData.shortName,
-                            host: playerData.host
+                            host: playerData.host,
+                            startPos: playerData.startPos
                         });
                     } else {
                         const player = await allyTeam.createPlayer({
@@ -79,8 +80,9 @@ export class DemoProcessor extends FileProcessor {
                             countryCode: playerData.countryCode,
                             rgbColor: { r: teamData.rgbColor[0], g: teamData.rgbColor[1], b: teamData.rgbColor[2] },
                             rank: playerData.rank,
-                            skillUncertainty: playerData.skillUncertainty || null,
-                            skill: playerData.skill
+                            skillUncertainty: playerData.skillUncertainty,
+                            skill: playerData.skill,
+                            startPos: playerData.startPos
                         });
 
                         const [ user ] = await this.db.schema.user.findOrCreate({

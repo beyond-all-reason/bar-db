@@ -9,8 +9,8 @@ export interface Spectator {
     name: string;
     countryCode: string;
     rank: number;
-    skillUncertainty: number;
-    skill: string;
+    skillUncertainty?: number;
+    skill?: string;
 }
 
 export interface SpectatorCreationAttributes extends Optional<Spectator, "id"> { }

@@ -13,8 +13,9 @@ export interface Player {
     countryCode: string;
     rgbColor: { r: number, g: number, b: number };
     rank: number;
-    skillUncertainty: number | null;
-    skill: string | null;
+    skillUncertainty?: number;
+    skill?: string;
+    startPos?: { x: number, y: number, z: number };
 }
 
 export interface PlayerCreationAttributes extends Optional<Player, "id"> { }

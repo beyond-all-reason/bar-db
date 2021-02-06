@@ -8,6 +8,7 @@ export interface AI {
     shortName: string;
     name: string;
     host: boolean;
+    startPos?: { x: number, y: number, z: number };
 }
 
 export interface AICreationAttributes extends Optional<AI, "id"> { }
