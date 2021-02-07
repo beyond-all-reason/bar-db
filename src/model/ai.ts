@@ -8,10 +8,10 @@ export interface AI {
     shortName: string;
     name: string;
     host: boolean;
+    handicap: number;
+    faction: string;
+    rgbColor: { r: number, g: number, b: number };
     startPos?: { x: number, y: number, z: number };
-    handicap?: number;
-    faction?: string;
-    rgbColor?: { r: number, g: number, b: number };
 }
 
 export interface AICreationAttributes extends Optional<AI, "id"> { }

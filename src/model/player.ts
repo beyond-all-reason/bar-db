@@ -13,8 +13,8 @@ export interface Player {
     countryCode: string;
     rgbColor: { r: number, g: number, b: number };
     rank: number;
+    skill: string;
     skillUncertainty?: number;
-    skill?: string;
     startPos?: { x: number, y: number, z: number };
 }
 
