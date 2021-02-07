@@ -9,6 +9,9 @@ export interface AI {
     name: string;
     host: boolean;
     startPos?: { x: number, y: number, z: number };
+    handicap?: number;
+    faction?: string;
+    rgbColor?: { r: number, g: number, b: number };
 }
 
 export interface AICreationAttributes extends Optional<AI, "id"> { }

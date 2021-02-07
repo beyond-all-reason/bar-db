@@ -150,7 +150,7 @@ export class Database {
             rank: { type: DataTypes.INTEGER },
             skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
             skill: { type: DataTypes.STRING, allowNull: true },
-            startPos: { type: DataTypes.JSON, allowNull: true }
+            startPos: { type: DataTypes.JSON, allowNull: true } // TODO: reprocess demos until no nulls left, then make this not null
         });
 
         const spectatorModel = this.sequelize.define<SpectatorInstance>("Spectator", {
@@ -169,7 +169,10 @@ export class Database {
             shortName: { type: DataTypes.STRING },
             name: { type: DataTypes.STRING },
             host: { type: DataTypes.BOOLEAN },
-            startPos: { type: DataTypes.JSON, allowNull: true }
+            startPos: { type: DataTypes.JSON, allowNull: true }, // TODO: reprocess demos until no nulls left, then make this not null
+            handicap: { type: DataTypes.INTEGER, allowNull: true }, // TODO: reprocess demos until no nulls left, then make this not null
+            faction: { type: DataTypes.STRING, allowNull: true }, // TODO: reprocess demos until no nulls left, then make this not null
+            rgbColor: { type: DataTypes.JSON, allowNull: true }, // TODO: reprocess demos until no nulls left, then make this not null
         });
 
         const userModel = this.sequelize.define<UserInstance>("User", {

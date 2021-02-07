@@ -68,7 +68,10 @@ export class DemoProcessor extends FileProcessor {
                             name: playerData.name,
                             shortName: playerData.shortName,
                             host: playerData.host,
-                            startPos: playerData.startPos
+                            startPos: playerData.startPos,
+                            faction: teamData.side,
+                            rgbColor: { r: teamData.rgbColor[0], g: teamData.rgbColor[1], b: teamData.rgbColor[2] },
+                            handicap: teamData.handicap
                         });
                     } else {
                         const player = await allyTeam.createPlayer({
