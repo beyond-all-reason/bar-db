@@ -115,7 +115,14 @@ export class Database {
             notDeformable: { type: DataTypes.BOOLEAN },
             voidWater: { type: DataTypes.BOOLEAN },
             voidGround: { type: DataTypes.BOOLEAN },
-            autoShowMetal: { type: DataTypes.BOOLEAN },
+            autoShowMetal: { type: DataTypes.BOOLEAN }
+        }, {
+            indexes: [
+                {
+                    unique: true,
+                    fields: ["scriptName"]
+                }
+            ]
         });
 
         const demoModel = this.sequelize.define<DemoInstance>("Demo", {

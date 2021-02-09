@@ -29,7 +29,7 @@ export class DemoProcessor extends FileProcessor {
         const gameEndedNaturally = demoData.statistics.winningAllyTeamIds.length;
 
         if (!gameEndedNaturally) {
-            return;
+            return "delete";
         }
 
         const demoExisted = await this.db.schema.demo.destroy({
