@@ -24,7 +24,9 @@ export class MapProcessor extends FileProcessor {
         await mapData.heightMap.toFile(`${destDir}/height.png`);
         await mapData.metalMap.toFile(`${destDir}/metal.png`);
         await mapData.typeMap.toFile(`${destDir}/type.png`);
-        await mapData.textureMap!.toFile(`${destDir}/texture.png`);
+        await mapData.textureMap!.toFile(`${destDir}/texture-hq.png`);
+        await mapData.textureMap!.resize({ width: 684 }).jpeg({ quality: 80 }).toFile(`${destDir}/texture-lq.jpg`);
+        await mapData.textureMap!.resize({ width: 250, height: 250, fit: "cover" }).jpeg({quality: 80 }).toFile(`${destDir}/texture-thumb.jpg`);
 
         const newMap = {
             fileName: mapData.fileName,
