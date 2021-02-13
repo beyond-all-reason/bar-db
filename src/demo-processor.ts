@@ -45,7 +45,8 @@ export class DemoProcessor extends FileProcessor {
             hostSettings: demoData.script.hostSettings,
             gameSettings: demoData.script.gameSettings,
             mapSettings: demoData.script.mapSettings,
-            gameEndedNormally: demoData.statistics.winningAllyTeamIds.length > 0
+            gameEndedNormally: demoData.statistics.winningAllyTeamIds.length > 0,
+            chatlog: demoData.chatlog
         });
 
         for (const allyTeamData of demoData.script.allyTeams) {

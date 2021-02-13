@@ -1,3 +1,4 @@
+import { DemoModel } from "sdfz-demo-parser";
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model } from "sequelize";
 
 import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
@@ -16,6 +17,7 @@ export interface Demo {
     gameSettings: { [key: string]: string };
     mapSettings: { [key: string]: string };
     gameEndedNormally: boolean;
+    chatlog: DemoModel.ChatMessage[];
 }
 
 export interface DemoCreationAttributes extends Demo { }
