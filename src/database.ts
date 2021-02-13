@@ -21,11 +21,13 @@ export interface DatabaseConfig {
     dbPassword: string;
     verbose?: boolean;
     createSchemaDiagram?: boolean;
+    syncModel?: boolean;
 }
 
 const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
     verbose: false,
-    createSchemaDiagram: false
+    createSchemaDiagram: false,
+    syncModel: true
 };
 
 export interface DatabaseSchema {
@@ -220,14 +222,16 @@ export class Database {
         userModel.hasMany(spectatorModel, { foreignKey: "userId", onDelete: "CASCADE" });
         spectatorModel.belongsTo(userModel, { foreignKey: "userId" });
 
-        await mapModel.sync({ alter: true });
-        await userModel.sync({ alter: true });
-        await demoModel.sync({ alter: true });
-        await allyTeamModel.sync({ alter: true });
-        await playerModel.sync({ alter: true });
-        await spectatorModel.sync({ alter: true });
-        await aiModel.sync({ alter: true });
-        await aliasModel.sync({ alter: true });
+        if (this.config.syncModel) {
+            await mapModel.sync({ alter: true });
+            await userModel.sync({ alter: true });
+            await demoModel.sync({ alter: true });
+            await allyTeamModel.sync({ alter: true });
+            await playerModel.sync({ alter: true });
+            await spectatorModel.sync({ alter: true });
+            await aiModel.sync({ alter: true });
+            await aliasModel.sync({ alter: true });
+        }
 
         this.schema = {
             map: mapModel,
