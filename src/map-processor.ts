@@ -11,7 +11,7 @@ export class MapProcessor extends FileProcessor {
     constructor(config: FileProcessorConfig) {
         super(config);
 
-        this.mapParser = new MapParser({ mipmapSize: 4 });
+        this.mapParser = new MapParser({ mipmapSize: 8 });
         this.db = config.db;
     }
 
@@ -25,8 +25,9 @@ export class MapProcessor extends FileProcessor {
         await mapData.metalMap.toFile(`${destDir}/metal.png`);
         await mapData.typeMap.toFile(`${destDir}/type.png`);
         await mapData.textureMap!.toFile(`${destDir}/texture-hq.png`);
-        await mapData.textureMap!.resize({ width: 684 }).jpeg({ quality: 80 }).toFile(`${destDir}/texture-lq.jpg`);
-        await mapData.textureMap!.resize({ width: 250, height: 250, fit: "cover" }).jpeg({quality: 80 }).toFile(`${destDir}/texture-thumb.jpg`);
+        await mapData.textureMap!.resize({ width: 765, height: 300, fit: "outside" }).jpeg({ quality: 90 }).toFile(`${destDir}/texture-mq.jpg`);
+        await mapData.textureMap!.resize({ width: 684, height: 100, fit: "outside" }).jpeg({ quality: 80 }).toFile(`${destDir}/texture-lq.jpg`);
+        await mapData.textureMap!.resize({ width: 250, height: 250, fit: "cover" }).jpeg({ quality: 80 }).toFile(`${destDir}/texture-thumb.jpg`);
 
         const newMap = {
             fileName: mapData.fileName,

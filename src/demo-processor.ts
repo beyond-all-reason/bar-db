@@ -5,18 +5,18 @@ import { Database } from "./database";
 import { FileProcessor as FileProcessor, FileProcessorConfig } from "./file-processor";
 
 export class DemoProcessor extends FileProcessor {
-    protected demoParser: DemoParser;
     protected db: Database;
 
     constructor(config: FileProcessorConfig) {
         super(config);
 
-        this.demoParser = new DemoParser();
         this.db = config.db;
     }
 
     protected async processFile(filePath: string) {
-        const demoData = await this.demoParser.parseDemo(filePath);
+        const demoParser = new DemoParser();
+
+        const demoData = await demoParser.parseDemo(filePath);
         const mapScriptName = demoData.script.hostSettings.mapname;
 
         const [ map ] = await this.db.schema.map.findOrCreate({

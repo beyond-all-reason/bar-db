@@ -7,7 +7,7 @@ import { Database } from "./database";
 export interface FileProcessorConfig {
     db: Database;
     dir: string;
-    fileExt: string;
+    fileExt: string[];
     verbose?: boolean;
     filePollMs?: number;
 }
@@ -69,6 +69,6 @@ export abstract class FileProcessor {
     protected async getUnprocessedFile() : Promise<string | undefined> {
         const unprocessedPath = path.join(this.config.dir, "unprocessed");
         const files = await fs.readdir(unprocessedPath);
-        return files.find(file => path.extname(file) === this.config.fileExt);
+        return files.find(file => this.config.fileExt.includes(path.extname(file)));
     }
 }

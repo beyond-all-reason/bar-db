@@ -24,8 +24,8 @@ export class BARDB {
             createSchemaDiagram: this.config.createSchemaDiagram
         });
 
-        this.mapProcessor = new MapProcessor({ db: this.db, dir: "maps", fileExt: ".sd7", verbose: this.config.verbose });
-        this.demoProcessor = new DemoProcessor({ db: this.db, dir: "demos", fileExt: ".sdfz", verbose: this.config.verbose });
+        this.mapProcessor = new MapProcessor({ db: this.db, dir: "maps", fileExt: [".sd7", ".sdz"], verbose: this.config.verbose });
+        this.demoProcessor = new DemoProcessor({ db: this.db, dir: "demos", fileExt: [".sdfz"], verbose: this.config.verbose });
     }
 
     public async init() {
