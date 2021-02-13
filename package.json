@@ -1,6 +1,6 @@
 {
   "name": "bar-db",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Beyond All Reason Database",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
