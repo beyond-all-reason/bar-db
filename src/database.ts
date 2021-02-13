@@ -138,6 +138,7 @@ export class Database {
             hostSettings: { type: DataTypes.JSON },
             gameSettings: { type: DataTypes.JSON },
             mapSettings: { type: DataTypes.JSON },
+            gameEndedNormally: { type: DataTypes.BOOLEAN, defaultValue: true },
         });
 
         const allyTeamModel = this.sequelize.define<AllyTeamInstance>("AllyTeam", {

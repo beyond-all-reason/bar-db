@@ -26,12 +26,6 @@ export class DemoProcessor extends FileProcessor {
             }
         });
 
-        const gameEndedNaturally = demoData.statistics.winningAllyTeamIds.length;
-
-        if (!gameEndedNaturally) {
-            return "delete";
-        }
-
         const demoExisted = await this.db.schema.demo.destroy({
             where: { id: demoData.header.gameId }
         });
@@ -50,7 +44,8 @@ export class DemoProcessor extends FileProcessor {
             fullDurationMs: demoData.header.wallclockTime * 1000,
             hostSettings: demoData.script.hostSettings,
             gameSettings: demoData.script.gameSettings,
-            mapSettings: demoData.script.mapSettings
+            mapSettings: demoData.script.mapSettings,
+            gameEndedNormally: demoData.statistics.winningAllyTeamIds.length > 0
         });
 
         for (const allyTeamData of demoData.script.allyTeams) {

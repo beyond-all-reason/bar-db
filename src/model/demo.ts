@@ -15,6 +15,7 @@ export interface Demo {
     hostSettings: { [key: string]: string };
     gameSettings: { [key: string]: string };
     mapSettings: { [key: string]: string };
+    gameEndedNormally: boolean;
 }
 
 export interface DemoCreationAttributes extends Demo { }
