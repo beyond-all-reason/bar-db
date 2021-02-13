@@ -93,7 +93,7 @@ export class Database {
             id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             scriptName: { type: DataTypes.STRING, allowNull: false },
             fileName: { type: DataTypes.STRING },
-            description: { type: DataTypes.STRING },
+            description: { type: DataTypes.TEXT({ length: "medium" }) },
             mapHardness: { type: DataTypes.FLOAT },
             gravity: { type: DataTypes.FLOAT },
             tidalStrength: { type: DataTypes.FLOAT },
