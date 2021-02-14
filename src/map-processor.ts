@@ -60,6 +60,10 @@ export class MapProcessor extends FileProcessor {
         const storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.scriptName } });
 
         if (storedMap) {
+            if (this.config.verbose) {
+                console.log("Map already processed. Updating...");
+            }
+
             await storedMap.update(newMap);
         } else {
             await this.db.schema.map.create(newMap);
