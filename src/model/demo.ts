@@ -18,6 +18,8 @@ export interface Demo {
     mapSettings: { [key: string]: string };
     gameEndedNormally: boolean;
     chatlog: DemoModel.ChatMessage[];
+    hasBots?: boolean;
+    preset?: "duel" | "team" | "ffa";
 }
 
 export interface DemoCreationAttributes extends Demo { }

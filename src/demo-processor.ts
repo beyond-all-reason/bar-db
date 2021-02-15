@@ -46,8 +46,11 @@ export class DemoProcessor extends FileProcessor {
             gameSettings: demoData.script.gameSettings,
             mapSettings: demoData.script.mapSettings,
             gameEndedNormally: demoData.statistics.winningAllyTeamIds.length > 0,
-            chatlog: demoData.chatlog
+            chatlog: demoData.chatlog,
+            hasBots: false
         });
+
+        let numOfPlayers = 0;
 
         for (const allyTeamData of demoData.script.allyTeams) {
             const allyTeam = await demo.createAllyTeam({
@@ -58,6 +61,8 @@ export class DemoProcessor extends FileProcessor {
 
             for (const teamData of allyTeamData.teams) {
                 for (const playerData of teamData.players) {
+                    numOfPlayers++;
+
                     if (this.isAI(playerData)) {
                         const ai = await allyTeam.createAI({
                             aiId: playerData.id,
@@ -69,6 +74,11 @@ export class DemoProcessor extends FileProcessor {
                             rgbColor: { r: teamData.rgbColor[0], g: teamData.rgbColor[1], b: teamData.rgbColor[2] },
                             handicap: teamData.handicap
                         });
+
+                        if (!demo.hasBots) {
+                            demo.hasBots = true;
+                            await demo.save();
+                        }
                     } else {
                         const player = await allyTeam.createPlayer({
                             playerId: playerData.id,
@@ -141,6 +151,16 @@ export class DemoProcessor extends FileProcessor {
 
             await user.addSpectator(spectator);
         }
+
+        if (demoData.script.allyTeams.length > 2) {
+            demo.preset = "ffa";
+        } else if (numOfPlayers > 2) {
+            demo.preset = "team";
+        } else if (numOfPlayers === 2) {
+            demo.preset = "duel";
+        }
+
+        await demo.save();
 
         return;
     }
