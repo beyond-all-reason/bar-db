@@ -20,6 +20,7 @@ export interface DatabaseConfig {
     dbUsername: string;
     dbPassword: string;
     verbose?: boolean;
+    logSQL?: boolean;
     createSchemaDiagram?: boolean;
     syncModel?: boolean;
 }
@@ -27,7 +28,8 @@ export interface DatabaseConfig {
 const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
     verbose: false,
     createSchemaDiagram: false,
-    syncModel: true
+    syncModel: true,
+    logSQL: false
 };
 
 export interface DatabaseSchema {
@@ -71,8 +73,7 @@ export class Database {
 
     protected async initSequelize() {
         this.sequelize = new Sequelize({
-            //logging: console.log,
-            logging: false,
+            logging: this.config.logSQL ? console.log : false,
             dialect: "postgres",
             host: this.config.dbHost,
             port: this.config.dbPort,
