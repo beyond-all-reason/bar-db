@@ -3,9 +3,7 @@ import { DemoModel, DemoParser } from "sdfz-demo-parser";
 
 import { Database } from "./database";
 import { FileProcessor as FileProcessor, FileProcessorConfig } from "./file-processor";
-import { AIInstance } from "./model/ai";
 import { AllyTeamInstance } from "./model/ally-team";
-import { SpectatorInstance } from "./model/spectator";
 
 export class DemoProcessor extends FileProcessor {
     protected db: Database;
@@ -93,7 +91,7 @@ export class DemoProcessor extends FileProcessor {
             user.countryCode = playerOrSpecData.countryCode;
             user.rank = playerOrSpecData.rank,
             user.skill = playerOrSpecData.skill,
-            user.skillUncertainty = playerOrSpecData.skillUncertainty
+            user.skillUncertainty = playerOrSpecData.skillUncertainty;
 
             await user.save();
 
