@@ -56,7 +56,7 @@ export class DemoProcessor extends FileProcessor {
             hostSettings: demoData.info.hostSettings,
             gameSettings: demoData.info.gameSettings,
             mapSettings: demoData.info.mapSettings,
-            gameEndedNormally: (demoData.info.meta.winningAllyTeamIds?.length ?? 0) > 0,
+            gameEndedNormally: demoData.info.meta.winningAllyTeamIds.length > 0,
             chatlog: demoData.chatlog,
             preset: preset,
             hasBots: demoData.info.ais.length > 0,
@@ -67,8 +67,8 @@ export class DemoProcessor extends FileProcessor {
         for (const allyTeamData of demoData.info.allyTeams) {
             const allyTeam = await demo.createAllyTeam({
                 allyTeamId: allyTeamData.allyTeamId,
-                startBox: allyTeamData.startBox,
-                winningTeam: allyTeamData.allyTeamId === demoData.statistics.winningAllyTeamIds[0]
+                startBox: allyTeamData.startBox!,
+                winningTeam: allyTeamData.allyTeamId === demoData.info.meta.winningAllyTeamIds[0]
             });
             allyTeams[allyTeam.allyTeamId] = allyTeam;
         }
@@ -78,9 +78,9 @@ export class DemoProcessor extends FileProcessor {
             const [ user ] = await this.db.schema.user.findOrCreate({
                 where: { id: playerOrSpecData.userId },
                 defaults: {
-                    id: playerOrSpecData.userId,
+                    id: playerOrSpecData.userId!,
                     username: playerOrSpecData.name,
-                    countryCode: playerOrSpecData.countryCode,
+                    countryCode: playerOrSpecData.countryCode!,
                     rank: playerOrSpecData.rank,
                     skill: playerOrSpecData.skill,
                     skillUncertainty: playerOrSpecData.skillUncertainty
@@ -88,7 +88,7 @@ export class DemoProcessor extends FileProcessor {
             });
 
             user.username = playerOrSpecData.name;
-            user.countryCode = playerOrSpecData.countryCode;
+            user.countryCode = playerOrSpecData.countryCode!;
             user.rank = playerOrSpecData.rank,
             user.skill = playerOrSpecData.skill,
             user.skillUncertainty = playerOrSpecData.skillUncertainty;
@@ -113,11 +113,11 @@ export class DemoProcessor extends FileProcessor {
                     teamId: playerOrSpecData.teamId,
                     handicap: playerOrSpecData.handicap,
                     faction: playerOrSpecData.faction,
-                    countryCode: playerOrSpecData.countryCode,
+                    countryCode: playerOrSpecData.countryCode!,
                     rgbColor: playerOrSpecData.rgbColor,
                     rank: playerOrSpecData.rank,
                     skillUncertainty: playerOrSpecData.skillUncertainty,
-                    skill: playerOrSpecData.skill,
+                    skill: playerOrSpecData.skill!,
                     startPos: playerOrSpecData.startPos
                 });
                 await user.addPlayer(player);
@@ -125,10 +125,10 @@ export class DemoProcessor extends FileProcessor {
                 const spectator = await demo.createSpectator({
                     playerId: playerOrSpecData.playerId,
                     name: playerOrSpecData.name,
-                    countryCode: playerOrSpecData.countryCode,
+                    countryCode: playerOrSpecData.countryCode!,
                     rank: playerOrSpecData.rank,
                     skillUncertainty: playerOrSpecData.skillUncertainty,
-                    skill: playerOrSpecData.skill
+                    skill: playerOrSpecData.skill!
                 });
                 await user.addSpectator(spectator);
             }
