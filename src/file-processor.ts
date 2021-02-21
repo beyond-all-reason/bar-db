@@ -44,7 +44,7 @@ export abstract class FileProcessor {
                 if (outPath && outPath !== "delete") {
                     await fs.rename(unprocessedDemoPath, path.join(outPath, fileName));
                 } else if (outPath === "delete") {
-                    console.log(`Deleting replay that ended unnaturally: ${fileName}.`);
+                    console.log(`Deleting replay: ${fileName}.`);
                     await fs.unlink(unprocessedDemoPath);
                 } else {
                     await fs.rename(unprocessedDemoPath, processedDemoPath);
