@@ -1,4 +1,5 @@
 import * as path from "path";
+import * as fs from "fs";
 import { DemoModel, DemoParser } from "sdfz-demo-parser";
 
 import { Database } from "./database";
@@ -15,6 +16,12 @@ export class DemoProcessor extends FileProcessor {
     }
 
     protected async processFile(filePath: string) {
+        const fileBytes = (await fs.promises.stat(filePath)).size;
+        const fileMB = fileBytes / 1048576;
+        if (fileMB > 20) {
+            throw new Error("File over 20MB, marking as error for now");
+        }
+
         const demoParser = new DemoParser();
 
         const demoData = await demoParser.parseDemo(filePath);
