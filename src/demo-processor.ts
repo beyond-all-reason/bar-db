@@ -16,6 +16,15 @@ export class DemoProcessor extends FileProcessor {
     }
 
     protected async processFile(filePath: string) {
+        const fileBytes1 = (await fs.promises.stat(filePath)).size;
+        const fileMB1 = fileBytes1 / 1048576;
+        if (fileMB1 > 20) {
+            if (this.config.verbose) {
+                console.log("File over 20MB, ignoring and deleting.");
+                return "delete";
+            }
+        }
+
         const demoParser = new DemoParser();
 
         const demoData = await demoParser.parseDemo(filePath);
@@ -149,11 +158,11 @@ export class DemoProcessor extends FileProcessor {
             });
         }
 
-        const fileBytes = (await fs.promises.stat(filePath)).size;
-        const fileMB = fileBytes / 1048576;
-        if (fileMB > 15) {
+        const fileBytes2 = (await fs.promises.stat(filePath)).size;
+        const fileMB2 = fileBytes2 / 1048576;
+        if (fileMB2 > 8) {
             if (this.config.verbose) {
-                console.log("File over 15MB, deleting.");
+                console.log("File over 8MB, deleting.");
                 return "delete";
             }
         }
