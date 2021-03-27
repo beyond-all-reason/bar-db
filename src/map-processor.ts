@@ -31,7 +31,7 @@ export class MapProcessor extends FileProcessor {
 
         const newMap = {
             fileName: mapData.fileName,
-            scriptName: mapData.scriptName,
+            scriptName: mapData.scriptName.trim(),
             description: mapData.info.description,
             mapHardness: mapData.info.mapHardness,
             gravity: mapData.info.gravity,
@@ -57,7 +57,7 @@ export class MapProcessor extends FileProcessor {
             autoShowMetal: mapData.info.autoShowMetal,
         };
 
-        const storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.scriptName } });
+        const storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.scriptName.trim() } });
 
         if (storedMap) {
             if (this.config.verbose) {
