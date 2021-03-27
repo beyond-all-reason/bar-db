@@ -142,7 +142,8 @@ export class Database {
             gameEndedNormally: { type: DataTypes.BOOLEAN, defaultValue: true },
             chatlog: { type: DataTypes.JSON, defaultValue: [] },
             hasBots: { type: DataTypes.BOOLEAN, allowNull: true },
-            preset: { type: DataTypes.STRING, allowNull: true }
+            preset: { type: DataTypes.STRING, allowNull: true },
+            reported: { type: DataTypes.BOOLEAN, defaultValue: false }
         });
 
         const allyTeamModel = this.sequelize.define<AllyTeamInstance>("AllyTeam", {

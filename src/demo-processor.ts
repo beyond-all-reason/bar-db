@@ -55,6 +55,14 @@ export class DemoProcessor extends FileProcessor {
             preset = "duel";
         }
 
+        let reported = false;
+        for (const line of demoData.chatlog) {
+            if (line.message.includes("!report")) {
+                reported = true;
+                break;
+            }
+        }
+
         const demo = await map.createDemo({
             id: demoData.info.meta.gameId,
             fileName: path.basename(filePath),
@@ -68,8 +76,9 @@ export class DemoProcessor extends FileProcessor {
             mapSettings: demoData.info.mapSettings,
             gameEndedNormally: demoData.info.meta.winningAllyTeamIds.length > 0,
             chatlog: demoData.chatlog,
-            preset: preset,
+            preset,
             hasBots: demoData.info.ais.length > 0,
+            reported
         });
 
         const allyTeams: { [allyTeamId: number]: AllyTeamInstance } = {};

@@ -20,6 +20,7 @@ export interface Demo {
     chatlog: DemoModel.ChatMessage[];
     hasBots?: boolean;
     preset?: "duel" | "team" | "ffa";
+    reported?: boolean;
 }
 
 export interface DemoCreationAttributes extends Demo { }
