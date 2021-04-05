@@ -18,9 +18,9 @@ export class DemoProcessor extends FileProcessor {
     protected async processFile(filePath: string) {
         const fileBytes1 = (await fs.promises.stat(filePath)).size;
         const fileMB1 = fileBytes1 / 1048576;
-        if (fileMB1 > 20) {
+        if (fileMB1 > 30) {
             if (this.config.verbose) {
-                console.log("File over 20MB, ignoring and deleting.");
+                console.log("File over 30MB, ignoring and deleting.");
                 return "delete";
             }
         }
@@ -169,9 +169,9 @@ export class DemoProcessor extends FileProcessor {
 
         const fileBytes2 = (await fs.promises.stat(filePath)).size;
         const fileMB2 = fileBytes2 / 1048576;
-        if (fileMB2 > 8) {
+        if (fileMB2 > 20) {
             if (this.config.verbose) {
-                console.log("File over 8MB, deleting.");
+                console.log("File over 20MB, deleting.");
                 return "delete";
             }
         }
