@@ -67,6 +67,8 @@ export class MapProcessor extends FileProcessor {
             await storedMap.update(newMap);
         } else {
             await this.db.schema.map.create(newMap);
+
+            await this.db.saveMapsToMemory();
         }
 
         return destDir;

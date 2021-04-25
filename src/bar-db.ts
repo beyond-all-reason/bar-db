@@ -21,7 +21,8 @@ export class BARDB {
             dbUsername: this.config.dbUsername,
             dbPassword: this.config.dbPassword,
             verbose: this.config.verbose,
-            createSchemaDiagram: this.config.createSchemaDiagram
+            createSchemaDiagram: this.config.createSchemaDiagram,
+            logSQL: this.config.logSQL
         });
 
         this.mapProcessor = new MapProcessor({ db: this.db, dir: "maps", fileExt: [".sd7", ".sdz"], verbose: this.config.verbose });

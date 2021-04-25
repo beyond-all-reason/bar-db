@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import { Optionals } from "jaz-ts-utils";
 import pg from "pg";
 import { DataTypes, ModelCtor, Sequelize } from "sequelize";
+import Redis from "ioredis";
 
 import { AIInstance } from "./model/ai";
 import { AliasInstance } from "./model/alias";
@@ -23,19 +24,21 @@ export interface DatabaseConfig {
     logSQL?: boolean;
     createSchemaDiagram?: boolean;
     syncModel?: boolean;
+    initMemoryStore?: boolean;
 }
 
 const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
     verbose: false,
     createSchemaDiagram: false,
     syncModel: true,
-    logSQL: false
+    logSQL: false,
+    initMemoryStore: true
 };
 
 export interface DatabaseSchema {
     demo: ModelCtor<DemoInstance>;
-    map: ModelCtor<MapInstance>;
     user: ModelCtor<UserInstance>;
+    map: ModelCtor<MapInstance>;
     player: ModelCtor<PlayerInstance>;
     spectator: ModelCtor<SpectatorInstance>;
     ai: ModelCtor<AIInstance>;
@@ -46,6 +49,7 @@ export interface DatabaseSchema {
 export class Database {
     public sequelize!: Sequelize;
     public schema!: DatabaseSchema;
+    public memoryStore!: Redis.Redis;
 
     protected config: DatabaseConfig;
 
@@ -55,11 +59,49 @@ export class Database {
 
     public async init() {
         await this.initDatabase();
-        await this.initSequelize();
         await this.initSchema();
+        await this.initMemoryStore();
+    }
+
+    public async saveUsersToMemory() {
+        console.time("save users to memory");
+
+        const users = await this.schema.user.findAll({
+            raw: true,
+            attributes: ["id", "username", "countryCode"]
+        });
+
+        await this.memoryStore.set("users", JSON.stringify(users));
+
+        console.timeEnd("save users to memory");
+    }
+
+    public async saveMapsToMemory() {
+        console.time("save maps to memory");
+
+        const maps = await this.schema.map.findAll({
+            raw: true,
+            attributes: ["id", "scriptName"]
+        });
+
+        await this.memoryStore.set("maps", JSON.stringify(maps));
+
+        console.timeEnd("save maps to memory");
+    }
+
+    public async getUsersFromMemory() {
+        const users = await this.memoryStore.get("users");
+        return users;
+    }
+
+    public async getMapsFromMemory() {
+        const maps = await this.memoryStore.get("maps");
+        return maps;
     }
 
     protected async initDatabase() {
+        console.time("db init");
+
         const pgClient = new pg.Client({ host: this.config.dbHost, port: this.config.dbPort, user: this.config.dbUsername, password: this.config.dbPassword });
         await pgClient.connect();
         const dbExistsQuery = await pgClient.query("SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = 'bar';");
@@ -69,9 +111,7 @@ export class Database {
             console.log("bar database created.");
         }
         await pgClient.end();
-    }
 
-    protected async initSequelize() {
         this.sequelize = new Sequelize({
             logging: this.config.logSQL ? console.log : false,
             dialect: "postgres",
@@ -89,9 +129,13 @@ export class Database {
             console.error("Unable to connect to the database:", error);
             throw error;
         }
+
+        console.timeEnd("db init");
     }
 
     protected async initSchema() {
+        console.time("schema init");
+
         const mapModel = this.sequelize.define<MapInstance>("Map", {
             id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             scriptName: { type: DataTypes.STRING, allowNull: false },
@@ -165,6 +209,7 @@ export class Database {
             rank: { type: DataTypes.INTEGER },
             skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
             skill: { type: DataTypes.STRING },
+            trueSkill: { type: DataTypes.FLOAT, allowNull: true },
             startPos: { type: DataTypes.JSON, allowNull: true }
         });
 
@@ -196,7 +241,15 @@ export class Database {
             countryCode: { type: DataTypes.STRING },
             rank: { type: DataTypes.INTEGER },
             skill: { type: DataTypes.STRING },
+            trueSkill: { type: DataTypes.FLOAT, allowNull: true },
             skillUncertainty: { type: DataTypes.FLOAT },
+        }, {
+            indexes: [
+                {
+                    unique: true,
+                    fields: ["username"],
+                }
+            ]
         });
 
         const aliasModel = this.sequelize.define<AliasInstance>("Alias", {
@@ -255,6 +308,16 @@ export class Database {
             await fs.writeFile("db-schema.svg", svg);
         }
 
-        console.log("Demo schema created");
+        console.timeEnd("schema init");
+    }
+
+    protected async initMemoryStore() {
+        this.memoryStore = new Redis();
+
+        if (this.config.initMemoryStore) {
+            await this.saveUsersToMemory();
+
+            await this.saveMapsToMemory();
+        }
     }
 }

@@ -11,6 +11,7 @@ export interface User {
     rank: number;
     skillUncertainty?: number;
     skill?: string;
+    trueSkill?: number;
 }
 
 export interface UserCreationAttributes extends User { }

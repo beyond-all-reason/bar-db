@@ -8,6 +8,7 @@ const args = yargs(process.argv.slice(2))
     .option("pgusername", { type: "string", description: "Run with verbose logging", default: "postgres" })
     .option("pgpassword", { type: "string", description: "Run with verbose logging", default: "test" })
     .option("diagram", { type: "boolean", description: "Create an SVG diagram of the database schema", default: false })
+    .option("logsql", { type: "boolean", description: "Log all executed SQL", default: false })
     .argv;
 
 import { BARDB } from "./bar-db";
@@ -18,7 +19,8 @@ const barDb = new BARDB({
     dbUsername: args.pgusername,
     dbPassword: args.pgpassword,
     verbose: args.verbose,
-    createSchemaDiagram: args.diagram
+    createSchemaDiagram: args.diagram,
+    logSQL: args.logsql
 });
 
 barDb.init();

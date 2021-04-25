@@ -18,9 +18,9 @@ export class DemoProcessor extends FileProcessor {
     protected async processFile(filePath: string) {
         const fileBytes1 = (await fs.promises.stat(filePath)).size;
         const fileMB1 = fileBytes1 / 1048576;
-        if (fileMB1 > 30) {
+        if (fileMB1 > 20) {
             if (this.config.verbose) {
-                console.log("File over 30MB, ignoring and deleting.");
+                console.log("File over 20MB, ignoring and deleting.");
                 return "delete";
             }
         }
@@ -94,7 +94,7 @@ export class DemoProcessor extends FileProcessor {
 
         const playerAndSpecs: Array<DemoModel.Info.Player | DemoModel.Info.Spectator> = [...demoData.info.players, ...demoData.info.spectators];
         for (const playerOrSpecData of playerAndSpecs) {
-            const [ user ] = await this.db.schema.user.findOrCreate({
+            const [ user, created ] = await this.db.schema.user.findOrCreate({
                 where: { id: playerOrSpecData.userId },
                 defaults: {
                     id: playerOrSpecData.userId!,
@@ -102,14 +102,18 @@ export class DemoProcessor extends FileProcessor {
                     countryCode: playerOrSpecData.countryCode!,
                     rank: playerOrSpecData.rank,
                     skill: playerOrSpecData.skill,
+                    trueSkill: Number(playerOrSpecData) || undefined,
                     skillUncertainty: playerOrSpecData.skillUncertainty
                 }
             });
 
             user.username = playerOrSpecData.name;
             user.countryCode = playerOrSpecData.countryCode!;
-            user.rank = playerOrSpecData.rank,
-            user.skill = playerOrSpecData.skill,
+            user.rank = playerOrSpecData.rank;
+            user.skill = playerOrSpecData.skill;
+            if (Number(playerOrSpecData)) {
+                user.trueSkill = Number(playerOrSpecData);
+            }
             user.skillUncertainty = playerOrSpecData.skillUncertainty;
 
             await user.save();
@@ -137,6 +141,7 @@ export class DemoProcessor extends FileProcessor {
                     rank: playerOrSpecData.rank,
                     skillUncertainty: playerOrSpecData.skillUncertainty,
                     skill: playerOrSpecData.skill!,
+                    trueSkill: Number(playerOrSpecData) || undefined,
                     startPos: playerOrSpecData.startPos
                 });
                 await user.addPlayer(player);
@@ -167,14 +172,7 @@ export class DemoProcessor extends FileProcessor {
             });
         }
 
-        const fileBytes2 = (await fs.promises.stat(filePath)).size;
-        const fileMB2 = fileBytes2 / 1048576;
-        if (fileMB2 > 20) {
-            if (this.config.verbose) {
-                console.log("File over 20MB, deleting.");
-                return "delete";
-            }
-        }
+        await this.db.saveUsersToMemory();
 
         return;
     }
