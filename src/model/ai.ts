@@ -17,6 +17,8 @@ export interface AI {
 export interface AICreationAttributes extends Optional<AI, "id"> { }
 
 export interface AIInstance extends Model<AI, AICreationAttributes>, AI {
+    allyTeamId: number;
+
     getAllyTeam: BelongsToGetAssociationMixin<AllyTeamInstance>;
     setAllyTeam: BelongsToSetAssociationMixin<AllyTeamInstance, AllyTeamInstance["id"]>;
     createAllyTeam: (allyTeam: AllyTeamCreationAttributes) => Promise<AllyTeamInstance>;

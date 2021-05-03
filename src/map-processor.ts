@@ -21,13 +21,13 @@ export class MapProcessor extends FileProcessor {
         const destDir = `${this.config.dir}/processed/${mapData.fileName}`;
         await fs.mkdir(destDir, { recursive: true });
 
-        await mapData.heightMap.toFile(`${destDir}/height.png`);
-        await mapData.metalMap.toFile(`${destDir}/metal.png`);
-        await mapData.typeMap.toFile(`${destDir}/type.png`);
-        await mapData.textureMap!.toFile(`${destDir}/texture-hq.png`);
-        await mapData.textureMap!.resize({ width: 765, height: 300, fit: "outside" }).jpeg({ quality: 90 }).toFile(`${destDir}/texture-mq.jpg`);
-        await mapData.textureMap!.resize({ width: 684, height: 100, fit: "outside" }).jpeg({ quality: 80 }).toFile(`${destDir}/texture-lq.jpg`);
-        await mapData.textureMap!.resize({ width: 250, height: 250, fit: "cover" }).jpeg({ quality: 80 }).toFile(`${destDir}/texture-thumb.jpg`);
+        await mapData.heightMap.writeAsync(`${destDir}/height.png`);
+        await mapData.metalMap.writeAsync(`${destDir}/metal.png`);
+        await mapData.typeMap.writeAsync(`${destDir}/type.png`);
+        await mapData.textureMap!.writeAsync(`${destDir}/texture-hq.png`);
+        // await mapData.textureMap!.resize({ width: 765, height: 300, fit: "outside" }).jpeg({ quality: 90 }).writeAsync(`${destDir}/texture-mq.jpg`); // TODO
+        // await mapData.textureMap!.resize({ width: 684, height: 100, fit: "outside" }).jpeg({ quality: 80 }).writeAsync(`${destDir}/texture-lq.jpg`);
+        // await mapData.textureMap!.resize({ width: 250, height: 250, fit: "cover" }).jpeg({ quality: 80 }).writeAsync(`${destDir}/texture-thumb.jpg`);
 
         const newMap = {
             fileName: mapData.fileName,

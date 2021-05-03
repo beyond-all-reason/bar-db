@@ -22,6 +22,9 @@ export interface Player {
 export interface PlayerCreationAttributes extends Optional<Player, "id"> { }
 
 export interface PlayerInstance extends Model<Player, PlayerCreationAttributes>, Player {
+    allyTeamId: number;
+    userId: number;
+
     getAllyTeam: BelongsToGetAssociationMixin<AllyTeamInstance>;
     setAllyTeam: BelongsToSetAssociationMixin<AllyTeamInstance, AllyTeamInstance["id"]>;
     createAllyTeam: (allyTeam: AllyTeamCreationAttributes) => Promise<AllyTeamInstance>;

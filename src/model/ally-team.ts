@@ -19,6 +19,8 @@ export interface AllyTeam {
 export interface AllyTeamCreationAttributes extends Optional<AllyTeam, "id"> { }
 
 export interface AllyTeamInstance extends Model<AllyTeam, AllyTeamCreationAttributes>, AllyTeam {
+    demoId: string;
+
     getDemo: BelongsToGetAssociationMixin<DemoInstance>;
     setDemo: BelongsToSetAssociationMixin<DemoInstance, DemoInstance["id"]>;
     createDemo: (demo: DemoCreationAttributes) => Promise<DemoInstance>;

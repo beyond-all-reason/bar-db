@@ -16,9 +16,8 @@ export interface Spectator {
 export interface SpectatorCreationAttributes extends Optional<Spectator, "id"> { }
 
 export interface SpectatorInstance extends Model<Spectator, SpectatorCreationAttributes>, Spectator {
-    getAllyTeam: BelongsToGetAssociationMixin<AllyTeamInstance>;
-    setAllyTeam: BelongsToSetAssociationMixin<AllyTeamInstance, AllyTeamInstance["id"]>;
-    createAllyTeam: (allyTeam: AllyTeamCreationAttributes) => Promise<AllyTeamInstance>;
+    demoId: string;
+    userId: number;
 
     getUser: BelongsToGetAssociationMixin<UserInstance>;
     setUser: BelongsToSetAssociationMixin<UserInstance, UserInstance["id"]>;

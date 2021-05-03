@@ -10,6 +10,8 @@ export interface Alias {
 export interface AliasCreationAttributes extends Optional<Alias, "id"> { }
 
 export interface AliasInstance extends Model<Alias, AliasCreationAttributes>, Alias {
+    userId: number;
+
     getUser: BelongsToGetAssociationMixin<UserInstance>;
     setUser: BelongsToSetAssociationMixin<UserInstance, UserInstance["id"]>;
     createUser: (user: UserCreationAttributes) => Promise<UserInstance>;
