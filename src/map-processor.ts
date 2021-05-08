@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import { MapParser } from "spring-map-parser";
+import Jimp from "jimp";
 
 import { Database } from "./database";
 import { FileProcessor, FileProcessorConfig } from "./file-processor";
@@ -25,9 +26,9 @@ export class MapProcessor extends FileProcessor {
         await mapData.metalMap.writeAsync(`${destDir}/metal.png`);
         await mapData.typeMap.writeAsync(`${destDir}/type.png`);
         await mapData.textureMap!.writeAsync(`${destDir}/texture-hq.png`);
-        // await mapData.textureMap!.resize({ width: 765, height: 300, fit: "outside" }).jpeg({ quality: 90 }).writeAsync(`${destDir}/texture-mq.jpg`); // TODO
-        // await mapData.textureMap!.resize({ width: 684, height: 100, fit: "outside" }).jpeg({ quality: 80 }).writeAsync(`${destDir}/texture-lq.jpg`);
-        // await mapData.textureMap!.resize({ width: 250, height: 250, fit: "cover" }).jpeg({ quality: 80 }).writeAsync(`${destDir}/texture-thumb.jpg`);
+        await mapData.textureMap!.resize(1000, Jimp.AUTO).quality(90).writeAsync(`${destDir}/texture-mq.jpg`);
+        await mapData.textureMap!.resize(500, Jimp.AUTO).quality(80).writeAsync(`${destDir}/texture-lq.jpg`);
+        await mapData.textureMap!.cover(250, 250).quality(80).writeAsync(`${destDir}/texture-thumb.jpg`);
 
         const newMap = {
             fileName: mapData.fileName,
