@@ -27,7 +27,7 @@ export interface DemoCreationAttributes extends Demo { }
 
 export interface DemoInstance extends Model<Demo, DemoCreationAttributes>, Demo {
     mapId: number;
-    
+
     getMap: BelongsToGetAssociationMixin<MapInstance>;
     setMap: BelongsToSetAssociationMixin<MapInstance, MapInstance["id"]>;
     createMap: (map: MapCreationAttributes) => Promise<MapInstance>;

@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
+import Redis from "ioredis";
 import { Optionals } from "jaz-ts-utils";
 import pg from "pg";
 import { DataTypes, ModelCtor, Sequelize } from "sequelize";
-import Redis from "ioredis";
 
 import { AIInstance } from "./model/ai";
 import { AliasInstance } from "./model/alias";

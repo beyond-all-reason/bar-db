@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
-import { MapParser } from "spring-map-parser";
 import Jimp from "jimp";
+import { MapParser } from "spring-map-parser";
 
 import { Database } from "./database";
 import { FileProcessor, FileProcessorConfig } from "./file-processor";

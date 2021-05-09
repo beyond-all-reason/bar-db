@@ -40,7 +40,7 @@ export abstract class FileProcessor {
 
             try {
                 console.log(`Processing file: ${fileName}`);
-                console.time(`process file`);
+                console.time("process file");
                 const outPath = await this.processFile(unprocessedDemoPath);
                 if (outPath && outPath !== "delete") {
                     await fs.rename(unprocessedDemoPath, path.join(outPath, fileName));
@@ -50,7 +50,7 @@ export abstract class FileProcessor {
                 } else {
                     await fs.rename(unprocessedDemoPath, processedDemoPath);
                 }
-                console.timeEnd(`process file`);
+                console.timeEnd("process file");
             } catch (err) {
                 console.log(`Failed to process file: ${fileName}.`);
                 console.error(err);

@@ -1,6 +1,5 @@
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, Model, Optional } from "sequelize";
 
-import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
 import { UserCreationAttributes, UserInstance } from "./user";
 
 export interface Spectator {
