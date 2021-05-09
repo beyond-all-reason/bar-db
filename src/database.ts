@@ -25,14 +25,16 @@ export interface DatabaseConfig {
     createSchemaDiagram?: boolean;
     syncModel?: boolean;
     initMemoryStore?: boolean;
+    alterDbSchema?: boolean;
 }
 
-const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
+export const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
     verbose: false,
     createSchemaDiagram: false,
     syncModel: true,
     logSQL: false,
-    initMemoryStore: true
+    initMemoryStore: true,
+    alterDbSchema: false
 };
 
 export interface DatabaseSchema {
@@ -109,6 +111,7 @@ export class Database {
         if (!dbExists) {
             await pgClient.query("CREATE DATABASE bar");
             console.log("bar database created.");
+            this.config.alterDbSchema = true;
         }
         await pgClient.end();
 
@@ -174,20 +177,20 @@ export class Database {
 
         const demoModel = this.sequelize.define<DemoInstance>("Demo", {
             id: { type: DataTypes.STRING, primaryKey: true },
-            fileName: { type: DataTypes.STRING, unique: true },
-            engineVersion: { type: DataTypes.STRING },
-            gameVersion: { type: DataTypes.STRING },
-            startTime: { type: DataTypes.DATE },
-            durationMs: { type: DataTypes.INTEGER },
-            fullDurationMs: { type: DataTypes.INTEGER },
-            hostSettings: { type: DataTypes.JSON },
-            gameSettings: { type: DataTypes.JSON },
-            mapSettings: { type: DataTypes.JSON },
-            gameEndedNormally: { type: DataTypes.BOOLEAN, defaultValue: true },
-            chatlog: { type: DataTypes.JSON, defaultValue: [] },
+            fileName: { type: DataTypes.STRING, unique: true, allowNull: false },
+            engineVersion: { type: DataTypes.STRING, allowNull: false },
+            gameVersion: { type: DataTypes.STRING, allowNull: false },
+            startTime: { type: DataTypes.DATE, allowNull: false },
+            durationMs: { type: DataTypes.INTEGER, allowNull: false },
+            fullDurationMs: { type: DataTypes.INTEGER, allowNull: false },
+            hostSettings: { type: DataTypes.JSON, allowNull: false },
+            gameSettings: { type: DataTypes.JSON, allowNull: false },
+            mapSettings: { type: DataTypes.JSON, allowNull: false },
+            gameEndedNormally: { type: DataTypes.BOOLEAN, defaultValue: true, allowNull: false },
+            chatlog: { type: DataTypes.JSON, defaultValue: [], allowNull: true },
             hasBots: { type: DataTypes.BOOLEAN, allowNull: true },
             preset: { type: DataTypes.STRING, allowNull: true },
-            reported: { type: DataTypes.BOOLEAN, defaultValue: false }
+            reported: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: true }
         });
 
         const allyTeamModel = this.sequelize.define<AllyTeamInstance>("AllyTeam", {
@@ -282,14 +285,14 @@ export class Database {
         spectatorModel.belongsTo(userModel, { foreignKey: "userId" });
 
         if (this.config.syncModel) {
-            await mapModel.sync({ alter: true });
-            await userModel.sync({ alter: true });
-            await demoModel.sync({ alter: true });
-            await allyTeamModel.sync({ alter: true });
-            await playerModel.sync({ alter: true });
-            await spectatorModel.sync({ alter: true });
-            await aiModel.sync({ alter: true });
-            await aliasModel.sync({ alter: true });
+            await mapModel.sync({ alter: this.config.alterDbSchema });
+            await userModel.sync({ alter: this.config.alterDbSchema });
+            await demoModel.sync({ alter: this.config.alterDbSchema });
+            await allyTeamModel.sync({ alter: this.config.alterDbSchema });
+            await playerModel.sync({ alter: this.config.alterDbSchema });
+            await spectatorModel.sync({ alter: this.config.alterDbSchema });
+            await aiModel.sync({ alter: this.config.alterDbSchema });
+            await aliasModel.sync({ alter: this.config.alterDbSchema });
         }
 
         this.schema = {
