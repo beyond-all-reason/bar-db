@@ -25,10 +25,10 @@ export class MapProcessor extends FileProcessor {
         await mapData.heightMap.writeAsync(`${destDir}/height.png`);
         await mapData.metalMap.writeAsync(`${destDir}/metal.png`);
         await mapData.typeMap.writeAsync(`${destDir}/type.png`);
-        await mapData.textureMap!.writeAsync(`${destDir}/texture-hq.png`);
-        await mapData.textureMap!.resize(1000, Jimp.AUTO).quality(90).writeAsync(`${destDir}/texture-mq.jpg`);
-        await mapData.textureMap!.resize(500, Jimp.AUTO).quality(80).writeAsync(`${destDir}/texture-lq.jpg`);
-        await mapData.textureMap!.cover(250, 250).quality(80).writeAsync(`${destDir}/texture-thumb.jpg`);
+        await mapData.textureMap!.clone().writeAsync(`${destDir}/texture-hq.png`);
+        await mapData.textureMap!.clone().resize(1000, Jimp.AUTO).quality(90).writeAsync(`${destDir}/texture-mq.jpg`);
+        await mapData.textureMap!.clone().resize(500, Jimp.AUTO).quality(80).writeAsync(`${destDir}/texture-lq.jpg`);
+        await mapData.textureMap!.clone().cover(250, 250).quality(80).writeAsync(`${destDir}/texture-thumb.jpg`);
 
         const newMap = {
             fileName: mapData.fileName,
