@@ -102,7 +102,7 @@ export class DemoProcessor extends FileProcessor {
                     countryCode: playerOrSpecData.countryCode!,
                     rank: playerOrSpecData.rank,
                     skill: playerOrSpecData.skill,
-                    trueSkill: Number(playerOrSpecData) || undefined,
+                    trueSkill: Number(playerOrSpecData.skill) || undefined,
                     skillUncertainty: playerOrSpecData.skillUncertainty
                 }
             });
@@ -111,8 +111,8 @@ export class DemoProcessor extends FileProcessor {
             user.countryCode = playerOrSpecData.countryCode!;
             user.rank = playerOrSpecData.rank;
             user.skill = playerOrSpecData.skill;
-            if (Number(playerOrSpecData)) {
-                user.trueSkill = Number(playerOrSpecData);
+            if (Number(playerOrSpecData.skill)) {
+                user.trueSkill = Number(playerOrSpecData.skill);
             }
             user.skillUncertainty = playerOrSpecData.skillUncertainty;
 
@@ -141,7 +141,7 @@ export class DemoProcessor extends FileProcessor {
                     rank: playerOrSpecData.rank,
                     skillUncertainty: playerOrSpecData.skillUncertainty,
                     skill: playerOrSpecData.skill!,
-                    trueSkill: Number(playerOrSpecData) || undefined,
+                    trueSkill: Number(playerOrSpecData.skill) || undefined,
                     startPos: playerOrSpecData.startPos
                 });
                 await user.addPlayer(player);
