@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import yargs from "yargs";
+import { BARDB } from "./bar-db";
+import { defaultDatabaseConfig } from "./database";
 
 const args = yargs(process.argv.slice(2))
     .option("verbose", { alias: "v", type: "boolean", description: "Run with verbose logging", default: defaultDatabaseConfig.verbose })
@@ -11,9 +13,6 @@ const args = yargs(process.argv.slice(2))
     .option("logsql", { type: "boolean", description: "Log all executed SQL", default: defaultDatabaseConfig.logSQL })
     .option("alter", { type: "boolean", description: "Alter DB Schema", default: defaultDatabaseConfig.alterDbSchema })
     .argv;
-
-import { BARDB } from "./bar-db";
-import { defaultDatabaseConfig } from "./database";
 
 const barDb = new BARDB({
     dbHost: args.pghost,
