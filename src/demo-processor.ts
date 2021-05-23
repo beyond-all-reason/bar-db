@@ -5,6 +5,7 @@ import { DemoModel, DemoParser } from "sdfz-demo-parser";
 import { Database } from "./database";
 import { FileProcessor as FileProcessor, FileProcessorConfig } from "./file-processor";
 import { AllyTeamInstance } from "./model/ally-team";
+import { UserInstance } from "./model/user";
 
 export class DemoProcessor extends FileProcessor {
     protected db: Database;
@@ -94,38 +95,42 @@ export class DemoProcessor extends FileProcessor {
 
         const playerAndSpecs: Array<DemoModel.Info.Player | DemoModel.Info.Spectator> = [...demoData.info.players, ...demoData.info.spectators];
         for (const playerOrSpecData of playerAndSpecs) {
-            const [ user, created ] = await this.db.schema.user.findOrCreate({
-                where: { id: playerOrSpecData.userId },
-                defaults: {
-                    id: playerOrSpecData.userId!,
-                    username: playerOrSpecData.name,
-                    countryCode: playerOrSpecData.countryCode!,
-                    rank: playerOrSpecData.rank,
-                    skill: playerOrSpecData.skill,
-                    trueSkill: Number(playerOrSpecData.skill) || undefined,
-                    skillUncertainty: playerOrSpecData.skillUncertainty
-                }
-            });
+            let user: UserInstance | undefined;
 
-            user.username = playerOrSpecData.name;
-            user.countryCode = playerOrSpecData.countryCode!;
-            user.rank = playerOrSpecData.rank;
-            user.skill = playerOrSpecData.skill;
-            if (Number(playerOrSpecData.skill)) {
-                user.trueSkill = Number(playerOrSpecData.skill);
-            }
-            user.skillUncertainty = playerOrSpecData.skillUncertainty;
-
-            await user.save();
-
-            const [ alias ] = await user.getAliases({
-                where: { alias: playerOrSpecData.name }
-            });
-
-            if (!alias) {
-                await user.createAlias({
-                    alias: playerOrSpecData.name
+            if (playerOrSpecData.userId !== undefined) {
+                [ user ] = await this.db.schema.user.findOrCreate({
+                    where: { id: playerOrSpecData.userId },
+                    defaults: {
+                        id: playerOrSpecData.userId,
+                        username: playerOrSpecData.name,
+                        countryCode: playerOrSpecData.countryCode!,
+                        rank: playerOrSpecData.rank,
+                        skill: playerOrSpecData.skill,
+                        trueSkill: Number(playerOrSpecData.skill) || undefined,
+                        skillUncertainty: playerOrSpecData.skillUncertainty
+                    }
                 });
+    
+                user.username = playerOrSpecData.name;
+                user.countryCode = playerOrSpecData.countryCode!;
+                user.rank = playerOrSpecData.rank;
+                user.skill = playerOrSpecData.skill;
+                if (Number(playerOrSpecData.skill)) {
+                    user.trueSkill = Number(playerOrSpecData.skill);
+                }
+                user.skillUncertainty = playerOrSpecData.skillUncertainty;
+    
+                await user.save();
+    
+                const [ alias ] = await user.getAliases({
+                    where: { alias: playerOrSpecData.name }
+                });
+    
+                if (!alias) {
+                    await user.createAlias({
+                        alias: playerOrSpecData.name
+                    });
+                }
             }
 
             if ("teamId" in playerOrSpecData) {
@@ -144,7 +149,9 @@ export class DemoProcessor extends FileProcessor {
                     trueSkill: Number(playerOrSpecData.skill) || undefined,
                     startPos: playerOrSpecData.startPos
                 });
-                await user.addPlayer(player);
+                if (user) {
+                    await user.addPlayer(player);
+                }
             } else {
                 const spectator = await demo.createSpectator({
                     playerId: playerOrSpecData.playerId,
@@ -154,7 +161,9 @@ export class DemoProcessor extends FileProcessor {
                     skillUncertainty: playerOrSpecData.skillUncertainty,
                     skill: playerOrSpecData.skill!
                 });
-                await user.addSpectator(spectator);
+                if (user) {
+                    await user.addSpectator(spectator);
+                }
             }
         }
 

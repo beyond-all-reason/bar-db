@@ -1,6 +1,4 @@
-import { BARDB } from "./bar-db";
-import { Database } from "./database";
-import { DemoProcessor } from "./demo-processor";
-import { MapProcessor } from "./map-processor";
-
-export { BARDB, Database, DemoProcessor, MapProcessor };
+export * from "./bar-db";
+export * from "./database";
+export * from "./demo-processor";
+export * from "./map-processor";
