@@ -29,7 +29,7 @@ export interface DatabaseConfig {
 }
 
 export const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
-    verbose: false,
+    verbose: true,
     createSchemaDiagram: false,
     syncModel: true,
     logSQL: false,
