@@ -7,6 +7,9 @@ import { DataTypes, ModelCtor, Sequelize } from "sequelize";
 import { AIInstance } from "./model/ai";
 import { AliasInstance } from "./model/alias";
 import { AllyTeamInstance } from "./model/ally-team";
+import { BalanceChangeInstance } from "./model/balance-change";
+import { BalanceChangeAuthorInstance } from "./model/balance-change-author";
+import { BalanceChangeUnitDef, BalanceChangeUnitDefInstance } from "./model/balance-change-unit-def";
 import { DemoInstance } from "./model/demo";
 import { MapInstance } from "./model/map";
 import { PlayerInstance } from "./model/player";
@@ -16,25 +19,23 @@ import { UserInstance } from "./model/user";
 const sequelizeErd = require("sequelize-erd");
 
 export interface DatabaseConfig {
-    dbHost: string;
-    dbPort: number;
-    dbUsername: string;
-    dbPassword: string;
-    verbose?: boolean;
-    logSQL?: boolean;
+    host: string;
+    port: number;
+    username: string;
+    password: string;
     createSchemaDiagram?: boolean;
+    logSQL?: boolean;
+    alterDbSchema?: boolean;
     syncModel?: boolean;
     initMemoryStore?: boolean;
-    alterDbSchema?: boolean;
 }
 
-export const defaultDatabaseConfig: Required<Optionals<DatabaseConfig>> = {
-    verbose: true,
+const defaultDatabaseConfig: Optionals<DatabaseConfig> = {
     createSchemaDiagram: false,
-    syncModel: true,
     logSQL: false,
+    alterDbSchema: false,
+    syncModel: true,
     initMemoryStore: true,
-    alterDbSchema: false
 };
 
 export interface DatabaseSchema {
@@ -46,6 +47,9 @@ export interface DatabaseSchema {
     ai: ModelCtor<AIInstance>;
     allyTeam: ModelCtor<AllyTeamInstance>;
     alias: ModelCtor<AliasInstance>;
+    balanceChange: ModelCtor<BalanceChangeInstance>;
+    balanceChangeAuthor: ModelCtor<BalanceChangeAuthorInstance>;
+    balanceChangeUnitDef: ModelCtor<BalanceChangeUnitDefInstance>;
 }
 
 export class Database {
@@ -104,7 +108,7 @@ export class Database {
     protected async initDatabase() {
         console.time("db init");
 
-        const pgClient = new pg.Client({ host: this.config.dbHost, port: this.config.dbPort, user: this.config.dbUsername, password: this.config.dbPassword });
+        const pgClient = new pg.Client({ host: this.config.host, port: this.config.port, user: this.config.username, password: this.config.password });
         await pgClient.connect();
         const dbExistsQuery = await pgClient.query("SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = 'bar';");
         const dbExists = dbExistsQuery.rowCount > 0;
@@ -118,10 +122,10 @@ export class Database {
         this.sequelize = new Sequelize({
             logging: this.config.logSQL ? console.log : false,
             dialect: "postgres",
-            host: this.config.dbHost,
-            port: this.config.dbPort,
-            username: this.config.dbUsername,
-            password: this.config.dbPassword,
+            host: this.config.host,
+            port: this.config.port,
+            username: this.config.username,
+            password: this.config.password,
             database: "bar"
         });
 
@@ -247,17 +251,37 @@ export class Database {
             trueSkill: { type: DataTypes.FLOAT, allowNull: true },
             skillUncertainty: { type: DataTypes.FLOAT },
         }, {
-            indexes: [
-                {
-                    unique: true,
-                    fields: ["username"],
-                }
-            ]
+            indexes: [{ unique: true, fields: ["username"] }]
         });
 
         const aliasModel = this.sequelize.define<AliasInstance>("Alias", {
             id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             alias: { type: DataTypes.STRING }
+        });
+
+        const balanceChangeAuthorModel = this.sequelize.define<BalanceChangeAuthorInstance>("BalanceChangeAuthor", {
+            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            name: { type: DataTypes.STRING },
+            img: { type: DataTypes.STRING },
+            url: { type: DataTypes.STRING },
+        });
+
+        const balanceChangeModel = this.sequelize.define<BalanceChangeInstance>("BalanceChange", {
+            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            sha: { type: DataTypes.STRING, unique: true },
+            url: { type: DataTypes.STRING },
+            date: { type: DataTypes.DATE },
+            message: { type: DataTypes.TEXT },
+        }, {
+            indexes: [{ unique: true, fields: ["sha"] }]
+        });
+
+        const balanceChangeUnitDefModel = this.sequelize.define<BalanceChangeUnitDefInstance>("BalanceChangeUnitDef", {
+            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            unitDefId: { type: DataTypes.STRING },
+            changes: { type: DataTypes.JSON },
+        }, {
+            indexes: [{ fields: ["unitDefId"] }]
         });
 
         mapModel.hasMany(demoModel, { foreignKey: "mapId" });
@@ -284,6 +308,12 @@ export class Database {
         userModel.hasMany(spectatorModel, { foreignKey: "userId", onDelete: "CASCADE" });
         spectatorModel.belongsTo(userModel, { foreignKey: "userId" });
 
+        balanceChangeAuthorModel.hasMany(balanceChangeModel, { foreignKey: "balanceChangeAuthorId", onDelete: "CASCADE" });
+        balanceChangeModel.belongsTo(balanceChangeAuthorModel, { foreignKey: "balanceChangeAuthorId" });
+        
+        balanceChangeModel.hasMany(balanceChangeUnitDefModel, { foreignKey: "balanceChangeId", onDelete: "CASCADE" });
+        balanceChangeUnitDefModel.belongsTo(balanceChangeModel, { foreignKey: "balanceChangeId" });
+
         if (this.config.syncModel) {
             await mapModel.sync({ alter: this.config.alterDbSchema });
             await userModel.sync({ alter: this.config.alterDbSchema });
@@ -293,6 +323,9 @@ export class Database {
             await spectatorModel.sync({ alter: this.config.alterDbSchema });
             await aiModel.sync({ alter: this.config.alterDbSchema });
             await aliasModel.sync({ alter: this.config.alterDbSchema });
+            await balanceChangeAuthorModel.sync({ alter: this.config.alterDbSchema });
+            await balanceChangeModel.sync({ alter: this.config.alterDbSchema });
+            await balanceChangeUnitDefModel.sync({ alter: this.config.alterDbSchema });
         }
 
         this.schema = {
@@ -303,7 +336,10 @@ export class Database {
             player: playerModel,
             spectator: spectatorModel,
             ai: aiModel,
-            alias: aliasModel
+            alias: aliasModel,
+            balanceChange: balanceChangeModel,
+            balanceChangeAuthor: balanceChangeAuthorModel,
+            balanceChangeUnitDef: balanceChangeUnitDefModel,
         };
 
         if (this.config.createSchemaDiagram) {
