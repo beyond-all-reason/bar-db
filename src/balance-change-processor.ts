@@ -54,6 +54,8 @@ export class BalanceChangeProcessor {
                         console.log(`Balance change processed`);
                     }
                 }
+
+                await this.db.saveBalanceChangesToMemory();
             } catch (err) {
                 //this.config.errorLoggingFunction!(err);
                 console.error(err);

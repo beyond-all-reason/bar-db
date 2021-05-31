@@ -66,43 +66,7 @@ export class Database {
     public async init() {
         await this.initDatabase();
         await this.initSchema();
-        await this.initMemoryStore();
-    }
-
-    public async saveUsersToMemory() {
-        console.time("save users to memory");
-
-        const users = await this.schema.user.findAll({
-            raw: true,
-            attributes: ["id", "username", "countryCode"]
-        });
-
-        await this.memoryStore.set("users", JSON.stringify(users));
-
-        console.timeEnd("save users to memory");
-    }
-
-    public async saveMapsToMemory() {
-        console.time("save maps to memory");
-
-        const maps = await this.schema.map.findAll({
-            raw: true,
-            attributes: ["id", "scriptName"]
-        });
-
-        await this.memoryStore.set("maps", JSON.stringify(maps));
-
-        console.timeEnd("save maps to memory");
-    }
-
-    public async getUsersFromMemory() {
-        const users = await this.memoryStore.get("users");
-        return users;
-    }
-
-    public async getMapsFromMemory() {
-        const maps = await this.memoryStore.get("maps");
-        return maps;
+        await this.initCacheStore();
     }
 
     protected async initDatabase() {
@@ -309,9 +273,9 @@ export class Database {
         spectatorModel.belongsTo(userModel, { foreignKey: "userId" });
 
         balanceChangeAuthorModel.hasMany(balanceChangeModel, { foreignKey: "balanceChangeAuthorId", onDelete: "CASCADE" });
-        balanceChangeModel.belongsTo(balanceChangeAuthorModel, { foreignKey: "balanceChangeAuthorId" });
+        balanceChangeModel.belongsTo(balanceChangeAuthorModel, { foreignKey: "balanceChangeAuthorId", as: "author" });
         
-        balanceChangeModel.hasMany(balanceChangeUnitDefModel, { foreignKey: "balanceChangeId", onDelete: "CASCADE" });
+        balanceChangeModel.hasMany(balanceChangeUnitDefModel, { foreignKey: "balanceChangeId", onDelete: "CASCADE", as: "changes" });
         balanceChangeUnitDefModel.belongsTo(balanceChangeModel, { foreignKey: "balanceChangeId" });
 
         if (this.config.syncModel) {
@@ -350,13 +314,82 @@ export class Database {
         console.timeEnd("schema init");
     }
 
-    protected async initMemoryStore() {
+    protected async initCacheStore() {
         this.memoryStore = new Redis();
 
         if (this.config.initMemoryStore) {
             await this.saveUsersToMemory();
-
             await this.saveMapsToMemory();
+            await this.saveBalanceChangesToMemory();
         }
+    }
+
+    public async saveUsersToMemory() {
+        console.time("save users to memory");
+
+        const results = await this.schema.user.findAll({
+            raw: true,
+            attributes: ["id", "username", "countryCode"]
+        });
+        
+        await this.memoryStore.set("users", JSON.stringify(results));
+
+        console.timeEnd("save users to memory");
+    }
+
+    public async saveMapsToMemory() {
+        console.time("save maps to memory");
+
+        const results = await this.schema.map.findAll({
+            raw: true,
+            attributes: ["id", "scriptName"]
+        });
+
+        await this.memoryStore.set("maps", JSON.stringify(results));
+
+        console.timeEnd("save maps to memory");
+    }
+
+    public async saveBalanceChangesToMemory() {
+        console.time("save balance changes to memory");
+
+        const results = await this.schema.balanceChange.findAll({
+            attributes: ["sha", "date", "message"],
+            include: [
+                {
+                    model: this.schema.balanceChangeAuthor,
+                    attributes: ["name", "img", "url"],
+                    subQuery: false,
+                    as: "author"
+                },
+                {
+                    model: this.schema.balanceChangeUnitDef,
+                    attributes: ["unitDefId", "changes"],
+                    subQuery: false,
+                    as: "changes"
+                }
+            ],
+            order: [["date", "DESC"]],
+            raw: true
+        });
+
+        await this.memoryStore.set("balanceChanges", JSON.stringify(results));
+
+        console.timeEnd("save balance changes to memory");
+    }
+
+    public async getUsersFromMemory() {
+        const results = await this.memoryStore.get("users");
+        return results;
+    }
+
+    public async getMapsFromMemory() {
+        const results = await this.memoryStore.get("maps");
+        return results;
+    }
+
+    public async getBalanceChangesFromMemory() {
+        const results = await this.memoryStore.get("balanceChanges");
+        return results;
     }
 }
