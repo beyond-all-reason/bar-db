@@ -2,23 +2,23 @@ import { Optional, Model, HasManyAddAssociationMixin, HasManyAddAssociationsMixi
 import { BalanceChangeCreationAttributes, BalanceChangeInstance, DemoCreationAttributes } from "..";
 
 export interface BalanceChangeAuthor {
-    balanceChangeAuthorId: number;
+    id: number;
     name: string;
     img: string;
     url: string;
 }
 
-export interface BalanceChangeAuthorCreationAttributes extends Optional<BalanceChangeAuthor, "balanceChangeAuthorId"> { }
+export interface BalanceChangeAuthorCreationAttributes extends Optional<BalanceChangeAuthor, "id"> { }
 
 export interface BalanceChangeAuthorInstance extends Model<BalanceChangeAuthor, BalanceChangeAuthorCreationAttributes>, BalanceChangeAuthor {
     getBalanceChanges: HasManyGetAssociationsMixin<BalanceChangeInstance>;
-    setBalanceChanges: HasManySetAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["balanceChangeAuthorId"]>;
-    addBalanceChanges: HasManyAddAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["balanceChangeAuthorId"]>;
-    addBalanceChange: HasManyAddAssociationMixin<BalanceChangeInstance, BalanceChangeInstance["balanceChangeAuthorId"]>;
+    setBalanceChanges: HasManySetAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["id"]>;
+    addBalanceChanges: HasManyAddAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["id"]>;
+    addBalanceChange: HasManyAddAssociationMixin<BalanceChangeInstance, BalanceChangeInstance["id"]>;
     createBalanceChange: (change: BalanceChangeCreationAttributes) => Promise<BalanceChangeInstance>;
-    removeBalanceChange: HasManyRemoveAssociationMixin<BalanceChangeInstance, BalanceChangeInstance["balanceChangeAuthorId"]>;
-    removeBalanceChanges: HasManyRemoveAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["balanceChangeAuthorId"]>;
-    hasBalanceChange: HasManyHasAssociationMixin<BalanceChangeInstance, BalanceChangeInstance["balanceChangeAuthorId"]>;
-    hasBalanceChanges: HasManyHasAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["balanceChangeAuthorId"]>;
+    removeBalanceChange: HasManyRemoveAssociationMixin<BalanceChangeInstance, BalanceChangeInstance["id"]>;
+    removeBalanceChanges: HasManyRemoveAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["id"]>;
+    hasBalanceChange: HasManyHasAssociationMixin<BalanceChangeInstance, BalanceChangeInstance["id"]>;
+    hasBalanceChanges: HasManyHasAssociationsMixin<BalanceChangeInstance, BalanceChangeInstance["id"]>;
     countBalanceChanges: HasManyCountAssociationsMixin;
 }

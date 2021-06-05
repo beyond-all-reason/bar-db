@@ -224,14 +224,14 @@ export class Database {
         });
 
         const balanceChangeAuthorModel = this.sequelize.define<BalanceChangeAuthorInstance>("BalanceChangeAuthor", {
-            balanceChangeAuthorId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             name: { type: DataTypes.STRING },
             img: { type: DataTypes.STRING },
             url: { type: DataTypes.STRING },
         });
 
         const balanceChangeModel = this.sequelize.define<BalanceChangeInstance>("BalanceChange", {
-            balanceChangeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             sha: { type: DataTypes.STRING, unique: true },
             url: { type: DataTypes.STRING },
             date: { type: DataTypes.DATE },
@@ -241,7 +241,7 @@ export class Database {
         });
 
         const balanceChangeUnitDefModel = this.sequelize.define<BalanceChangeUnitDefInstance>("BalanceChangeUnitDef", {
-            balanceChangeUnitDefId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             unitDefId: { type: DataTypes.STRING },
             changes: { type: DataTypes.JSON },
         }, {

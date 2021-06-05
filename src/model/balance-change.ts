@@ -4,30 +4,30 @@ import { BalanceChangeAuthorCreationAttributes, BalanceChangeAuthorInstance } fr
 import { BalanceChangeUnitDef, BalanceChangeUnitDefCreationAttributes, BalanceChangeUnitDefInstance } from "./balance-change-unit-def";
 
 export interface BalanceChange {
-    balanceChangeId: number;
+    id: number;
     sha: string;
     url: string;
     date: Date;
     message: string;
 }
 
-export interface BalanceChangeCreationAttributes extends Optional<BalanceChange, "balanceChangeId"> { }
+export interface BalanceChangeCreationAttributes extends Optional<BalanceChange, "id"> { }
 
 export interface BalanceChangeInstance extends Model<BalanceChange, BalanceChangeCreationAttributes>, BalanceChange {
     balanceChangeAuthorId: number;
 
     getBalanceChangeAuthor: BelongsToGetAssociationMixin<BalanceChangeAuthorInstance>;
-    setBalanceChangeAuthor: BelongsToSetAssociationMixin<BalanceChangeAuthorInstance, BalanceChangeAuthorInstance["balanceChangeAuthorId"]>;
+    setBalanceChangeAuthor: BelongsToSetAssociationMixin<BalanceChangeAuthorInstance, MapInstance["id"]>;
     createBalanceChangeAuthor: (author: BalanceChangeAuthorCreationAttributes) => Promise<BalanceChangeAuthorInstance>;
 
     getBalanceChangeUnitDefs: HasManyGetAssociationsMixin<BalanceChangeUnitDefInstance>;
-    setBalanceChangeUnitDefs: HasManySetAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["balanceChangeUnitDefId"]>;
-    addBalanceChangeUnitDef: HasManyAddAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["balanceChangeUnitDefId"]>;
-    addBalanceChangeUnitDefs: HasManyAddAssociationMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["balanceChangeUnitDefId"]>;
+    setBalanceChangeUnitDefs: HasManySetAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["id"]>;
+    addBalanceChangeUnitDef: HasManyAddAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["id"]>;
+    addBalanceChangeUnitDefs: HasManyAddAssociationMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["id"]>;
     createBalanceChangeUnitDef: (unitDef: BalanceChangeUnitDefCreationAttributes) => Promise<BalanceChangeUnitDefInstance>;
-    removeBalanceChangeUnitDef: HasManyRemoveAssociationMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["balanceChangeUnitDefId"]>;
-    removeBalanceChangeUnitDefs: HasManyRemoveAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["balanceChangeUnitDefId"]>;
-    hasBalanceChangeUnitDef: HasManyHasAssociationMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["balanceChangeUnitDefId"]>;
-    hasBalanceChangeUnitDefs: HasManyHasAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["balanceChangeUnitDefId"]>;
+    removeBalanceChangeUnitDef: HasManyRemoveAssociationMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["id"]>;
+    removeBalanceChangeUnitDefs: HasManyRemoveAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["id"]>;
+    hasBalanceChangeUnitDef: HasManyHasAssociationMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["id"]>;
+    hasBalanceChangeUnitDefs: HasManyHasAssociationsMixin<BalanceChangeUnitDefInstance, BalanceChangeUnitDefInstance["id"]>;
     countBalanceChangeUnitDefs: HasManyCountAssociationsMixin;
 }
