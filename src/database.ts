@@ -56,8 +56,7 @@ export class Database {
     public sequelize!: Sequelize;
     public schema!: DatabaseSchema;
     public memoryStore!: Redis.Redis;
-
-    protected config: DatabaseConfig;
+    public config: DatabaseConfig;
 
     constructor(config: DatabaseConfig) {
         this.config = Object.assign({}, defaultDatabaseConfig, config);
@@ -341,7 +340,7 @@ export class Database {
 
         const results = await this.schema.map.findAll({
             raw: true,
-            attributes: ["id", "scriptName"]
+            attributes: ["id", "scriptName", "fileName"]
         });
 
         await this.memoryStore.set("maps", JSON.stringify(results));
