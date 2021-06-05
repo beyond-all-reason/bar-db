@@ -44,7 +44,8 @@ export class BalanceChangeProcessor {
                 console.log(`Polling for balance changes...`);
 
                 const changes = await this.balanceChangeFetcher.fetchLatestBalanceChanges({
-                    excludeShas: this.processedShas
+                    excludeShas: this.processedShas,
+                    page: 1
                 });
 
                 for (const change of changes) {
@@ -82,9 +83,10 @@ export class BalanceChangeProcessor {
         });
 
         for (const change of commit.changes) {
-            const unitDefChange = await balanceChange.createBalanceChangeUnitDef({
+            const unitDefChange = await balanceChange.createChange({
                 unitDefId: change.propertyId,
-                changes: change
+                changes: change,
+                scav: change.isScav ?? false
             });
         }
 

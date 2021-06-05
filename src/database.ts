@@ -242,6 +242,7 @@ export class Database {
         const balanceChangeUnitDefModel = this.sequelize.define<BalanceChangeUnitDefInstance>("BalanceChangeUnitDef", {
             id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             unitDefId: { type: DataTypes.STRING },
+            scav: { type: DataTypes.BOOLEAN },
             changes: { type: DataTypes.JSON },
         }, {
             indexes: [{ fields: ["unitDefId"] }]

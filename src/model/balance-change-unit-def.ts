@@ -4,6 +4,7 @@ import { Optional, Model } from "sequelize/types";
 export interface BalanceChangeUnitDef {
     id: number;
     unitDefId: string;
+    scav: boolean;
     changes: ObjectChanges;
 }
 
