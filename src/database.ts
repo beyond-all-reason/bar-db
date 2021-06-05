@@ -224,14 +224,14 @@ export class Database {
         });
 
         const balanceChangeAuthorModel = this.sequelize.define<BalanceChangeAuthorInstance>("BalanceChangeAuthor", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            balanceChangeAuthorId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             name: { type: DataTypes.STRING },
             img: { type: DataTypes.STRING },
             url: { type: DataTypes.STRING },
         });
 
         const balanceChangeModel = this.sequelize.define<BalanceChangeInstance>("BalanceChange", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            balanceChangeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             sha: { type: DataTypes.STRING, unique: true },
             url: { type: DataTypes.STRING },
             date: { type: DataTypes.DATE },
@@ -241,7 +241,7 @@ export class Database {
         });
 
         const balanceChangeUnitDefModel = this.sequelize.define<BalanceChangeUnitDefInstance>("BalanceChangeUnitDef", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+            balanceChangeUnitDefId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             unitDefId: { type: DataTypes.STRING },
             changes: { type: DataTypes.JSON },
         }, {
@@ -320,7 +320,6 @@ export class Database {
         if (this.config.initMemoryStore) {
             await this.saveUsersToMemory();
             await this.saveMapsToMemory();
-            await this.saveBalanceChangesToMemory();
         }
     }
 
@@ -348,34 +347,6 @@ export class Database {
         await this.memoryStore.set("maps", JSON.stringify(results));
 
         console.timeEnd("save maps to memory");
-    }
-
-    public async saveBalanceChangesToMemory() {
-        console.time("save balance changes to memory");
-
-        const results = await this.schema.balanceChange.findAll({
-            attributes: ["sha", "date", "message"],
-            include: [
-                {
-                    model: this.schema.balanceChangeAuthor,
-                    attributes: ["name", "img", "url"],
-                    subQuery: false,
-                    as: "author"
-                },
-                {
-                    model: this.schema.balanceChangeUnitDef,
-                    attributes: ["unitDefId", "changes"],
-                    subQuery: false,
-                    as: "changes"
-                }
-            ],
-            order: [["date", "DESC"]],
-            raw: true
-        });
-
-        await this.memoryStore.set("balanceChanges", JSON.stringify(results));
-
-        console.timeEnd("save balance changes to memory");
     }
 
     public async getUsersFromMemory() {
