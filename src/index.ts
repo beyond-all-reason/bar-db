@@ -2,7 +2,6 @@ export * from "./bar-db";
 export * from "./database";
 export * from "./demo-processor";
 export * from "./map-processor";
-
 export * from "./model/ai";
 export * from "./model/alias";
 export * from "./model/ally-team";

@@ -1,5 +1,5 @@
 import { ObjectChanges } from "bar-balance-changes";
-import { Optional, Model } from "sequelize/types";
+import { Model, Optional } from "sequelize/types";
 
 export interface BalanceChangeUnitDef {
     id: number;

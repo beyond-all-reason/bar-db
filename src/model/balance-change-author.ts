@@ -1,5 +1,6 @@
-import { Optional, Model, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin } from "sequelize/types";
-import { BalanceChangeCreationAttributes, BalanceChangeInstance, DemoCreationAttributes } from "..";
+import { HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional } from "sequelize/types";
+
+import { BalanceChangeCreationAttributes, BalanceChangeInstance } from "..";
 
 export interface BalanceChangeAuthor {
     id: number;

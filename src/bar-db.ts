@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import { format } from "util";
 import { Optionals } from "jaz-ts-utils";
+import { format } from "util";
 
 import { BalanceChangeProcessor, BalanceChangeProcessorConfig } from "./balance-change-processor";
 import { Database, DatabaseConfig } from "./database";
@@ -29,19 +29,19 @@ export class BARDB {
     constructor(config: BARDBConfig) {
         this.config = Object.assign({}, defaultBARDBConfig, config);
 
-        if (!fs.existsSync("logs")){
+        if (!fs.existsSync("logs")) {
             fs.mkdirSync("logs");
         }
-        const writeStream = fs.createWriteStream("logs/error.log", { flags: 'w' });
+        const writeStream = fs.createWriteStream("logs/error.log", { flags: "w" });
         //this.config.errorLoggingFunction = (err) => writeStream.write(err);
 
         global.console.error = (message?: any) => {
             writeStream.write(format(message) + "\n");
-        }
+        };
 
         this.db = new Database(this.config.db);
 
-        this.mapProcessor = new MapProcessor({ 
+        this.mapProcessor = new MapProcessor({
             db: this.db,
             dir: "maps",
             fileExt: [".sd7", ".sdz"],

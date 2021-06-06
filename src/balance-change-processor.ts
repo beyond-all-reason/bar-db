@@ -1,5 +1,6 @@
-import { BalanceChangeFetcher, BalanceChange } from "bar-balance-changes";
+import { BalanceChange, BalanceChangeFetcher } from "bar-balance-changes";
 import { delay, Optionals } from "jaz-ts-utils";
+
 import { Database } from "./database";
 
 export interface BalanceChangeProcessorConfig {
@@ -39,28 +40,28 @@ export class BalanceChangeProcessor {
     }
 
     public async processBalanceChanges() {
-        while(true) {
+        while (true) {
             try {
-                console.log(`Polling for balance changes...`);
+                console.log("Polling for balance changes...");
 
                 const changes = await this.balanceChangeFetcher.fetchLatestBalanceChanges({
                     excludeShas: this.processedShas,
-                    page: 1
+                    page: 0
                 });
 
                 for (const change of changes) {
-                    if (!this.processedShas.includes(change.sha)){
+                    if (!this.processedShas.includes(change.sha)) {
                         console.log(`Processing balance change: ${change.sha} - ${change.message}`);
                         await this.saveChange(change);
-                        console.log(`Balance change processed`);
+                        console.log("Balance change processed");
                     }
                 }
             } catch (err) {
                 //this.config.errorLoggingFunction!(err);
                 console.error(err);
-                console.log(`There was an error processing balance changes`);
+                console.log("There was an error processing balance changes");
             }
-    
+
             await delay(this.config.pollIntervalMs!);
         }
     }

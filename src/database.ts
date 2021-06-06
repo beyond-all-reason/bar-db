@@ -9,7 +9,7 @@ import { AliasInstance } from "./model/alias";
 import { AllyTeamInstance } from "./model/ally-team";
 import { BalanceChangeInstance } from "./model/balance-change";
 import { BalanceChangeAuthorInstance } from "./model/balance-change-author";
-import { BalanceChangeUnitDef, BalanceChangeUnitDefInstance } from "./model/balance-change-unit-def";
+import { BalanceChangeUnitDefInstance } from "./model/balance-change-unit-def";
 import { DemoInstance } from "./model/demo";
 import { MapInstance } from "./model/map";
 import { PlayerInstance } from "./model/player";
@@ -274,7 +274,7 @@ export class Database {
 
         balanceChangeAuthorModel.hasMany(balanceChangeModel, { foreignKey: "balanceChangeAuthorId", onDelete: "CASCADE" });
         balanceChangeModel.belongsTo(balanceChangeAuthorModel, { foreignKey: "balanceChangeAuthorId", as: "author" });
-        
+
         balanceChangeModel.hasMany(balanceChangeUnitDefModel, { foreignKey: "balanceChangeId", onDelete: "CASCADE", as: "changes" });
         balanceChangeUnitDefModel.belongsTo(balanceChangeModel, { foreignKey: "balanceChangeId" });
 
@@ -330,7 +330,7 @@ export class Database {
             raw: true,
             attributes: ["id", "username", "countryCode"]
         });
-        
+
         await this.memoryStore.set("users", JSON.stringify(results));
 
         console.timeEnd("save users to memory");

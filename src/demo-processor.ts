@@ -110,7 +110,7 @@ export class DemoProcessor extends FileProcessor {
                         skillUncertainty: playerOrSpecData.skillUncertainty
                     }
                 });
-    
+
                 user.username = playerOrSpecData.name;
                 user.countryCode = playerOrSpecData.countryCode!;
                 user.rank = playerOrSpecData.rank;
@@ -119,13 +119,13 @@ export class DemoProcessor extends FileProcessor {
                     user.trueSkill = Number(playerOrSpecData.skill);
                 }
                 user.skillUncertainty = playerOrSpecData.skillUncertainty;
-    
+
                 await user.save();
-    
+
                 const [ alias ] = await user.getAliases({
                     where: { alias: playerOrSpecData.name }
                 });
-    
+
                 if (!alias) {
                     await user.createAlias({
                         alias: playerOrSpecData.name
