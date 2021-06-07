@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import { Optionals } from "jaz-ts-utils";
-import { Config } from "src/config-interface";
+import { Config } from "config";
 import { format } from "util";
 
-import { BalanceChangeProcessor, BalanceChangeProcessorConfig } from "./balance-change-processor";
+import { BalanceChangeProcessor } from "./balance-change-processor";
 import { Database } from "./database";
 import { DemoProcessor } from "./demo-processor";
 import { MapProcessor } from "./map-processor";

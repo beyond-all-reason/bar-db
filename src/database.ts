@@ -1,21 +1,20 @@
 import { promises as fs } from "fs";
 import Redis from "ioredis";
-import { Optionals } from "jaz-ts-utils";
 import pg from "pg";
 import { DataTypes, ModelCtor, Sequelize } from "sequelize";
-import { Config, defaultConfig } from "src/config-interface";
+import { Config, defaultConfig } from "./config";
 
-import { AIInstance } from "./model/ai";
-import { AliasInstance } from "./model/alias";
-import { AllyTeamInstance } from "./model/ally-team";
-import { BalanceChangeInstance } from "./model/balance-change";
-import { BalanceChangeAuthorInstance } from "./model/balance-change-author";
-import { BalanceChangeUnitDefInstance } from "./model/balance-change-unit-def";
-import { DemoInstance } from "./model/demo";
-import { MapInstance } from "./model/map";
-import { PlayerInstance } from "./model/player";
-import { SpectatorInstance } from "./model/spectator";
-import { UserInstance } from "./model/user";
+import { AIInstance } from "model/ai";
+import { AliasInstance } from "model/alias";
+import { AllyTeamInstance } from "model/ally-team";
+import { BalanceChangeInstance } from "model/balance-change";
+import { BalanceChangeAuthorInstance } from "model/balance-change-author";
+import { BalanceChangeUnitDefInstance } from "model/balance-change-unit-def";
+import { DemoInstance } from "model/demo";
+import { MapInstance } from "model/map";
+import { PlayerInstance } from "model/player";
+import { SpectatorInstance } from "model/spectator";
+import { UserInstance } from "model/user";
 
 const sequelizeErd = require("sequelize-erd");
 
