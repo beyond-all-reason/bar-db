@@ -16,5 +16,7 @@
         "auth": "1234",
         "pollIntervalMs": 1800000
     },
+    "mapsDir": "/var/www/maps",
+    "demosDir": "/var/www/demos",
     "verbose": true
 }

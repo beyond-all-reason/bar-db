@@ -1,21 +1,18 @@
 import * as fs from "fs";
 import { Optionals } from "jaz-ts-utils";
+import { Config } from "src/config-interface";
 import { format } from "util";
 
 import { BalanceChangeProcessor, BalanceChangeProcessorConfig } from "./balance-change-processor";
-import { Database, DatabaseConfig } from "./database";
+import { Database } from "./database";
 import { DemoProcessor } from "./demo-processor";
 import { MapProcessor } from "./map-processor";
 
-export interface BARDBConfig {
-    db: DatabaseConfig;
-    balanceChanges: BalanceChangeProcessorConfig;
-    verbose?: boolean;
+export interface BARDBConfig extends Config {
     errorLoggingFunction?: (err: string) => void;
 }
 
 const defaultBARDBConfig: Optionals<BARDBConfig> = {
-    verbose: true,
     errorLoggingFunction: console.error
 };
 
@@ -43,14 +40,14 @@ export class BARDB {
 
         this.mapProcessor = new MapProcessor({
             db: this.db,
-            dir: "maps",
+            dir: this.config.mapsDir,
             fileExt: [".sd7", ".sdz"],
             verbose: this.config.verbose
         });
 
         this.demoProcessor = new DemoProcessor({
             db: this.db,
-            dir: "demos",
+            dir: this.config.demosDir,
             fileExt: [".sdfz"],
             verbose: this.config.verbose
         });

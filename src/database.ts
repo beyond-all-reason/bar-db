@@ -3,6 +3,7 @@ import Redis from "ioredis";
 import { Optionals } from "jaz-ts-utils";
 import pg from "pg";
 import { DataTypes, ModelCtor, Sequelize } from "sequelize";
+import { Config, defaultConfig } from "src/config-interface";
 
 import { AIInstance } from "./model/ai";
 import { AliasInstance } from "./model/alias";
@@ -17,26 +18,6 @@ import { SpectatorInstance } from "./model/spectator";
 import { UserInstance } from "./model/user";
 
 const sequelizeErd = require("sequelize-erd");
-
-export interface DatabaseConfig {
-    host: string;
-    port: number;
-    username: string;
-    password: string;
-    createSchemaDiagram?: boolean;
-    logSQL?: boolean;
-    alterDbSchema?: boolean;
-    syncModel?: boolean;
-    initMemoryStore?: boolean;
-}
-
-const defaultDatabaseConfig: Optionals<DatabaseConfig> = {
-    createSchemaDiagram: false,
-    logSQL: false,
-    alterDbSchema: false,
-    syncModel: true,
-    initMemoryStore: true,
-};
 
 export interface DatabaseSchema {
     demo: ModelCtor<DemoInstance>;
@@ -56,10 +37,10 @@ export class Database {
     public sequelize!: Sequelize;
     public schema!: DatabaseSchema;
     public memoryStore!: Redis.Redis;
-    public config: DatabaseConfig;
+    public config: Config["db"];
 
-    constructor(config: DatabaseConfig) {
-        this.config = Object.assign({}, defaultDatabaseConfig, config);
+    constructor(config: Config["db"]) {
+        this.config = Object.assign({}, defaultConfig.db, config);
     }
 
     public async init() {
