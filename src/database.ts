@@ -194,7 +194,7 @@ export class Database {
             trueSkill: { type: DataTypes.FLOAT, allowNull: true },
             skillUncertainty: { type: DataTypes.FLOAT },
         }, {
-            indexes: [{ unique: true, fields: ["username"] }]
+            indexes: [{ fields: ["username"] }]
         });
 
         const aliasModel = this.sequelize.define<AliasInstance>("Alias", {
