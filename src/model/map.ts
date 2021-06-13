@@ -1,4 +1,6 @@
+import { DeepPartial } from "jaz-ts-utils";
 import { HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional } from "sequelize";
+import { MapInfo } from "spring-map-parser";
 
 import { DemoCreationAttributes, DemoInstance } from "./demo";
 
@@ -32,6 +34,7 @@ export interface Map {
     voidWater?: boolean;
     voidGround?: boolean;
     autoShowMetal?: boolean;
+    mapInfo?: DeepPartial<MapInfo>;
 }
 
 export interface MapCreationAttributes extends Optional<Map, "id"> { }

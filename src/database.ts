@@ -112,7 +112,8 @@ export class Database {
             notDeformable: { type: DataTypes.BOOLEAN },
             voidWater: { type: DataTypes.BOOLEAN },
             voidGround: { type: DataTypes.BOOLEAN },
-            autoShowMetal: { type: DataTypes.BOOLEAN }
+            autoShowMetal: { type: DataTypes.BOOLEAN },
+            mapInfo: { type: DataTypes.JSON }
         }, {
             indexes: [
                 {
