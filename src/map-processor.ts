@@ -19,7 +19,7 @@ export class MapProcessor extends FileProcessor {
     protected async processFile(filePath: string) {
         const mapData = await this.mapParser.parseMap(filePath);
 
-        const destDir = `${this.config.dir}/processed/${mapData.fileName}`;
+        const destDir = `${this.config.dir}/processed/${mapData.info.fileName}`;
         await fs.mkdir(destDir, { recursive: true });
 
         await mapData.heightMap.writeAsync(`${destDir}/height.png`);
@@ -31,8 +31,8 @@ export class MapProcessor extends FileProcessor {
         await mapData.textureMap!.clone().cover(250, 250).quality(80).writeAsync(`${destDir}/texture-thumb.jpg`);
 
         const newMap = {
-            fileName: mapData.fileName,
-            scriptName: mapData.scriptName.trim(),
+            fileName: mapData.info.fileName,
+            scriptName: mapData.info.scriptName.trim(),
             description: mapData.info.description,
             mapHardness: mapData.info.mapHardness,
             gravity: mapData.info.gravity,
@@ -42,10 +42,10 @@ export class MapProcessor extends FileProcessor {
             minWind: mapData.info.minWind,
             maxWind: mapData.info.maxWind,
             startPositions: mapData.info.startPositions,
-            width: mapData.meta.mapWidthUnits * 2,
-            height: mapData.meta.mapHeightUnits * 2,
-            minDepth: mapData.meta.minDepth,
-            maxDepth: mapData.meta.maxDepth,
+            width: mapData.info.mapWidthUnits * 2,
+            height: mapData.info.mapHeightUnits * 2,
+            minDepth: mapData.info.minDepth,
+            maxDepth: mapData.info.maxDepth,
             name: mapData.info.name,
             shortname: mapData.info.shortname,
             author: mapData.info.author,
@@ -58,7 +58,7 @@ export class MapProcessor extends FileProcessor {
             autoShowMetal: mapData.info.autoShowMetal,
         };
 
-        const storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.scriptName.trim() } });
+        const storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.info.scriptName.trim() } });
 
         if (storedMap) {
             if (this.config.verbose) {
