@@ -12,7 +12,7 @@ export interface BARDBConfig extends Config {
     errorLoggingFunction?: (err: string) => void;
 }
 
-const defaultBARDBConfig: Optionals<BARDBConfig> = {
+const defaultBARDBConfig: Partial<BARDBConfig> = {
     errorLoggingFunction: console.error
 };
 
@@ -42,14 +42,16 @@ export class BARDB {
             db: this.db,
             dir: this.config.mapsDir,
             fileExt: [".sd7", ".sdz"],
-            verbose: this.config.verbose
+            verbose: this.config.verbose,
+            objectStorage: this.config.objectStorage
         });
 
         this.demoProcessor = new DemoProcessor({
             db: this.db,
             dir: this.config.demosDir,
             fileExt: [".sdfz"],
-            verbose: this.config.verbose
+            verbose: this.config.verbose,
+            objectStorage: this.config.objectStorage
         });
 
         this.balanceChangeProcessor = new BalanceChangeProcessor({ ...this.config.balanceChanges, errorLoggingFunction: this.config.errorLoggingFunction }, this.db);

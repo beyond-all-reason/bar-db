@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { promises as fs } from "fs";
 import Jimp from "jimp";
 import { MapParser, StartPos } from "spring-map-parser";
@@ -76,5 +77,9 @@ export class MapProcessor extends FileProcessor {
         }
 
         return destDir;
+    }
+
+    protected async uploadFileToObjectStorage(filePath: string, prefix: string = "/") {
+        return super.uploadFileToObjectStorage(filePath, "/maps");
     }
 }

@@ -19,6 +19,12 @@ export type Config = {
     mapsDir: string;
     demosDir: string;
     verbose: boolean;
+    objectStorage?: {
+        authUrl: string;
+        containerUrl: string;
+        username: string;
+        password: string;
+    };
 };
 
 export const defaultConfig: Config = {

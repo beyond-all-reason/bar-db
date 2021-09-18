@@ -182,7 +182,9 @@ export class DemoProcessor extends FileProcessor {
         }
 
         await this.db.saveUsersToMemory();
+    }
 
-        return;
+    protected async uploadFileToObjectStorage(filePath: string, prefix: string = "/") {
+        return super.uploadFileToObjectStorage(filePath, "/demos");
     }
 }

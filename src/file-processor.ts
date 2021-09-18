@@ -1,6 +1,7 @@
-import { promises as fs } from "fs";
+import * as fs from "fs";
 import { delay } from "jaz-ts-utils";
 import * as path from "path";
+import axios, { AxiosResponse } from "axios";
 
 import { Database } from "./database";
 
@@ -10,6 +11,12 @@ export interface FileProcessorConfig {
     fileExt: string[];
     verbose?: boolean;
     filePollMs?: number;
+    objectStorage?: {
+        authUrl: string;
+        containerUrl: string;
+        username: string;
+        password: string;
+    };
 }
 
 const defaultFileProcessorConfig: Partial<FileProcessorConfig> = {
@@ -19,43 +26,64 @@ const defaultFileProcessorConfig: Partial<FileProcessorConfig> = {
 
 export abstract class FileProcessor {
     protected config: FileProcessorConfig;
+    protected authToken: string = "123";
 
     constructor(config: FileProcessorConfig) {
         this.config = Object.assign({}, defaultFileProcessorConfig, config);
     }
 
     public async init() {
-        await fs.mkdir(`${this.config.dir}/processed`, { recursive: true });
-        await fs.mkdir(`${this.config.dir}/unprocessed`, { recursive: true });
-        await fs.mkdir(`${this.config.dir}/errored`, { recursive: true });
+        await fs.promises.mkdir(`${this.config.dir}/processed`, { recursive: true });
+        await fs.promises.mkdir(`${this.config.dir}/unprocessed`, { recursive: true });
+        await fs.promises.mkdir(`${this.config.dir}/errored`, { recursive: true });
     }
 
     public async processFiles() {
         const fileName = await this.getUnprocessedFile();
 
         if (fileName) {
-            const unprocessedDemoPath = path.join(this.config.dir, "unprocessed", fileName);
-            const processedDemoPath = path.join(this.config.dir, "processed", fileName);
-            const erroredDemoPath = path.join(this.config.dir, "errored", fileName);
+            const unprocessedPath = path.join(this.config.dir, "unprocessed", fileName);
+            const processedPath = path.join(this.config.dir, "processed", fileName);
+            const erroredPath = path.join(this.config.dir, "errored", fileName);
 
             try {
                 console.log(`Processing file: ${fileName}`);
                 console.time("process file");
-                const outPath = await this.processFile(unprocessedDemoPath);
-                if (outPath && outPath !== "delete") {
-                    await fs.rename(unprocessedDemoPath, path.join(outPath, fileName));
-                } else if (outPath === "delete") {
-                    console.log(`Deleting replay: ${fileName}.`);
-                    await fs.unlink(unprocessedDemoPath);
-                } else {
-                    await fs.rename(unprocessedDemoPath, processedDemoPath);
+                const outPath = await this.processFile(unprocessedPath);
+
+                try {
+                    if (!this.config.objectStorage) {
+                        throw new Error("Object storage not defined");
+                    }
+
+                    const response = await this.uploadFileToObjectStorage(unprocessedPath);
+
+                    if (response && response.status === 201 || response.status === 200) {
+                        console.log(`${fileName} uploaded to object storage`);
+                        await fs.promises.unlink(unprocessedPath);
+                    }
+                } catch (err) {
+                    if (this.config.objectStorage) {
+                        console.log("Error uploading to object storage");
+                        console.error(err);
+                    }
+
+                    if (outPath && outPath !== "delete") {
+                        await fs.promises.rename(unprocessedPath, path.join(outPath, fileName));
+                    } else if (outPath === "delete") {
+                        console.log(`Deleting file: ${fileName}.`);
+                        await fs.promises.unlink(unprocessedPath);
+                    } else {
+                        await fs.promises.rename(unprocessedPath, processedPath);
+                    }
                 }
+
                 console.timeEnd("process file");
             } catch (err) {
                 console.log(`Failed to process file: ${fileName}.`);
                 console.error(err);
 
-                await fs.rename(unprocessedDemoPath, erroredDemoPath);
+                await fs.promises.rename(unprocessedPath, erroredPath);
             }
         } else {
             await delay(this.config.filePollMs!);
@@ -70,7 +98,69 @@ export abstract class FileProcessor {
 
     protected async getUnprocessedFile() : Promise<string | undefined> {
         const unprocessedPath = path.join(this.config.dir, "unprocessed");
-        const files = await fs.readdir(unprocessedPath);
+        const files = await fs.promises.readdir(unprocessedPath);
         return files.find(file => this.config.fileExt.includes(path.extname(file)));
+    }
+
+    protected async uploadFileToObjectStorage(filePath: string, prefix: string = "/") : Promise<AxiosResponse<any>> {
+        try {
+            const fileName = path.basename(filePath);
+
+            const response = await axios({
+                method: "put",
+                url: `${this.config.objectStorage?.containerUrl}${prefix}/${fileName}`,
+                headers: {
+                    "X-Auth-Token": this.authToken
+                },
+                data: fs.createReadStream(filePath),
+                maxContentLength: Infinity,
+                maxBodyLength: Infinity,
+            });
+
+            return response;
+        } catch (err: any) {
+            if (err?.response?.status === 401) {
+                console.log("Fetching new auth token for object storage");
+                await this.fetchNewAuthToken();
+                return await this.uploadFileToObjectStorage(filePath, prefix);
+            }
+
+            throw err;
+        }
+    }
+
+    protected async fetchNewAuthToken() : Promise<void> {
+        const response = await axios({
+            method: "post",
+            url: `${this.config.objectStorage?.authUrl}/v3/auth/tokens`,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: {
+                auth: {
+                    identity: {
+                        methods: [
+                            "password"
+                        ],
+                        password: {
+                            user: {
+                                name: this.config.objectStorage?.username,
+                                domain: {
+                                    name: "Default"
+                                },
+                                password: this.config.objectStorage?.password
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    
+        if (response.status === 201 || response.status === 200) {
+            this.authToken = response.headers["x-subject-token"];
+        } else {
+            console.error(response);
+            throw new Error("Unable to get auth token");
+        }
     }
 }
