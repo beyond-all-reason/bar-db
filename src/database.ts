@@ -90,6 +90,7 @@ export class Database {
             id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             scriptName: { type: DataTypes.STRING, allowNull: false },
             fileName: { type: DataTypes.STRING },
+            fileNameWithExt: { type: DataTypes.STRING },
             description: { type: DataTypes.TEXT },
             mapHardness: { type: DataTypes.FLOAT },
             gravity: { type: DataTypes.FLOAT },

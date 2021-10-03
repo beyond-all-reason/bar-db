@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import Jimp from "jimp";
 import { SpringMap } from "model/map";
 import { MapParser, StartPos } from "spring-map-parser";
+import * as path from "path";
 
 import { Database } from "./database";
 import { FileProcessor, FileProcessorConfig } from "./file-processor";
@@ -43,6 +44,7 @@ export class MapProcessor extends FileProcessor {
 
         const newMap: Omit<SpringMap, "id"> = {
             fileName: mapData.fileName,
+            fileNameWithExt: mapData.fileNameWithExt,
             scriptName: mapData.scriptName.trim(),
             description: mapData.mapInfo?.description || mapData.smd?.description || null,
             mapHardness: mapData.mapInfo?.maphardness ?? mapData.smd?.mapHardness,

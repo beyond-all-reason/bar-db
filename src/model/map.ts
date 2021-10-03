@@ -8,6 +8,7 @@ export interface SpringMap {
     id: number;
     scriptName: string;
     fileName?: string;
+    fileNameWithExt?: string;
     description?: string | null;
     mapHardness?: number;
     gravity?: number;
