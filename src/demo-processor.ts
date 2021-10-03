@@ -20,10 +20,8 @@ export class DemoProcessor extends FileProcessor {
         const fileBytes1 = (await fs.promises.stat(filePath)).size;
         const fileMB1 = fileBytes1 / 1048576;
         if (fileMB1 > 20) { // sdfz-demo-parser isn't efficient enough with memory to handle demos larger than 20MB atm
-            if (this.config.verbose) {
-                console.log("File over 20MB, ignoring and deleting.");
-                return "delete";
-            }
+            console.log(`File over ${fileMB1}MB, ignoring and deleting.`);
+            return "delete";
         }
 
         const demoParser = new DemoParser();
@@ -42,7 +40,7 @@ export class DemoProcessor extends FileProcessor {
             where: { id: demoData.header.gameId }
         });
 
-        if (demoExisted && this.config.verbose) {
+        if (demoExisted) {
             console.log("Demo already processed. Deleting and reprocessing...");
         }
 

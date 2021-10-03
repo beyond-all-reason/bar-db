@@ -48,7 +48,7 @@ export abstract class FileProcessor {
             const processedPath = path.join(this.config.dir, "processed", fileName);
             const erroredPath = path.join(this.config.dir, "errored", fileName);
 
-            console.log(`Processing file: ${fileName}`);
+            console.log(`processing file: ${fileName}`);
             console.time("process file");
             
             try {
@@ -62,39 +62,33 @@ export abstract class FileProcessor {
                         if (response && response.status === 201 || response.status === 200) {
                             console.log(`${fileName} uploaded to object storage`);
                         }
-
-                        await fs.promises.unlink(unprocessedPath);
                     } catch (err) {
-                        console.log("Error uploading to object storage");
+                        console.log("error uploading to object storage");
                         console.log(err);
-                        await fs.promises.rename(unprocessedPath, erroredPath);
+                        await fs.promises.copyFile(unprocessedPath, erroredPath);
                     }
                 }
 
                 if (this.config.storeFile === "internal" || this.config.storeFile === "both") {
-                    try {
-                        console.log("storing file internally");
-                        if (outPath && outPath !== "delete") {
-                            await fs.promises.rename(unprocessedPath, path.join(outPath, fileName));
-                        } else if (outPath === "delete") {
-                            console.log(`Deleting file: ${fileName}.`);
-                            await fs.promises.unlink(unprocessedPath);
-                        } else {
-                            await fs.promises.rename(unprocessedPath, processedPath);
-                        }
-                    } catch (err) {
-                        console.log("Error storing internally");
-                        console.log(err);
-                        await fs.promises.rename(unprocessedPath, erroredPath);
+                    console.log("storing file internally");
+                    if (outPath && outPath !== "delete") {
+                        await fs.promises.copyFile(unprocessedPath, path.join(outPath, fileName));
+                    } else if (outPath === "delete") {
+                        
+                    } else {
+                        await fs.promises.copyFile(unprocessedPath, processedPath);
                     }
                 }
 
                 console.timeEnd("process file");
             } catch (err) {
-                console.log("Error processing file");
+                console.log("error processing file");
                 console.log(err);
                 await fs.promises.rename(unprocessedPath, erroredPath);
             }
+
+            console.log(`deleting file: ${unprocessedPath}`);
+            await fs.promises.unlink(unprocessedPath);
         } else {
             await delay(this.config.filePollMs!);
         }
