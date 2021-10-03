@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { BARDBConfig } from "config";
+import { BARDBConfig } from "bar-db-config";
 import * as fs from "fs";
 import yargs from "yargs";
 

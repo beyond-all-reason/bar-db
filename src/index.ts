@@ -1,4 +1,4 @@
-export * from "./config";
+export * from "./bar-db-config";
 export * from "./bar-db";
 export * from "./database";
 export * from "./demo-processor";

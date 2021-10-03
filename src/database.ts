@@ -2,19 +2,19 @@ import { promises as fs } from "fs";
 import Redis from "ioredis";
 import pg from "pg";
 import { DataTypes, ModelCtor, Sequelize } from "sequelize";
-import { BARDBConfig, defaultBARDBConfig } from "./config";
 
-import { AIInstance } from "model/ai";
-import { AliasInstance } from "model/alias";
-import { AllyTeamInstance } from "model/ally-team";
-import { BalanceChangeInstance } from "model/balance-change";
-import { BalanceChangeAuthorInstance } from "model/balance-change-author";
-import { BalanceChangeUnitDefInstance } from "model/balance-change-unit-def";
-import { DemoInstance } from "model/demo";
-import { SpringMapInstance } from "model/spring-map";
-import { PlayerInstance } from "model/player";
-import { SpectatorInstance } from "model/spectator";
-import { UserInstance } from "model/user";
+import { BARDBConfig, defaultBARDBConfig } from "./bar-db-config";
+import { AIInstance } from "./model/ai";
+import { AliasInstance } from "./model/alias";
+import { AllyTeamInstance } from "./model/ally-team";
+import { BalanceChangeInstance } from "./model/balance-change";
+import { BalanceChangeAuthorInstance } from "./model/balance-change-author";
+import { BalanceChangeUnitDefInstance } from "./model/balance-change-unit-def";
+import { DemoInstance } from "./model/demo";
+import { SpringMapInstance } from "./model/spring-map";
+import { PlayerInstance } from "./model/player";
+import { SpectatorInstance } from "./model/spectator";
+import { UserInstance } from "./model/user";
 
 const sequelizeErd = require("sequelize-erd");
 

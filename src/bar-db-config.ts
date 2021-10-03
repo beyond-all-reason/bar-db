@@ -1,4 +1,4 @@
-export type BARDBConfig = {
+export interface BARDBConfig {
     db: {
         host: string;
         port: number;

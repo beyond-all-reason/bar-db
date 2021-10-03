@@ -1,8 +1,7 @@
 import * as fs from "fs";
-import { Optionals } from "jaz-ts-utils";
-import { BARDBConfig, defaultBARDBConfig } from "config";
 import { format } from "util";
 
+import { BARDBConfig, defaultBARDBConfig } from "./bar-db-config";
 import { BalanceChangeProcessor } from "./balance-change-processor";
 import { Database } from "./database";
 import { DemoProcessor } from "./demo-processor";
