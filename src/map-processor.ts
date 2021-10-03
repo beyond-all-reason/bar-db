@@ -2,7 +2,6 @@ import { promises as fs } from "fs";
 import Jimp from "jimp";
 import { SpringMap } from "model/spring-map";
 import { MapParser, StartPos } from "spring-map-parser";
-import * as path from "path";
 
 import { Database } from "./database";
 import { FileProcessor, FileProcessorConfig } from "./file-processor";
@@ -57,8 +56,8 @@ export class MapProcessor extends FileProcessor {
             startPositions,
             width: mapData.smf!.mapWidthUnits * 2,
             height: mapData.smf!.mapHeightUnits * 2,
-            minDepth: mapData.mapInfo?.minDepth,
-            maxDepth: mapData.mapInfo?.maxDepth,
+            minDepth: mapData.minHeight,
+            maxDepth: mapData.maxHeight,
             name: mapData.mapInfo?.name,
             shortname: mapData.mapInfo?.shortname,
             author: mapData.mapInfo?.author,
