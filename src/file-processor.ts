@@ -76,6 +76,7 @@ export abstract class FileProcessor {
                         }
                     } catch (err) {
                         console.log("Error uploading to object storage");
+                        console.log(err);
                         throw err;
                     }
                 }
