@@ -2,7 +2,7 @@ import { DemoModel } from "sdfz-demo-parser";
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model } from "sequelize";
 
 import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
-import { MapCreationAttributes, MapInstance } from "./map";
+import { SpringMapCreationAttributes, SpringMapInstance } from "./map";
 import { SpectatorCreationAttributes, SpectatorInstance } from "./spectator";
 
 export interface Demo {
@@ -28,9 +28,9 @@ export interface DemoCreationAttributes extends Demo { }
 export interface DemoInstance extends Model<Demo, DemoCreationAttributes>, Demo {
     mapId: number;
 
-    getMap: BelongsToGetAssociationMixin<MapInstance>;
-    setMap: BelongsToSetAssociationMixin<MapInstance, MapInstance["id"]>;
-    createMap: (map: MapCreationAttributes) => Promise<MapInstance>;
+    getMap: BelongsToGetAssociationMixin<SpringMapInstance>;
+    setMap: BelongsToSetAssociationMixin<SpringMapInstance, SpringMapInstance["id"]>;
+    createMap: (map: SpringMapCreationAttributes) => Promise<SpringMapInstance>;
 
     getAllyTeams: HasManyGetAssociationsMixin<AllyTeamInstance>;
     setAllyTeams: HasManySetAssociationsMixin<AllyTeamInstance, AllyTeamInstance["id"]>;

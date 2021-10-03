@@ -17,11 +17,13 @@ export interface FileProcessorConfig {
         username: string;
         password: string;
     };
+    storeFile?: "internal" | "external" | "both";
 }
 
 const defaultFileProcessorConfig: Partial<FileProcessorConfig> = {
     verbose: false,
-    filePollMs: 5000
+    filePollMs: 5000,
+    storeFile: "internal"
 };
 
 export abstract class FileProcessor {
@@ -51,23 +53,8 @@ export abstract class FileProcessor {
                 console.time("process file");
                 const outPath = await this.processFile(unprocessedPath);
 
-                try {
-                    if (!this.config.objectStorage) {
-                        throw new Error("Object storage not defined");
-                    }
-
-                    const response = await this.uploadFileToObjectStorage(unprocessedPath);
-
-                    if (response && response.status === 201 || response.status === 200) {
-                        console.log(`${fileName} uploaded to object storage`);
-                        await fs.promises.unlink(unprocessedPath);
-                    }
-                } catch (err) {
-                    if (this.config.objectStorage) {
-                        console.log("Error uploading to object storage");
-                        console.error(err);
-                    }
-
+                if (this.config.storeFile === "internal" || this.config.storeFile === "both") {
+                    console.log("storing file internally");
                     if (outPath && outPath !== "delete") {
                         await fs.promises.rename(unprocessedPath, path.join(outPath, fileName));
                     } else if (outPath === "delete") {
@@ -75,6 +62,21 @@ export abstract class FileProcessor {
                         await fs.promises.unlink(unprocessedPath);
                     } else {
                         await fs.promises.rename(unprocessedPath, processedPath);
+                    }
+                }
+
+                if (this.config.objectStorage && (this.config.storeFile === "external" || this.config.storeFile === "both")) {
+                    try {
+                        console.log("storing file externally");
+                        const response = await this.uploadFileToObjectStorage(unprocessedPath);
+
+                        if (response && response.status === 201 || response.status === 200) {
+                            console.log(`${fileName} uploaded to object storage`);
+                            await fs.promises.unlink(unprocessedPath);
+                        }
+                    } catch (err) {
+                        console.log("Error uploading to object storage");
+                        throw err;
                     }
                 }
 

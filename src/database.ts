@@ -11,7 +11,7 @@ import { BalanceChangeInstance } from "model/balance-change";
 import { BalanceChangeAuthorInstance } from "model/balance-change-author";
 import { BalanceChangeUnitDefInstance } from "model/balance-change-unit-def";
 import { DemoInstance } from "model/demo";
-import { MapInstance } from "model/map";
+import { SpringMapInstance } from "model/map";
 import { PlayerInstance } from "model/player";
 import { SpectatorInstance } from "model/spectator";
 import { UserInstance } from "model/user";
@@ -21,7 +21,7 @@ const sequelizeErd = require("sequelize-erd");
 export interface DatabaseSchema {
     demo: ModelCtor<DemoInstance>;
     user: ModelCtor<UserInstance>;
-    map: ModelCtor<MapInstance>;
+    map: ModelCtor<SpringMapInstance>;
     player: ModelCtor<PlayerInstance>;
     spectator: ModelCtor<SpectatorInstance>;
     ai: ModelCtor<AIInstance>;
@@ -86,7 +86,7 @@ export class Database {
     protected async initSchema() {
         console.time("schema init");
 
-        const mapModel = this.sequelize.define<MapInstance>("Map", {
+        const mapModel = this.sequelize.define<SpringMapInstance>("Map", {
             id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
             scriptName: { type: DataTypes.STRING, allowNull: false },
             fileName: { type: DataTypes.STRING },

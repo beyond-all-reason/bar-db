@@ -18,13 +18,15 @@ export type Config = {
     };
     mapsDir: string;
     demosDir: string;
-    verbose: boolean;
     objectStorage?: {
         authUrl: string;
         containerUrl: string;
         username: string;
         password: string;
     };
+    storeDemos?: "internal" | "external" | "both";
+    storeMaps?: "internal" | "external" | "both";
+    verbose: boolean;
 };
 
 export const defaultConfig: Config = {
@@ -47,5 +49,7 @@ export const defaultConfig: Config = {
     },
     mapsDir: "/var/www/maps",
     demosDir: "/var/www/demos",
+    storeDemos: "internal",
+    storeMaps: "internal",
     verbose: true
 };

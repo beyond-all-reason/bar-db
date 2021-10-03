@@ -1,6 +1,6 @@
-import { AxiosResponse } from "axios";
 import { promises as fs } from "fs";
 import Jimp from "jimp";
+import { SpringMap } from "model/map";
 import { MapParser, StartPos } from "spring-map-parser";
 
 import { Database } from "./database";
@@ -13,7 +13,7 @@ export class MapProcessor extends FileProcessor {
     constructor(config: FileProcessorConfig) {
         super(config);
 
-        this.mapParser = new MapParser({ mipmapSize: 8 });
+        this.mapParser = new MapParser({ mipmapSize: 16 });
         this.db = config.db;
     }
 
@@ -26,24 +26,32 @@ export class MapProcessor extends FileProcessor {
         await mapData.heightMap.writeAsync(`${destDir}/height.png`);
         await mapData.metalMap.writeAsync(`${destDir}/metal.png`);
         await mapData.typeMap.writeAsync(`${destDir}/type.png`);
-        await mapData.textureMap!.clone().writeAsync(`${destDir}/texture-hq.png`);
-        await mapData.textureMap!.clone().resize(1000, Jimp.AUTO).quality(90).writeAsync(`${destDir}/texture-mq.jpg`);
-        await mapData.textureMap!.clone().resize(500, Jimp.AUTO).quality(80).writeAsync(`${destDir}/texture-lq.jpg`);
-        await mapData.textureMap!.clone().cover(250, 250).quality(80).writeAsync(`${destDir}/texture-thumb.jpg`);
+
+        if (mapData.textureMap) {
+            await mapData.textureMap!.clone().quality(80).writeAsync(`${destDir}/texture-hq.jpg`);
+            await mapData.textureMap!.clone().writeAsync(`${destDir}/texture-hq.png`);
+            await mapData.textureMap!.clone().resize(1000, Jimp.AUTO).quality(90).writeAsync(`${destDir}/texture-mq.jpg`);
+            await mapData.textureMap!.clone().resize(500, Jimp.AUTO).quality(80).writeAsync(`${destDir}/texture-lq.jpg`);
+            await mapData.textureMap!.clone().cover(250, 250).quality(80).writeAsync(`${destDir}/texture-thumb.jpg`);
+        }
+
+        if (mapData.specularMap) {
+            await mapData.specularMap.clone().writeAsync(`${destDir}/specular.png`);
+        }
 
         const startPositions = (mapData.mapInfo?.teams?.map(obj => obj!.startPos) ?? mapData.smd?.startPositions) as Array<StartPos>;
 
-        const newMap = {
+        const newMap: Omit<SpringMap, "id"> = {
             fileName: mapData.fileName,
             scriptName: mapData.scriptName.trim(),
-            description: mapData.mapInfo?.description ?? mapData.smd?.description,
+            description: mapData.mapInfo?.description || mapData.smd?.description || null,
             mapHardness: mapData.mapInfo?.maphardness ?? mapData.smd?.mapHardness,
             gravity: mapData.mapInfo?.gravity ?? mapData.smd?.gravity,
             tidalStrength: mapData.mapInfo?.tidalStrength ?? mapData.smd?.tidalStrength,
             maxMetal: mapData.mapInfo?.maxMetal ?? mapData.smd?.maxMetal,
             extractorRadius: mapData.mapInfo?.extractorRadius ?? mapData.smd?.extractorRadius,
             minWind: mapData.mapInfo?.atmosphere?.minWind ?? mapData.smd?.minWind,
-            maxWind: mapData.mapInfo?.atmosphere?.maxWind  ?? mapData.smd?.maxWind,
+            maxWind: mapData.mapInfo?.atmosphere?.maxWind ?? mapData.smd?.maxWind,
             startPositions,
             width: mapData.smf!.mapWidthUnits * 2,
             height: mapData.smf!.mapHeightUnits * 2,
@@ -61,6 +69,13 @@ export class MapProcessor extends FileProcessor {
             autoShowMetal: mapData.mapInfo?.autoShowMetal,
             mapInfo: mapData.mapInfo
         };
+
+        if (newMap.minWind === NaN) {
+            newMap.minWind = 5;
+        }
+        if (newMap.maxWind === NaN) {
+            newMap.maxWind = 25;
+        }
 
         const storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.scriptName.trim() } });
 

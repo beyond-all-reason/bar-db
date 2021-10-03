@@ -19,7 +19,7 @@ export class DemoProcessor extends FileProcessor {
     protected async processFile(filePath: string) {
         const fileBytes1 = (await fs.promises.stat(filePath)).size;
         const fileMB1 = fileBytes1 / 1048576;
-        if (fileMB1 > 20) {
+        if (fileMB1 > 20) { // sdfz-demo-parser isn't efficient enough with memory to handle demos larger than 20MB atm
             if (this.config.verbose) {
                 console.log("File over 20MB, ignoring and deleting.");
                 return "delete";

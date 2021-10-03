@@ -1,6 +1,6 @@
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional } from "sequelize/types";
 
-import { MapInstance } from "..";
+import { SpringMapInstance } from "..";
 import { BalanceChangeAuthorCreationAttributes, BalanceChangeAuthorInstance } from "./balance-change-author";
 import { BalanceChangeUnitDefCreationAttributes, BalanceChangeUnitDefInstance } from "./balance-change-unit-def";
 
@@ -18,7 +18,7 @@ export interface BalanceChangeInstance extends Model<BalanceChange, BalanceChang
     balanceChangeAuthorId: number;
 
     getAuthor: BelongsToGetAssociationMixin<BalanceChangeAuthorInstance>;
-    setAuthor: BelongsToSetAssociationMixin<BalanceChangeAuthorInstance, MapInstance["id"]>;
+    setAuthor: BelongsToSetAssociationMixin<BalanceChangeAuthorInstance, SpringMapInstance["id"]>;
     createAuthor: (author: BalanceChangeAuthorCreationAttributes) => Promise<BalanceChangeAuthorInstance>;
 
     getChanges: HasManyGetAssociationsMixin<BalanceChangeUnitDefInstance>;

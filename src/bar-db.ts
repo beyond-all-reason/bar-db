@@ -43,7 +43,8 @@ export class BARDB {
             dir: this.config.mapsDir,
             fileExt: [".sd7", ".sdz"],
             verbose: this.config.verbose,
-            objectStorage: this.config.objectStorage
+            objectStorage: this.config.objectStorage,
+            storeFile: this.config.storeMaps || "internal"
         });
 
         this.demoProcessor = new DemoProcessor({
@@ -51,7 +52,8 @@ export class BARDB {
             dir: this.config.demosDir,
             fileExt: [".sdfz"],
             verbose: this.config.verbose,
-            objectStorage: this.config.objectStorage
+            objectStorage: this.config.objectStorage,
+            storeFile: this.config.storeDemos || "internal"
         });
 
         this.balanceChangeProcessor = new BalanceChangeProcessor({ ...this.config.balanceChanges, errorLoggingFunction: this.config.errorLoggingFunction }, this.db);

@@ -4,11 +4,11 @@ import { MapInfo } from "spring-map-parser";
 
 import { DemoCreationAttributes, DemoInstance } from "./demo";
 
-export interface Map {
+export interface SpringMap {
     id: number;
     scriptName: string;
     fileName?: string;
-    description?: string;
+    description?: string | null;
     mapHardness?: number;
     gravity?: number;
     tidalStrength?: number;
@@ -37,9 +37,9 @@ export interface Map {
     mapInfo?: DeepPartial<MapInfo>;
 }
 
-export interface MapCreationAttributes extends Optional<Map, "id"> { }
+export interface SpringMapCreationAttributes extends Optional<SpringMap, "id"> { }
 
-export interface MapInstance extends Model<Map, MapCreationAttributes>, Map {
+export interface SpringMapInstance extends Model<SpringMap, SpringMapCreationAttributes>, SpringMap {
     getDemos: HasManyGetAssociationsMixin<DemoInstance>;
     setDemos: HasManySetAssociationsMixin<DemoInstance, DemoInstance["id"]>;
     addDemos: HasManyAddAssociationsMixin<DemoInstance, DemoInstance["id"]>;
