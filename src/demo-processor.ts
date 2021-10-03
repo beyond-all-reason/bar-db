@@ -55,10 +55,12 @@ export class DemoProcessor extends FileProcessor {
         }
 
         let reported = false;
-        for (const line of demoData.chatlog) {
-            if (line.message.includes("!report")) {
-                reported = true;
-                break;
+        if (demoData.chatlog && demoData.chatlog.length) {
+            for (const line of demoData.chatlog) {
+                if (line.message.includes("!report")) {
+                    reported = true;
+                    break;
+                }
             }
         }
 
@@ -74,7 +76,7 @@ export class DemoProcessor extends FileProcessor {
             gameSettings: demoData.info.gameSettings,
             mapSettings: demoData.info.mapSettings,
             gameEndedNormally: demoData.info.meta.winningAllyTeamIds.length > 0,
-            chatlog: demoData.chatlog,
+            chatlog: demoData.chatlog || [],
             preset,
             hasBots: demoData.info.ais.length > 0,
             reported
