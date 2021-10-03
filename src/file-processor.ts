@@ -85,7 +85,7 @@ export abstract class FileProcessor {
                 console.log(`deleting file: ${unprocessedPath}`);
                 await fs.promises.unlink(unprocessedPath);
             } catch (err) {
-                console.log("error processing file");
+                console.log("error processing file, moving to errored");
                 console.log(err);
                 await fs.promises.rename(unprocessedPath, erroredPath);
             }
