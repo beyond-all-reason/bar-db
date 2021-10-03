@@ -1,20 +1,12 @@
 import * as fs from "fs";
 import { Optionals } from "jaz-ts-utils";
-import { Config } from "config";
+import { BARDBConfig, defaultBARDBConfig } from "config";
 import { format } from "util";
 
 import { BalanceChangeProcessor } from "./balance-change-processor";
 import { Database } from "./database";
 import { DemoProcessor } from "./demo-processor";
 import { MapProcessor } from "./map-processor";
-
-export interface BARDBConfig extends Config {
-    errorLoggingFunction?: (err: string) => void;
-}
-
-const defaultBARDBConfig: Partial<BARDBConfig> = {
-    errorLoggingFunction: console.error
-};
 
 export class BARDB {
     protected config: BARDBConfig;
@@ -56,7 +48,7 @@ export class BARDB {
             storeFile: this.config.storeDemos || "internal"
         });
 
-        this.balanceChangeProcessor = new BalanceChangeProcessor({ ...this.config.balanceChanges, errorLoggingFunction: this.config.errorLoggingFunction }, this.db);
+        this.balanceChangeProcessor = new BalanceChangeProcessor({ ...this.config.balanceChanges }, this.db);
     }
 
     public async init() {

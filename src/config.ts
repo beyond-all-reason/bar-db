@@ -1,4 +1,4 @@
-export type Config = {
+export type BARDBConfig = {
     db: {
         host: string;
         port: number;
@@ -29,7 +29,7 @@ export type Config = {
     verbose: boolean;
 };
 
-export const defaultConfig: Config = {
+export const defaultBARDBConfig: BARDBConfig = {
     db: {
         host: "localhost",
         port: 5432,

@@ -2,7 +2,7 @@ import { DemoModel } from "sdfz-demo-parser";
 import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model } from "sequelize";
 
 import { AllyTeamCreationAttributes, AllyTeamInstance } from "./ally-team";
-import { SpringMapCreationAttributes, SpringMapInstance } from "./map";
+import { SpringMapCreationAttributes, SpringMapInstance } from "./spring-map";
 import { SpectatorCreationAttributes, SpectatorInstance } from "./spectator";
 
 export interface Demo {

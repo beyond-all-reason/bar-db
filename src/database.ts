@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import Redis from "ioredis";
 import pg from "pg";
 import { DataTypes, ModelCtor, Sequelize } from "sequelize";
-import { Config, defaultConfig } from "./config";
+import { BARDBConfig, defaultBARDBConfig } from "./config";
 
 import { AIInstance } from "model/ai";
 import { AliasInstance } from "model/alias";
@@ -11,7 +11,7 @@ import { BalanceChangeInstance } from "model/balance-change";
 import { BalanceChangeAuthorInstance } from "model/balance-change-author";
 import { BalanceChangeUnitDefInstance } from "model/balance-change-unit-def";
 import { DemoInstance } from "model/demo";
-import { SpringMapInstance } from "model/map";
+import { SpringMapInstance } from "model/spring-map";
 import { PlayerInstance } from "model/player";
 import { SpectatorInstance } from "model/spectator";
 import { UserInstance } from "model/user";
@@ -36,10 +36,10 @@ export class Database {
     public sequelize!: Sequelize;
     public schema!: DatabaseSchema;
     public memoryStore!: Redis.Redis;
-    public config: Config["db"];
+    public config: BARDBConfig["db"];
 
-    constructor(config: Config["db"]) {
-        this.config = Object.assign({}, defaultConfig.db, config);
+    constructor(config: BARDBConfig["db"]) {
+        this.config = Object.assign({}, defaultBARDBConfig.db, config);
     }
 
     public async init() {

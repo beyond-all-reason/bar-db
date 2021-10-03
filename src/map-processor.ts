@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import Jimp from "jimp";
-import { SpringMap } from "model/map";
+import { SpringMap } from "model/spring-map";
 import { MapParser, StartPos } from "spring-map-parser";
 import * as path from "path";
 
