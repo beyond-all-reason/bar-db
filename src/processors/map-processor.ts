@@ -1,12 +1,15 @@
 import { promises as fs } from "fs";
+import { Signal } from "jaz-ts-utils";
 import Jimp from "jimp";
-import { SpringMap } from "model/spring-map";
 import { MapParser, StartPos } from "spring-map-parser";
 
-import { Database } from "./database";
-import { FileProcessor, FileProcessorConfig } from "./file-processor";
+import { DBSchema } from "~/model/db";
+import { Database } from "~/database";
+import { FileProcessor, FileProcessorConfig } from "~/processors/file-processor";
 
 export class MapProcessor extends FileProcessor {
+    public onMapProcessed: Signal<DBSchema.SpringMap.Instance> = new Signal();
+
     protected mapParser: MapParser;
     protected db: Database;
 
@@ -41,7 +44,7 @@ export class MapProcessor extends FileProcessor {
 
         const startPositions = (mapData.mapInfo?.teams?.map(obj => obj!.startPos) ?? mapData.smd?.startPositions) as Array<StartPos>;
 
-        const newMap: Omit<SpringMap, "id"> = {
+        const newMap: Omit<DBSchema.SpringMap.Schema, "id"> = {
             fileName: mapData.fileName,
             fileNameWithExt: mapData.fileNameWithExt,
             scriptName: mapData.scriptName.trim(),
@@ -78,19 +81,19 @@ export class MapProcessor extends FileProcessor {
             newMap.maxWind = 25;
         }
 
-        const storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.scriptName.trim() } });
+        let storedMap = await this.db.schema.map.findOne({ where: { scriptName: mapData.scriptName.trim() } });
 
         if (storedMap) {
             if (this.config.verbose) {
                 console.log("Map already processed. Updating...");
             }
 
-            await storedMap.update(newMap);
+            storedMap = await storedMap.update(newMap);
         } else {
-            await this.db.schema.map.create(newMap);
-
-            await this.db.saveMapsToMemory();
+            storedMap = await this.db.schema.map.create(newMap);
         }
+        
+        this.onMapProcessed.dispatch(storedMap);
 
         return destDir;
     }

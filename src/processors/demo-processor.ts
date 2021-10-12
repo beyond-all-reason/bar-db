@@ -1,13 +1,15 @@
 import * as fs from "fs";
+import { Signal } from "jaz-ts-utils";
 import * as path from "path";
 import { DemoModel, DemoParser } from "sdfz-demo-parser";
 
-import { Database } from "./database";
-import { FileProcessor as FileProcessor, FileProcessorConfig } from "./file-processor";
-import { AllyTeamInstance } from "./model/ally-team";
-import { UserInstance } from "./model/user";
+import { Database } from "~/database";
+import { DBSchema } from "~/model/db";
+import { FileProcessor as FileProcessor, FileProcessorConfig } from "~/processors/file-processor";
 
 export class DemoProcessor extends FileProcessor {
+    public onDemoProcessed: Signal<DBSchema.Demo.Instance> = new Signal();
+
     protected db: Database;
 
     constructor(config: FileProcessorConfig) {
@@ -82,7 +84,7 @@ export class DemoProcessor extends FileProcessor {
             reported
         });
 
-        const allyTeams: { [allyTeamId: number]: AllyTeamInstance } = {};
+        const allyTeams: { [allyTeamId: number]: DBSchema.AllyTeam.Instance } = {};
 
         for (const allyTeamData of demoData.info.allyTeams) {
             const allyTeam = await demo.createAllyTeam({
@@ -95,7 +97,7 @@ export class DemoProcessor extends FileProcessor {
 
         const playerAndSpecs: Array<DemoModel.Info.Player | DemoModel.Info.Spectator> = [...demoData.info.players, ...demoData.info.spectators];
         for (const playerOrSpecData of playerAndSpecs) {
-            let user: UserInstance | undefined;
+            let user: DBSchema.User.Instance | undefined;
 
             if (playerOrSpecData.userId !== undefined) {
                 [ user ] = await this.db.schema.user.findOrCreate({
@@ -181,7 +183,7 @@ export class DemoProcessor extends FileProcessor {
             });
         }
 
-        await this.db.saveUsersToMemory();
+        this.onDemoProcessed.dispatch(demo);
     }
 
     protected async uploadFileToObjectStorage(filePath: string, prefix: string = "/") {

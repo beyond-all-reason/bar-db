@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import { format } from "util";
 
-import { BARDBConfig, defaultBARDBConfig } from "./bar-db-config";
-import { BalanceChangeProcessor } from "./balance-change-processor";
-import { Database } from "./database";
-import { DemoProcessor } from "./demo-processor";
-import { MapProcessor } from "./map-processor";
+import { BARDBConfig, defaultBARDBConfig } from "~/bar-db-config";
+import { Database } from "~/database";
+import { MemoryStore } from "~/memory-store";
+import { BalanceChangeProcessor } from "~/processors/balance-change-processor";
+import { MapProcessor } from "~/processors/map-processor";
+import { DemoProcessor } from "~/processors/demo-processor";
 
 export class BARDB {
     protected config: BARDBConfig;
@@ -13,6 +14,7 @@ export class BARDB {
     protected mapProcessor: MapProcessor;
     protected demoProcessor: DemoProcessor;
     protected balanceChangeProcessor: BalanceChangeProcessor;
+    protected memoryStore?: MemoryStore;
 
     constructor(config: BARDBConfig) {
         this.config = Object.assign({}, defaultBARDBConfig, config);
@@ -38,6 +40,10 @@ export class BARDB {
             storeFile: this.config.storeMaps || "internal"
         });
 
+        this.mapProcessor.onMapProcessed.add(() => {
+            this.memoryStore?.saveMapsToMemory();
+        });
+
         this.demoProcessor = new DemoProcessor({
             db: this.db,
             dir: this.config.demosDir,
@@ -47,7 +53,15 @@ export class BARDB {
             storeFile: this.config.storeDemos || "internal"
         });
 
+        this.demoProcessor.onDemoProcessed.add(() => {
+            this.memoryStore?.saveUsersToMemory();
+        });
+
         this.balanceChangeProcessor = new BalanceChangeProcessor({ ...this.config.balanceChanges }, this.db);
+
+        if (this.config.db.initMemoryStore) {
+            this.memoryStore = new MemoryStore(this.db);
+        }
     }
 
     public async init() {
@@ -56,10 +70,14 @@ export class BARDB {
         await this.demoProcessor.init();
         await this.balanceChangeProcessor.init();
 
-        console.log("Scanning for maps...");
+        if (this.memoryStore) {
+            await this.memoryStore.init();
+        }
+
+        console.log("Polling for maps...");
         this.mapProcessor.processFiles();
 
-        console.log("Scanning for demos...");
+        console.log("Polling for demos...");
         this.demoProcessor.processFiles();
 
         this.balanceChangeProcessor.processBalanceChanges();

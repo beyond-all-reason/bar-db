@@ -3,7 +3,7 @@ import { delay } from "jaz-ts-utils";
 import * as path from "path";
 import axios, { AxiosResponse } from "axios";
 
-import { Database } from "./database";
+import { Database } from "~/database";
 
 export interface FileProcessorConfig {
     db: Database;

@@ -26,6 +26,7 @@ export interface BARDBConfig {
     };
     storeDemos?: "internal" | "external" | "both";
     storeMaps?: "internal" | "external" | "both";
+    apiPort: number;
     verbose: boolean;
 };
 
@@ -51,5 +52,6 @@ export const defaultBARDBConfig: BARDBConfig = {
     demosDir: "/var/www/demos",
     storeDemos: "internal",
     storeMaps: "internal",
+    apiPort: 3001,
     verbose: true
 };

@@ -1,41 +1,26 @@
 import { promises as fs } from "fs";
-import Redis from "ioredis";
 import pg from "pg";
-import { DataTypes, ModelCtor, Sequelize } from "sequelize";
-
-import { BARDBConfig, defaultBARDBConfig } from "./bar-db-config";
-import { AIInstance } from "./model/ai";
-import { AliasInstance } from "./model/alias";
-import { AllyTeamInstance } from "./model/ally-team";
-import { BalanceChangeInstance } from "./model/balance-change";
-import { BalanceChangeAuthorInstance } from "./model/balance-change-author";
-import { BalanceChangeUnitDefInstance } from "./model/balance-change-unit-def";
-import { DemoInstance } from "./model/demo";
-import { SpringMapInstance } from "./model/spring-map";
-import { PlayerInstance } from "./model/player";
-import { SpectatorInstance } from "./model/spectator";
-import { UserInstance } from "./model/user";
-
+import { ModelCtor, Sequelize } from "sequelize";
 const sequelizeErd = require("sequelize-erd");
 
-export interface DatabaseSchema {
-    demo: ModelCtor<DemoInstance>;
-    user: ModelCtor<UserInstance>;
-    map: ModelCtor<SpringMapInstance>;
-    player: ModelCtor<PlayerInstance>;
-    spectator: ModelCtor<SpectatorInstance>;
-    ai: ModelCtor<AIInstance>;
-    allyTeam: ModelCtor<AllyTeamInstance>;
-    alias: ModelCtor<AliasInstance>;
-    balanceChange: ModelCtor<BalanceChangeInstance>;
-    balanceChangeAuthor: ModelCtor<BalanceChangeAuthorInstance>;
-    balanceChangeUnitDef: ModelCtor<BalanceChangeUnitDefInstance>;
-}
+import { DBSchema } from "~/model/db";
+import { BARDBConfig, defaultBARDBConfig } from "~/bar-db-config";
 
 export class Database {
     public sequelize!: Sequelize;
-    public schema!: DatabaseSchema;
-    public memoryStore!: Redis.Redis;
+    public schema!: {
+        demo: ModelCtor<DBSchema.Demo.Instance>;
+        user: ModelCtor<DBSchema.User.Instance>;
+        map: ModelCtor<DBSchema.SpringMap.Instance>;
+        player: ModelCtor<DBSchema.Player.Instance>;
+        spectator: ModelCtor<DBSchema.Spectator.Instance>;
+        ai: ModelCtor<DBSchema.AI.Instance>;
+        allyTeam: ModelCtor<DBSchema.AllyTeam.Instance>;
+        alias: ModelCtor<DBSchema.Alias.Instance>;
+        balanceChange: ModelCtor<DBSchema.BalanceChange.Instance>;
+        balanceChangeAuthor: ModelCtor<DBSchema.BalanceChangeAuthor.Instance>;
+        balanceChangeUnitDef: ModelCtor<DBSchema.BalanceChangeUnitDef.Instance>;
+    };
     public config: BARDBConfig["db"];
 
     constructor(config: BARDBConfig["db"]) {
@@ -45,7 +30,6 @@ export class Database {
     public async init() {
         await this.initDatabase();
         await this.initSchema();
-        await this.initCacheStore();
     }
 
     protected async initDatabase() {
@@ -86,207 +70,63 @@ export class Database {
     protected async initSchema() {
         console.time("schema init");
 
-        const mapModel = this.sequelize.define<SpringMapInstance>("Map", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            scriptName: { type: DataTypes.STRING, allowNull: false },
-            fileName: { type: DataTypes.STRING },
-            fileNameWithExt: { type: DataTypes.STRING },
-            description: { type: DataTypes.TEXT },
-            mapHardness: { type: DataTypes.FLOAT },
-            gravity: { type: DataTypes.FLOAT },
-            tidalStrength: { type: DataTypes.FLOAT },
-            maxMetal: { type: DataTypes.FLOAT },
-            extractorRadius: { type: DataTypes.FLOAT },
-            minWind: { type: DataTypes.FLOAT },
-            maxWind: { type: DataTypes.FLOAT },
-            startPositions: { type: DataTypes.JSON },
-            width: { type: DataTypes.INTEGER },
-            height: { type: DataTypes.INTEGER },
-            minDepth: { type: DataTypes.FLOAT },
-            maxDepth: { type: DataTypes.FLOAT },
-            name: { type: DataTypes.STRING },
-            shortname: { type: DataTypes.STRING },
-            author: { type: DataTypes.STRING },
-            version: { type: DataTypes.STRING },
-            mapfile: { type: DataTypes.STRING },
-            modtype: { type: DataTypes.INTEGER },
-            notDeformable: { type: DataTypes.BOOLEAN },
-            voidWater: { type: DataTypes.BOOLEAN },
-            voidGround: { type: DataTypes.BOOLEAN },
-            autoShowMetal: { type: DataTypes.BOOLEAN },
-            mapInfo: { type: DataTypes.JSON }
-        }, {
-            indexes: [
-                {
-                    unique: true,
-                    fields: ["scriptName"]
-                }
-            ]
-        });
+        this.schema = {
+            map: this.sequelize.define<DBSchema.SpringMap.Instance>("Map", DBSchema.SpringMap.sequelizeDefinition, DBSchema.SpringMap.sequelizeOptions),
+            demo: this.sequelize.define<DBSchema.Demo.Instance>("Demo", DBSchema.Demo.sequelizeDefinition, DBSchema.Demo.sequelizeOptions),
+            allyTeam: this.sequelize.define<DBSchema.AllyTeam.Instance>("AllyTeam", DBSchema.AllyTeam.sequelizeDefinition, DBSchema.AllyTeam.sequelizeOptions),
+            player: this.sequelize.define<DBSchema.Player.Instance>("Player", DBSchema.Player.sequelizeDefinition, DBSchema.Player.sequelizeOptions),
+            spectator: this.sequelize.define<DBSchema.Spectator.Instance>("Spectator", DBSchema.Spectator.sequelizeDefinition, DBSchema.Spectator.sequelizeOptions),
+            ai: this.sequelize.define<DBSchema.AI.Instance>("AI", DBSchema.AI.sequelizeDefinition, DBSchema.AI.sequelizeOptions),
+            user: this.sequelize.define<DBSchema.User.Instance>("User", DBSchema.User.sequelizeDefinition, DBSchema.User.sequelizeOptions),
+            alias: this.sequelize.define<DBSchema.Alias.Instance>("Alias", DBSchema.Alias.sequelizeDefinition, DBSchema.Alias.sequelizeOptions),
+            balanceChangeAuthor: this.sequelize.define<DBSchema.BalanceChangeAuthor.Instance>("BalanceChangeAuthor", DBSchema.BalanceChangeAuthor.sequelizeDefinition, DBSchema.BalanceChangeAuthor.sequelizeOptions),
+            balanceChange: this.sequelize.define<DBSchema.BalanceChange.Instance>("BalanceChange", DBSchema.BalanceChange.sequelizeDefinition, DBSchema.BalanceChange.sequelizeOptions),
+            balanceChangeUnitDef: this.sequelize.define<DBSchema.BalanceChangeUnitDef.Instance>("BalanceChangeUnitDef", DBSchema.BalanceChangeUnitDef.sequelizeDefinition, DBSchema.BalanceChangeUnitDef.sequelizeOptions),
+        };
 
-        const demoModel = this.sequelize.define<DemoInstance>("Demo", {
-            id: { type: DataTypes.STRING, primaryKey: true },
-            fileName: { type: DataTypes.STRING, unique: true, allowNull: false },
-            engineVersion: { type: DataTypes.STRING, allowNull: false },
-            gameVersion: { type: DataTypes.STRING, allowNull: false },
-            startTime: { type: DataTypes.DATE, allowNull: false },
-            durationMs: { type: DataTypes.INTEGER, allowNull: false },
-            fullDurationMs: { type: DataTypes.INTEGER, allowNull: false },
-            hostSettings: { type: DataTypes.JSON, allowNull: false },
-            gameSettings: { type: DataTypes.JSON, allowNull: false },
-            mapSettings: { type: DataTypes.JSON, allowNull: false },
-            gameEndedNormally: { type: DataTypes.BOOLEAN, defaultValue: true, allowNull: false },
-            chatlog: { type: DataTypes.JSON, defaultValue: [], allowNull: true },
-            hasBots: { type: DataTypes.BOOLEAN, allowNull: true },
-            preset: { type: DataTypes.STRING, allowNull: true },
-            reported: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: true }
-        });
+        this.schema.map.hasMany(this.schema.demo, { foreignKey: "mapId" });
+        this.schema.demo.belongsTo(this.schema.map, { foreignKey: "mapId" });
 
-        const allyTeamModel = this.sequelize.define<AllyTeamInstance>("AllyTeam", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            allyTeamId: { type: DataTypes.INTEGER },
-            startBox: { type: DataTypes.JSON },
-            winningTeam: { type: DataTypes.BOOLEAN }
-        });
+        this.schema.demo.hasMany(this.schema.allyTeam, { foreignKey: "demoId", onDelete: "CASCADE" });
+        this.schema.allyTeam.belongsTo(this.schema.demo, { foreignKey: "demoId" });
 
-        const playerModel = this.sequelize.define<PlayerInstance>("Player", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            playerId: { type: DataTypes.INTEGER },
-            name: { type: DataTypes.STRING },
-            teamId: { type: DataTypes.INTEGER },
-            handicap: { type: DataTypes.INTEGER },
-            faction: { type: DataTypes.STRING },
-            countryCode: { type: DataTypes.STRING },
-            rgbColor: { type: DataTypes.JSON },
-            rank: { type: DataTypes.INTEGER },
-            skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
-            skill: { type: DataTypes.STRING },
-            trueSkill: { type: DataTypes.FLOAT, allowNull: true },
-            startPos: { type: DataTypes.JSON, allowNull: true }
-        });
+        this.schema.demo.hasMany(this.schema.spectator, { foreignKey: "demoId", onDelete: "CASCADE" });
+        this.schema.spectator.belongsTo(this.schema.demo, { foreignKey: "demoId" });
 
-        const spectatorModel = this.sequelize.define<SpectatorInstance>("Spectator", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            playerId: { type: DataTypes.INTEGER },
-            name: { type: DataTypes.STRING },
-            countryCode: { type: DataTypes.STRING },
-            rank: { type: DataTypes.INTEGER },
-            skillUncertainty: { type: DataTypes.INTEGER },
-            skill: { type: DataTypes.STRING }
-        });
+        this.schema.allyTeam.hasMany(this.schema.player, { foreignKey: "allyTeamId", onDelete: "CASCADE" });
+        this.schema.player.belongsTo(this.schema.allyTeam, { foreignKey: "allyTeamId" });
 
-        const aiModel = this.sequelize.define<AIInstance>("AI", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            aiId: { type: DataTypes.INTEGER },
-            shortName: { type: DataTypes.STRING },
-            name: { type: DataTypes.STRING },
-            host: { type: DataTypes.BOOLEAN },
-            startPos: { type: DataTypes.JSON, allowNull: true },
-            handicap: { type: DataTypes.INTEGER },
-            faction: { type: DataTypes.STRING },
-            rgbColor: { type: DataTypes.JSON }
-        });
+        this.schema.allyTeam.hasMany(this.schema.ai, { foreignKey: "allyTeamId", onDelete: "CASCADE" });
+        this.schema.ai.belongsTo(this.schema.allyTeam, { foreignKey: "allyTeamId" });
 
-        const userModel = this.sequelize.define<UserInstance>("User", {
-            id: { type: DataTypes.INTEGER, primaryKey: true },
-            username: { type: DataTypes.STRING },
-            countryCode: { type: DataTypes.STRING },
-            rank: { type: DataTypes.INTEGER },
-            skill: { type: DataTypes.STRING },
-            trueSkill: { type: DataTypes.FLOAT, allowNull: true },
-            skillUncertainty: { type: DataTypes.FLOAT },
-        }, {
-            indexes: [{ fields: ["username"] }]
-        });
+        this.schema.user.hasMany(this.schema.player, { foreignKey: "userId", onDelete: "CASCADE" });
+        this.schema.player.belongsTo(this.schema.user, { foreignKey: "userId" });
 
-        const aliasModel = this.sequelize.define<AliasInstance>("Alias", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            alias: { type: DataTypes.STRING }
-        });
+        this.schema.user.hasMany(this.schema.alias, { foreignKey: "userId", onDelete: "CASCADE" });
+        this.schema.alias.belongsTo(this.schema.user, { foreignKey: "userId" });
 
-        const balanceChangeAuthorModel = this.sequelize.define<BalanceChangeAuthorInstance>("BalanceChangeAuthor", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            name: { type: DataTypes.STRING },
-            img: { type: DataTypes.STRING },
-            url: { type: DataTypes.STRING },
-        });
+        this.schema.user.hasMany(this.schema.spectator, { foreignKey: "userId", onDelete: "CASCADE" });
+        this.schema.spectator.belongsTo(this.schema.user, { foreignKey: "userId" });
 
-        const balanceChangeModel = this.sequelize.define<BalanceChangeInstance>("BalanceChange", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            sha: { type: DataTypes.STRING, unique: true },
-            url: { type: DataTypes.STRING },
-            date: { type: DataTypes.DATE },
-            message: { type: DataTypes.TEXT },
-        }, {
-            indexes: [{ unique: true, fields: ["sha"] }]
-        });
+        this.schema.balanceChangeAuthor.hasMany(this.schema.balanceChange, { foreignKey: "balanceChangeAuthorId", onDelete: "CASCADE" });
+        this.schema.balanceChange.belongsTo(this.schema.balanceChangeAuthor, { foreignKey: "balanceChangeAuthorId", as: "author" });
 
-        const balanceChangeUnitDefModel = this.sequelize.define<BalanceChangeUnitDefInstance>("BalanceChangeUnitDef", {
-            id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-            unitDefId: { type: DataTypes.STRING },
-            scav: { type: DataTypes.BOOLEAN },
-            changes: { type: DataTypes.JSON },
-        }, {
-            indexes: [{ fields: ["unitDefId"] }]
-        });
-
-        mapModel.hasMany(demoModel, { foreignKey: "mapId" });
-        demoModel.belongsTo(mapModel, { foreignKey: "mapId" });
-
-        demoModel.hasMany(allyTeamModel, { foreignKey: "demoId", onDelete: "CASCADE" });
-        allyTeamModel.belongsTo(demoModel, { foreignKey: "demoId" });
-
-        demoModel.hasMany(spectatorModel, { foreignKey: "demoId", onDelete: "CASCADE" });
-        spectatorModel.belongsTo(demoModel, { foreignKey: "demoId" });
-
-        allyTeamModel.hasMany(playerModel, { foreignKey: "allyTeamId", onDelete: "CASCADE" });
-        playerModel.belongsTo(allyTeamModel, { foreignKey: "allyTeamId" });
-
-        allyTeamModel.hasMany(aiModel, { foreignKey: "allyTeamId", onDelete: "CASCADE" });
-        aiModel.belongsTo(allyTeamModel, { foreignKey: "allyTeamId" });
-
-        userModel.hasMany(playerModel, { foreignKey: "userId", onDelete: "CASCADE" });
-        playerModel.belongsTo(userModel, { foreignKey: "userId" });
-
-        userModel.hasMany(aliasModel, { foreignKey: "userId", onDelete: "CASCADE" });
-        aliasModel.belongsTo(userModel, { foreignKey: "userId" });
-
-        userModel.hasMany(spectatorModel, { foreignKey: "userId", onDelete: "CASCADE" });
-        spectatorModel.belongsTo(userModel, { foreignKey: "userId" });
-
-        balanceChangeAuthorModel.hasMany(balanceChangeModel, { foreignKey: "balanceChangeAuthorId", onDelete: "CASCADE" });
-        balanceChangeModel.belongsTo(balanceChangeAuthorModel, { foreignKey: "balanceChangeAuthorId", as: "author" });
-
-        balanceChangeModel.hasMany(balanceChangeUnitDefModel, { foreignKey: "balanceChangeId", onDelete: "CASCADE", as: "changes" });
-        balanceChangeUnitDefModel.belongsTo(balanceChangeModel, { foreignKey: "balanceChangeId" });
+        this.schema.balanceChange.hasMany(this.schema.balanceChangeUnitDef, { foreignKey: "balanceChangeId", onDelete: "CASCADE", as: "changes" });
+        this.schema.balanceChangeUnitDef.belongsTo(this.schema.balanceChange, { foreignKey: "balanceChangeId" });
 
         if (this.config.syncModel) {
-            await mapModel.sync({ alter: this.config.alterDbSchema });
-            await userModel.sync({ alter: this.config.alterDbSchema });
-            await demoModel.sync({ alter: this.config.alterDbSchema });
-            await allyTeamModel.sync({ alter: this.config.alterDbSchema });
-            await playerModel.sync({ alter: this.config.alterDbSchema });
-            await spectatorModel.sync({ alter: this.config.alterDbSchema });
-            await aiModel.sync({ alter: this.config.alterDbSchema });
-            await aliasModel.sync({ alter: this.config.alterDbSchema });
-            await balanceChangeAuthorModel.sync({ alter: this.config.alterDbSchema });
-            await balanceChangeModel.sync({ alter: this.config.alterDbSchema });
-            await balanceChangeUnitDefModel.sync({ alter: this.config.alterDbSchema });
+            await this.schema.map.sync({ alter: this.config.alterDbSchema });
+            await this.schema.user.sync({ alter: this.config.alterDbSchema });
+            await this.schema.demo.sync({ alter: this.config.alterDbSchema });
+            await this.schema.allyTeam.sync({ alter: this.config.alterDbSchema });
+            await this.schema.player.sync({ alter: this.config.alterDbSchema });
+            await this.schema.spectator.sync({ alter: this.config.alterDbSchema });
+            await this.schema.ai.sync({ alter: this.config.alterDbSchema });
+            await this.schema.alias.sync({ alter: this.config.alterDbSchema });
+            await this.schema.balanceChangeAuthor.sync({ alter: this.config.alterDbSchema });
+            await this.schema.balanceChange.sync({ alter: this.config.alterDbSchema });
+            await this.schema.balanceChangeUnitDef.sync({ alter: this.config.alterDbSchema });
         }
-
-        this.schema = {
-            map: mapModel,
-            user: userModel,
-            demo: demoModel,
-            allyTeam: allyTeamModel,
-            player: playerModel,
-            spectator: spectatorModel,
-            ai: aiModel,
-            alias: aliasModel,
-            balanceChange: balanceChangeModel,
-            balanceChangeAuthor: balanceChangeAuthorModel,
-            balanceChangeUnitDef: balanceChangeUnitDefModel,
-        };
 
         if (this.config.createSchemaDiagram) {
             const svg = await sequelizeErd({ source: this.sequelize });
@@ -294,55 +134,5 @@ export class Database {
         }
 
         console.timeEnd("schema init");
-    }
-
-    protected async initCacheStore() {
-        this.memoryStore = new Redis();
-
-        if (this.config.initMemoryStore) {
-            await this.saveUsersToMemory();
-            await this.saveMapsToMemory();
-        }
-    }
-
-    public async saveUsersToMemory() {
-        console.time("save users to memory");
-
-        const results = await this.schema.user.findAll({
-            raw: true,
-            attributes: ["id", "username", "countryCode"]
-        });
-
-        await this.memoryStore.set("users", JSON.stringify(results));
-
-        console.timeEnd("save users to memory");
-    }
-
-    public async saveMapsToMemory() {
-        console.time("save maps to memory");
-
-        const results = await this.schema.map.findAll({
-            raw: true,
-            attributes: ["id", "scriptName", "fileName"]
-        });
-
-        await this.memoryStore.set("maps", JSON.stringify(results));
-
-        console.timeEnd("save maps to memory");
-    }
-
-    public async getUsersFromMemory() {
-        const results = await this.memoryStore.get("users");
-        return results;
-    }
-
-    public async getMapsFromMemory() {
-        const results = await this.memoryStore.get("maps");
-        return results;
-    }
-
-    public async getBalanceChangesFromMemory() {
-        const results = await this.memoryStore.get("balanceChanges");
-        return results;
     }
 }

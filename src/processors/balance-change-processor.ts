@@ -1,7 +1,7 @@
 import { BalanceChange, BalanceChangeFetcher } from "bar-balance-changes";
 import { delay, Optionals } from "jaz-ts-utils";
 
-import { Database } from "./database";
+import { Database } from "~/database";
 
 export interface BalanceChangeProcessorConfig {
     owner: string;
@@ -46,9 +46,9 @@ export class BalanceChangeProcessor {
 
                 const changes = await this.balanceChangeFetcher.fetchLatestBalanceChanges({
                     excludeShas: this.processedShas,
-                    page: 0
+                    page: 10
                 });
-
+                
                 for (const change of changes) {
                     if (!this.processedShas.includes(change.sha)) {
                         console.log(`Processing balance change: ${change.sha} - ${change.message}`);
