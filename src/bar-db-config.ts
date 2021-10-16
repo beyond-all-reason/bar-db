@@ -1,3 +1,5 @@
+import { SpringLobbyProtocolClientConfig } from "sluts";
+
 export interface BARDBConfig {
     db: {
         host: string;
@@ -16,6 +18,16 @@ export interface BARDBConfig {
         auth: string,
         pollIntervalMs: number
     };
+    sldb: {
+        host: string,
+        port: number,
+        username: string,
+        password: string,
+        leaderboards: string[],
+        pollIntervalMs: number,
+        verbose: boolean
+    };
+    lobby: SpringLobbyProtocolClientConfig;
     mapsDir: string;
     demosDir: string;
     objectStorage?: {
@@ -47,6 +59,22 @@ export const defaultBARDBConfig: BARDBConfig = {
         repo: "beyond-all-reason",
         auth: "1234",
         pollIntervalMs: 1800000
+    },
+    sldb: {
+        host: "112.213.34.51",
+        port: 8300,
+        username: "xmlrpcUsername",
+        password: "xmlrpcPassword",
+        leaderboards: ["Duel", "Team", "FFA"],
+        pollIntervalMs: 60000,
+        verbose: false
+    },
+    lobby: {
+        host: "bar.teifion.co.uk",
+        port: 8200,
+        password: "BARDBBOT",
+        username: "1234545678",
+        lobbySignature: "BARDB"
     },
     mapsDir: "/var/www/maps",
     demosDir: "/var/www/demos",

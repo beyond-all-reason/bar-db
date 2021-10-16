@@ -16,6 +16,10 @@ export class MemoryStore {
         await this.saveMapsToMemory();
     }
 
+    public async get(key: string) {
+        return await this.redis.get(key);
+    }
+
     public async saveUsersToMemory() {
         console.time("save users to memory");
 

@@ -1,15 +1,33 @@
+import * as path from "path";
 import fastify, { FastifyInstance } from "fastify";
-import { Model, ModelStatic } from "sequelize";
+import fastifyRatelimit from "fastify-rate-limit";
+import fastifyAutoload from "fastify-autoload";
+import fastifyStatic from "fastify-static";
+import fastifySensible from "fastify-sensible";
+import Redis from "ioredis";
+const { JsonSchemaManager } = require('@alt3/sequelize-to-json-schemas');
 
 import { BARDBConfig } from "~/bar-db-config";
 import { Database } from "~/database";
-import { DBSchema } from "~/model/db";
-import { MapsReply, mapsReplyDef } from "~/model/rest-api/maps";
+import { SLDBService } from "~/rest-api/sldb-service";
+import { LobbyService } from "~/rest-api/lobby-service";
+
+export interface PluginOptions {
+    db: Database;
+    redis: Redis.Redis;
+    schemaManager: any;
+    sldbService: SLDBService,
+    lobbyService: LobbyService
+}
 
 export class RestAPI {
     protected config: BARDBConfig;
     protected db: Database;
-    protected server!: FastifyInstance;
+    protected redis: Redis.Redis; 
+    protected fastify!: FastifyInstance;
+    protected schemaManager: any;
+    protected sldbService: SLDBService;
+    protected lobbyService: LobbyService;
 
     constructor(config: BARDBConfig) {
         this.config = config;
@@ -19,63 +37,63 @@ export class RestAPI {
         this.config.db.initMemoryStore = false;
 
         this.db = new Database(config.db);
+
+        this.redis = new Redis();
+
+        this.schemaManager = new JsonSchemaManager();
+
+        this.sldbService = new SLDBService(config.sldb);
+
+        this.lobbyService = new LobbyService(config.lobby, this.redis);
     }
 
     public async init() {
         await this.db.init();
+        await this.sldbService.init();
+        await this.lobbyService.init();
 
-        this.server = await fastify({
+        this.fastify = await fastify({
             ignoreTrailingSlash: true,
-        });
-
-        // USE https://www.npmjs.com/package/sequelize-json-schema
-        this.server.get<{
-            Querystring: {
-                page: number;
-                limit: number;
-            };
-            Reply: MapsReply
-        }>("/maps", {
-            schema: {
-                querystring: {
-                    type: "object",
-                    properties: {
-                        page: { type: "number", default: 1 },
-                        limit: { type: "number", default: 24 },
-                    }
-                },
-                response: {
-                    200: mapsReplyDef
+            logger: false,
+            ajv: {
+                customOptions: {
+                    coerceTypes: "array"
                 }
             }
-        }, async (req, rep) => {
-            const { page, limit } = req.query;
-
-            const { count, rows }: { count: number, rows: DBSchema.SpringMap.Schema[] } = await this.db.schema.map.findAndCountAll({
-                offset: (page - 1) * limit,
-                limit,
-                order: [["scriptName", "ASC"]],
-                raw: true,
-            });
-
-            const response = {
-                totalResults: count,
-                page,
-                limit,
-                //filters,
-                //sorts: sort,
-                data: rows
-            };
-
-            rep.status(200).send(response);
         });
 
+        // https://github.com/fastify/fastify-http-proxy
+        // https://github.com/fastify/fastify-caching
+
+        this.fastify.register(fastifyRatelimit, {
+            max: 100,
+            timeWindow: '1 minute'
+        });
+
+        this.fastify.register(fastifyAutoload, {
+            dir: path.join(__dirname, "rest-api/routes"),
+            options: {
+                db: this.db,
+                redis: this.redis,
+                schemaManager: this.schemaManager,
+                sldbService: this.sldbService,
+                lobbyService: this.lobbyService
+            }
+        });
+
+        this.fastify.register(fastifyStatic, {
+            root: path.join(__dirname, "../maps/processed"),
+            prefix: "/maps/"
+        });
+
+        this.fastify.register(fastifySensible);
+
         try {
-            const address = await this.server.listen(this.config.apiPort);
+            const address = await this.fastify.listen(this.config.apiPort);
 
             console.log(`Server is now listening on ${address}`);
         } catch (err) {
-            this.server.log.error(err);
+            console.error(err);
             process.exit(1);
         }
     }
