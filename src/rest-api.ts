@@ -4,6 +4,7 @@ import fastifyRatelimit from "fastify-rate-limit";
 import fastifyAutoload from "fastify-autoload";
 import fastifyStatic from "fastify-static";
 import fastifySensible from "fastify-sensible";
+import fastifyCors from "fastify-cors";
 import Redis from "ioredis";
 const { JsonSchemaManager } = require('@alt3/sequelize-to-json-schemas');
 
@@ -62,8 +63,9 @@ export class RestAPI {
             }
         });
 
-        // https://github.com/fastify/fastify-http-proxy
-        // https://github.com/fastify/fastify-caching
+        this.fastify.register(fastifyCors);
+
+        this.fastify.register(fastifySensible);
 
         this.fastify.register(fastifyRatelimit, {
             max: 100,
@@ -85,8 +87,6 @@ export class RestAPI {
             root: path.join(__dirname, "../maps/processed"),
             prefix: "/maps/"
         });
-
-        this.fastify.register(fastifySensible);
 
         try {
             const address = await this.fastify.listen(this.config.apiPort);
