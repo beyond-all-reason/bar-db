@@ -1,4 +1,5 @@
-import { Static, Type } from "@sinclair/typebox";
+import { Static, TObject, TProperties, Type } from "@sinclair/typebox";
+import { coerceObject } from "~/utils/coerce-object";
 
 export const replayParamsSchema = Type.Object({
     replayId: Type.String()
