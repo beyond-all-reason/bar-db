@@ -4,7 +4,6 @@
   "description": "Beyond All Reason Database",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": "dist/bar-db-cli.js",
   "scripts": {
     "prepublish": "npm run build",
     "build": "webpack --mode=production",
