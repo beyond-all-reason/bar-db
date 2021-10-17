@@ -6,8 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "webpack --mode=production",
-    "dev": "webpack --mode=development --watch --progress",
+    "build": "ttsc",
+    "dev": "ttsc --watch",
     "lint": "./node_modules/.bin/eslint . --ext .ts",
     "lint-fix": "./node_modules/.bin/eslint . --ext .ts --fix",
     "test": "jest --passWithNoTests",
