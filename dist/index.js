@@ -12,5 +12,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./bar-db-config"), exports);
 __exportStar(require("./database"), exports);
-__exportStar(require("./utils/coerce-object"), exports);
 //# sourceMappingURL=index.js.map
