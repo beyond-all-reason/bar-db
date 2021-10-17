@@ -1,5 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
-import { paginateQuerySchema } from '~/model/rest-api/pagination';
+import { paginateQuerySchema } from './pagination';
 
 export enum ReplayPreset {
     FFA = 'ffa',
