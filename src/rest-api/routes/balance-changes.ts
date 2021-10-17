@@ -1,5 +1,6 @@
 import { FastifyPluginCallback } from "fastify";
-import { Op } from "sequelize";
+import { FindAndCountOptions, Op } from "sequelize";
+import { DBSchema } from "~/model/db";
 import { paginationQuerySchema, PaginationQueryType } from "~/model/rest-api/pagination";
 import { PluginOptions } from "~/rest-api";
 
@@ -16,17 +17,17 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db })
         handler: async (request, reply) => {
             const { page, limit } = request.query;
 
-            const { count: totalResults, rows: data } = await db.schema.balanceChange.findAndCountAll({
+            const query: FindAndCountOptions<DBSchema.BalanceChange.Schema> = {
+                offset: (page - 1) * limit,
+                limit,
                 attributes: ["sha", "date", "message", "url"],
                 distinct: true,
+                order: [["date", "DESC"]],
                 where: {
                     message: {
                         [Op.notILike]: "Merge pull request%"
                     }
                 },
-                order: [["date", "DESC"]],
-                offset: (page - 1) * limit,
-                limit,
                 include: [
                     {
                         model: db.schema.balanceChangeAuthor,
@@ -41,12 +42,19 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db })
                         where: {
                             scav: false
                         },
-                        required: true
+                        required: true,
                     }
                 ]
-            });
+            };
 
-            return { totalResults, page, limit, data };
+            try {
+                const { count: totalResults, rows: data } = await db.schema.balanceChange.findAndCountAll(query);
+
+                return { totalResults, page, limit, data };
+            } catch (err) {
+                console.log(err);
+                throw err;
+            }
         },
     });
 };

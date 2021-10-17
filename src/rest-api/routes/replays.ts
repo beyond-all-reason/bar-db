@@ -23,10 +23,26 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
         },
         handler: async (request, reply) => {
             const { page, limit, preset, endedNormally, hasBots, date: dateRangeStr, durationRangeMins, maps, players, reported, tsRange } = request.query;
-            console.log({ page, limit, preset, endedNormally, hasBots, dateRangeStr, durationRangeMins, maps, players, reported, tsRange });
+            console.log(request.query);
 
             const demoWhere: WhereAttributeHash<DBSchema.Demo.Schema> | AndOperator<DBSchema.Demo.Schema> | OrOperator<DBSchema.Demo.Schema> = {};
             const mapWhere: WhereAttributeHash<DBSchema.SpringMap.Schema> | AndOperator<DBSchema.SpringMap.Schema> | OrOperator<DBSchema.SpringMap.Schema> = {};
+
+            if (preset !== undefined) {
+                demoWhere.preset = preset;
+            }
+
+            if (endedNormally !== undefined) {
+                demoWhere.gameEndedNormally = endedNormally;
+            }
+
+            if (hasBots !== undefined) {
+                demoWhere.hasBots = hasBots;
+            }
+
+            if (reported !== undefined) {
+                demoWhere.reported = reported;
+            }
 
             const dateRange = dateRangeStr?.map(str => new Date(str)).sort((a, b) => a.valueOf() - b.valueOf());
             if (dateRange) {
@@ -80,32 +96,39 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
                         model: db.schema.map,
                         attributes: ["fileName", "scriptName"],
                         where: mapWhere,
-                        subQuery: true
+                        //subQuery: true
                     },
                     {
                         model: db.schema.allyTeam, // TODO: only include total player counts instead of objects
                         attributes: ["winningTeam"],
+                        separate: true,
                         include: [
                             {
                                 model: db.schema.player,
                                 attributes: ["name"],
-                                subQuery: false
+                                subQuery: false,
+                                separate: true,
                             },
                             {
                                 model: db.schema.ai,
                                 attributes: ["shortName"],
-                                subQuery: false
+                                subQuery: false,
+                                separate: true,
                             }
                         ],
                         required: true,
-                        subQuery: false
+                        //subQuery: false
                     }
                 ],
             };
 
-            const { count: totalResults, rows: data } = await db.schema.demo.findAndCountAll(query);
-
-            return { totalResults, page, limit, data };
+            try {
+                const { count: totalResults, rows: data } = await db.schema.demo.findAndCountAll(query);
+                return { totalResults, page, limit, data };
+            } catch (err) {
+                console.log(err);
+                throw err;
+            }
         }
     });
 

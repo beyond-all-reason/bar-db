@@ -35,11 +35,12 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
                         include: [db.schema.player, db.schema.ai],
                         separate: true,
                         order: [["allyTeamId", "ASC"]],
-                        subQuery: false
+                        subQuery: false,
                     },
                     {
                         model: db.schema.spectator,
-                        subQuery: false
+                        subQuery: false,
+                        separate: true,
                     }
                 ]
             });

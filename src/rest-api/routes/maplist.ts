@@ -2,17 +2,16 @@ import { FastifyPluginCallback } from "fastify";
 import { PluginOptions } from "~/rest-api";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 
-const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, redis }) {
+const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { config, db, redis }) {
     app.route({
         method: "GET",
         url: "/mapLists.conf",
         handler: async (request, reply) => {
             const mapListsGenerator = new MapListsGenerator({
-                googleSheetsId: "1rn4kIIc9Nnyv_ZiBxXvNXdhUSnh15aLrLsQXmtUBJt8",
-                googleSheetsAPIKey: "AIzaSyDkSWYX9nggs_cstsk7qArHek6F7yZqdo8"
+                googleSheetsId: config.maplists.googleSheetsId,
+                googleSheetsAPIKey: config.maplists.googleSheetsAPIKey
             });
 
-            //reply.type("application/conf");
             reply.header("Content-Disposition", "inline; filename=mapLists.conf");
 
             const mapLists = await mapListsGenerator.generate();

@@ -28,6 +28,10 @@ export interface BARDBConfig {
         verbose: boolean
     };
     lobby: SpringLobbyProtocolClientConfig;
+    maplists: {
+        googleSheetsId: string,
+        googleSheetsAPIKey: string
+    },
     mapsDir: string;
     demosDir: string;
     objectStorage?: {
@@ -75,6 +79,10 @@ export const defaultBARDBConfig: BARDBConfig = {
         password: "BARDBBOT",
         username: "1234545678",
         lobbySignature: "BARDB"
+    },
+    maplists: {
+        googleSheetsId: "1rn4kIIc9Nnyv_ZiBxXvNXdhUSnh15aLrLsQXmtUBJt8",
+        googleSheetsAPIKey: "123454"
     },
     mapsDir: "/var/www/maps",
     demosDir: "/var/www/demos",

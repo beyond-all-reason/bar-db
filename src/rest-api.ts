@@ -14,6 +14,7 @@ import { SLDBService } from "~/rest-api/sldb-service";
 import { LobbyService } from "~/rest-api/lobby-service";
 
 export interface PluginOptions {
+    config: BARDBConfig;
     db: Database;
     redis: Redis.Redis;
     schemaManager: any;
@@ -75,6 +76,7 @@ export class RestAPI {
         this.fastify.register(fastifyAutoload, {
             dir: path.join(__dirname, "rest-api/routes"),
             options: {
+                config: this.config,
                 db: this.db,
                 redis: this.redis,
                 schemaManager: this.schemaManager,
