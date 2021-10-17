@@ -11,8 +11,8 @@ var ReplayPreset;
 })(ReplayPreset = exports.ReplayPreset || (exports.ReplayPreset = {}));
 exports.replaysQuerySchema = (0, pagination_1.paginateQuerySchema)(typebox_1.Type.Object({
     preset: typebox_1.Type.Optional(typebox_1.Type.Array(typebox_1.Type.Enum(ReplayPreset))),
-    endedNormally: typebox_1.Type.Boolean(),
-    hasBots: typebox_1.Type.Boolean(),
+    endedNormally: typebox_1.Type.Optional(typebox_1.Type.Boolean()),
+    hasBots: typebox_1.Type.Optional(typebox_1.Type.Boolean()),
     tsRange: typebox_1.Type.Optional(typebox_1.Type.Tuple([
         typebox_1.Type.Number(),
         typebox_1.Type.Number()

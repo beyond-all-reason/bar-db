@@ -9,8 +9,8 @@ export enum ReplayPreset {
 
 export const replaysQuerySchema = paginateQuerySchema(Type.Object({
     preset: Type.Optional(Type.Array(Type.Enum(ReplayPreset))),
-    endedNormally: Type.Boolean(),
-    hasBots: Type.Boolean(),
+    endedNormally: Type.Optional(Type.Boolean()),
+    hasBots: Type.Optional(Type.Boolean()),
     tsRange: Type.Optional(
         Type.Tuple([
             Type.Number(),

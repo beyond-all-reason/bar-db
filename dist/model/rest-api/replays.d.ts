@@ -9,8 +9,8 @@ export declare const replaysQuerySchema: import("@sinclair/typebox").TIntersect<
     limit: import("@sinclair/typebox").TNumber;
 }>, import("@sinclair/typebox").TObject<{
     preset: import("@sinclair/typebox").TOptional<import("@sinclair/typebox").TArray<import("@sinclair/typebox").TEnum<import("@sinclair/typebox").TEnumKey<ReplayPreset>[]>>>;
-    endedNormally: import("@sinclair/typebox").TBoolean;
-    hasBots: import("@sinclair/typebox").TBoolean;
+    endedNormally: import("@sinclair/typebox").TOptional<import("@sinclair/typebox").TBoolean>;
+    hasBots: import("@sinclair/typebox").TOptional<import("@sinclair/typebox").TBoolean>;
     tsRange: import("@sinclair/typebox").TOptional<import("@sinclair/typebox").TTuple<[import("@sinclair/typebox").TNumber, import("@sinclair/typebox").TNumber]>>;
     reported: import("@sinclair/typebox").TOptional<import("@sinclair/typebox").TBoolean>;
     players: import("@sinclair/typebox").TOptional<import("@sinclair/typebox").TArray<import("@sinclair/typebox").TString>>;
