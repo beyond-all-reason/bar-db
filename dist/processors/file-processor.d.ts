@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { Database } from "~/database";
+import { Database } from "../database";
 export interface FileProcessorConfig {
     db: Database;
     dir: string;

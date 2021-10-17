@@ -1,5 +1,5 @@
 import { SLDBClient, SLDBModel } from "sldbts";
-import { BARDBConfig } from "~/bar-db-config";
+import { BARDBConfig } from "../bar-db-config";
 export declare class SLDBService {
     leaderboards: SLDBModel.LeaderboardResult[];
     protected config: BARDBConfig["sldb"];

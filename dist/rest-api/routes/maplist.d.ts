@@ -1,5 +1,5 @@
 import { FastifyPluginCallback } from "fastify";
-import { PluginOptions } from "~/rest-api";
+import { PluginOptions } from "./..";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 declare const plugin: FastifyPluginCallback<PluginOptions>;
 export interface MapListsGeneratorConfig {

@@ -1,5 +1,5 @@
 import { BalanceChange, BalanceChangeFetcher } from "bar-balance-changes";
-import { Database } from "~/database";
+import { Database } from "../database";
 export interface BalanceChangeProcessorConfig {
     owner: string;
     repo: string;

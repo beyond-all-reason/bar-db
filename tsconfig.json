@@ -23,5 +23,11 @@
     ],
     "exclude": [
         "node_modules",
+    ],
+    "plugins": [
+        {
+            "transform": "@zerollup/ts-transform-paths",
+        },
+        { "transform": "@zerollup/ts-transform-paths", "afterDeclarations": true }
     ]
 }

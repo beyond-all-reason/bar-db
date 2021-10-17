@@ -1,5 +1,5 @@
 import Redis from "ioredis";
-import { Database } from "~/database";
+import { Database } from "./database";
 export declare class MemoryStore {
     protected db: Database;
     protected redis: Redis.Redis;

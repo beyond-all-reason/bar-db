@@ -1,6 +1,6 @@
 import { ModelCtor, Sequelize } from "sequelize";
-import { DBSchema } from "~/model/db";
-import { BARDBConfig } from "~/bar-db-config";
+import { DBSchema } from "./model/db";
+import { BARDBConfig } from "./bar-db-config";
 export declare class Database {
     sequelize: Sequelize;
     schema: {
