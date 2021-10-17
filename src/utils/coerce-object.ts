@@ -11,7 +11,7 @@ const ajv = new Ajv({ coerceTypes: true });
 
 //     return;
 // }
-export function coerceObject<T extends any, S extends TObject<C>, C extends TProperties>(data: T, schema: S) : Static<typeof schema> | void {
+export function coerceObject<T extends any>(data: T, schema: object) : Static<typeof schema> | void {
     const validate = ajv.compile(schema);
     if (validate(data)) {
         return data as Static<typeof schema>;
