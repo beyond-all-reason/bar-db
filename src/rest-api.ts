@@ -91,7 +91,7 @@ export class RestAPI {
         });
 
         this.fastify.register(fastifyStatic, {
-            root: path.join(__dirname, "../maps/processed"),
+            root: path.join(this.config.mapsDir, "processed"),
             prefix: "/maps/"
         });
 
