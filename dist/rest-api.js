@@ -68,6 +68,7 @@ class RestAPI {
                 "127.0.0.1",
                 "0.0.0.0",
                 "localhost",
+                "51.195.223.10",
                 "bar-rts.com",
                 "api.bar-rts.com"
             ]
