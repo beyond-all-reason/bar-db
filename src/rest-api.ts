@@ -68,15 +68,16 @@ export class RestAPI {
 
         this.fastify.register(fastifySensible);
 
-        // this.fastify.register(fastifyRatelimit, {
-        //     redis: this.redis,
-        //     allowList: [
-        //         "127.0.0.1",
-        //         "0.0.0.0",
-        //         "localhost",
-        //         "bar-rts.com"
-        //     ]
-        // });
+        this.fastify.register(fastifyRatelimit, {
+            redis: this.redis,
+            allowList: [
+                "127.0.0.1",
+                "0.0.0.0",
+                "localhost",
+                "bar-rts.com",
+                "api.bar-rts.com"
+            ]
+        });
 
         this.fastify.register(fastifyAutoload, {
             dir: path.join(__dirname, "rest-api/routes"),

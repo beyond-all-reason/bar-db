@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestAPI = void 0;
 const path = __importStar(require("path"));
 const fastify_1 = __importDefault(require("fastify"));
+const fastify_rate_limit_1 = __importDefault(require("fastify-rate-limit"));
 const fastify_autoload_1 = __importDefault(require("fastify-autoload"));
 const fastify_static_1 = __importDefault(require("fastify-static"));
 const fastify_sensible_1 = __importDefault(require("fastify-sensible"));
@@ -61,15 +62,16 @@ class RestAPI {
         });
         this.fastify.register(fastify_cors_1.default);
         this.fastify.register(fastify_sensible_1.default);
-        // this.fastify.register(fastifyRatelimit, {
-        //     redis: this.redis,
-        //     allowList: [
-        //         "127.0.0.1",
-        //         "0.0.0.0",
-        //         "localhost",
-        //         "bar-rts.com"
-        //     ]
-        // });
+        this.fastify.register(fastify_rate_limit_1.default, {
+            redis: this.redis,
+            allowList: [
+                "127.0.0.1",
+                "0.0.0.0",
+                "localhost",
+                "bar-rts.com",
+                "api.bar-rts.com"
+            ]
+        });
         this.fastify.register(fastify_autoload_1.default, {
             dir: path.join(__dirname, "rest-api/routes"),
             options: {
