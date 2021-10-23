@@ -18,6 +18,11 @@ export namespace Player {
         trueSkill?: number;
         skillUncertainty?: number;
         startPos?: { x: number, y: number, z: number };
+        clanId?: string;
+        trueSkillMuBefore?: number;
+        trueSkillSigmaBefore?: number;
+        trueSkillMuAfter?: number;
+        trueSkillSigmaAfter?: number;
     }
     
     export interface CreationAttributes extends Optional<Schema, "id"> { }
@@ -48,7 +53,12 @@ export namespace Player {
         skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
         skill: { type: DataTypes.STRING },
         trueSkill: { type: DataTypes.FLOAT, allowNull: true },
-        startPos: { type: DataTypes.JSON, allowNull: true }
+        startPos: { type: DataTypes.JSON, allowNull: true },
+        clanId: { type: DataTypes.STRING, allowNull: true },
+        trueSkillMuBefore: { type: DataTypes.FLOAT, allowNull: true },
+        trueSkillSigmaBefore: { type: DataTypes.FLOAT, allowNull: true },
+        trueSkillMuAfter: { type: DataTypes.FLOAT, allowNull: true },
+        trueSkillSigmaAfter: { type: DataTypes.FLOAT, allowNull: true },
     };
 
     export const sequelizeOptions: ModelOptions = {

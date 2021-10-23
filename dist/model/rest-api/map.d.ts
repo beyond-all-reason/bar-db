@@ -1,5 +1,5 @@
 import { Static } from "@sinclair/typebox";
 export declare const mapParamsSchema: import("@sinclair/typebox").TObject<{
-    mapId: import("@sinclair/typebox").TInteger;
+    mapFileName: import("@sinclair/typebox").TString;
 }>;
 export declare type MapParamsType = Static<typeof mapParamsSchema>;

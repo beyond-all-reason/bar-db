@@ -8,7 +8,7 @@ const plugin = async function (app, { db, redis, schemaManager }) {
     });
     app.route({
         method: "GET",
-        url: "/maps/:mapId",
+        url: "/maps/:mapFileName",
         schema: {
             params: map_1.mapParamsSchema,
             response: {
@@ -16,7 +16,11 @@ const plugin = async function (app, { db, redis, schemaManager }) {
             }
         },
         handler: async (request, reply) => {
-            const map = await db.schema.map.findByPk(request.params.mapId);
+            const map = await db.schema.map.findOne({
+                where: {
+                    fileName: request.params.mapFileName
+                }
+            });
             if (map === null) {
                 throw app.httpErrors.notFound(`Map not found`);
             }

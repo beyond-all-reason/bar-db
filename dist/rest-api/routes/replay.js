@@ -17,10 +17,13 @@ const plugin = async function (app, { db, redis, schemaManager }) {
         handler: async (request, reply) => {
             const { replayId } = request.params;
             const replay = await db.schema.demo.findByPk(replayId, {
+                attributes: {
+                    exclude: ["chatlog"]
+                },
                 include: [
                     {
                         model: db.schema.map,
-                        attributes: ["id", "scriptName", "fileName"],
+                        attributes: ["id", "scriptName", "fileName", "width", "height"],
                         subQuery: false
                     },
                     {

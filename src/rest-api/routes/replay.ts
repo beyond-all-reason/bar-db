@@ -1,5 +1,4 @@
 import { FastifyPluginCallback } from "fastify";
-import { JSONSchema7 } from "json-schema";
 import { Database } from "~/database";
 import { DBSchema } from "~/model/db";
 import { mapParamsSchema, MapParamsType } from "~/model/rest-api/map";
@@ -24,10 +23,13 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
             const { replayId } = request.params;
 
             const replay = await db.schema.demo.findByPk(replayId, {
+                attributes: {
+                    exclude: ["chatlog"]
+                },
                 include: [
                     {
                         model: db.schema.map,
-                        attributes: ["id", "scriptName", "fileName"],
+                        attributes: ["id", "scriptName", "fileName", "width", "height"],
                         subQuery: false
                     },
                     {

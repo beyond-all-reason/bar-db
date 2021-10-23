@@ -22,11 +22,11 @@ exports.replaysQuerySchema = (0, pagination_1.paginateQuerySchema)(typebox_1.Typ
     maps: typebox_1.Type.Optional(typebox_1.Type.Array(typebox_1.Type.String())),
     date: typebox_1.Type.Optional(typebox_1.Type.Union([
         typebox_1.Type.Tuple([
-            typebox_1.Type.String({ format: "date-time" }),
-            typebox_1.Type.String({ format: "date-time" })
+            typebox_1.Type.String({ format: "date" }),
+            typebox_1.Type.String({ format: "date" })
         ]),
         typebox_1.Type.Tuple([
-            typebox_1.Type.String({ format: "date-time" })
+            typebox_1.Type.String({ format: "date" })
         ])
     ])),
     durationRangeMins: typebox_1.Type.Optional(typebox_1.Type.Tuple([

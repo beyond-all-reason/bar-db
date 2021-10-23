@@ -17,10 +17,11 @@ export namespace Demo {
         hostSettings: { [key: string]: string };
         gameSettings: { [key: string]: string };
         mapSettings: { [key: string]: string };
+        spadsSettings?: { [key: string]: string };
         gameEndedNormally: boolean;
         chatlog: DemoModel.ChatMessage[];
         hasBots?: boolean;
-        preset?: "duel" | "team" | "ffa";
+        preset?: string;
         reported?: boolean;
     }
     
@@ -67,11 +68,12 @@ export namespace Demo {
         hostSettings: { type: DataTypes.JSON, allowNull: false },
         gameSettings: { type: DataTypes.JSON, allowNull: false },
         mapSettings: { type: DataTypes.JSON, allowNull: false },
+        spadsSettings: { type: DataTypes.JSON, allowNull: true },
         gameEndedNormally: { type: DataTypes.BOOLEAN, defaultValue: true, allowNull: false },
         chatlog: { type: DataTypes.JSON, defaultValue: [], allowNull: true },
         hasBots: { type: DataTypes.BOOLEAN, allowNull: true },
         preset: { type: DataTypes.STRING, allowNull: true },
-        reported: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: true }
+        reported: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: true },
     };
 
     export const sequelizeOptions: ModelOptions = {

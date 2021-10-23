@@ -24,6 +24,11 @@ export declare namespace Player {
             y: number;
             z: number;
         };
+        clanId?: string;
+        trueSkillMuBefore?: number;
+        trueSkillSigmaBefore?: number;
+        trueSkillMuAfter?: number;
+        trueSkillSigmaAfter?: number;
     }
     interface CreationAttributes extends Optional<Schema, "id"> {
     }

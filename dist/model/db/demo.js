@@ -15,11 +15,12 @@ var Demo;
         hostSettings: { type: sequelize_1.DataTypes.JSON, allowNull: false },
         gameSettings: { type: sequelize_1.DataTypes.JSON, allowNull: false },
         mapSettings: { type: sequelize_1.DataTypes.JSON, allowNull: false },
+        spadsSettings: { type: sequelize_1.DataTypes.JSON, allowNull: true },
         gameEndedNormally: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: true, allowNull: false },
         chatlog: { type: sequelize_1.DataTypes.JSON, defaultValue: [], allowNull: true },
         hasBots: { type: sequelize_1.DataTypes.BOOLEAN, allowNull: true },
         preset: { type: sequelize_1.DataTypes.STRING, allowNull: true },
-        reported: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false, allowNull: true }
+        reported: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false, allowNull: true },
     };
     Demo.sequelizeOptions = {};
 })(Demo = exports.Demo || (exports.Demo = {}));

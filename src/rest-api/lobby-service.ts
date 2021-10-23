@@ -1,9 +1,8 @@
 import * as net from "net";
-import { SpringLobbyProtocolClient, SpringLobbyProtocolClientConfig } from "sluts";
+import { SpringLobbyProtocolClient } from "sluts";
 import { Signal } from "jaz-ts-utils";
 import Redis from "ioredis";
 
-import { createFileLogger } from "~/utils/create-file-logger";
 import { Battle } from "~/model/rest-api/battle";
 import { Player } from "~/model/rest-api/player";
 import { SpadsBattleData } from "~/model/rest-api/spads";

@@ -11,6 +11,9 @@ export declare namespace User {
         skillUncertainty?: number;
         skill?: string;
         trueSkill?: number;
+        privacyMode?: boolean;
+        trueSkillMu?: number;
+        trueSkillSigma?: number;
     }
     interface CreationAttributes extends Schema {
     }

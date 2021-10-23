@@ -63,8 +63,13 @@ class RestAPI {
         this.fastify.register(fastify_cors_1.default);
         this.fastify.register(fastify_sensible_1.default);
         this.fastify.register(fastify_rate_limit_1.default, {
-            max: 100,
-            timeWindow: '1 minute'
+            redis: this.redis,
+            allowList: [
+                "127.0.0.1",
+                "0.0.0.0",
+                "localhost",
+                "bar-rts.com"
+            ]
         });
         this.fastify.register(fastify_autoload_1.default, {
             dir: path.join(__dirname, "rest-api/routes"),

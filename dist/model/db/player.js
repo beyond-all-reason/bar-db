@@ -17,7 +17,12 @@ var Player;
         skillUncertainty: { type: sequelize_1.DataTypes.INTEGER, allowNull: true },
         skill: { type: sequelize_1.DataTypes.STRING },
         trueSkill: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
-        startPos: { type: sequelize_1.DataTypes.JSON, allowNull: true }
+        startPos: { type: sequelize_1.DataTypes.JSON, allowNull: true },
+        clanId: { type: sequelize_1.DataTypes.STRING, allowNull: true },
+        trueSkillMuBefore: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
+        trueSkillSigmaBefore: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
+        trueSkillMuAfter: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
+        trueSkillSigmaAfter: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
     };
     Player.sequelizeOptions = {};
 })(Player = exports.Player || (exports.Player = {}));

@@ -23,11 +23,11 @@ export const replaysQuerySchema = paginateQuerySchema(Type.Object({
     date: Type.Optional(
         Type.Union([
             Type.Tuple([
-                Type.String({ format: "date-time" }),
-                Type.String({ format: "date-time" })
+                Type.String({ format: "date" }),
+                Type.String({ format: "date" })
             ]),
             Type.Tuple([
-                Type.String({ format: "date-time" })
+                Type.String({ format: "date" })
             ])
         ])
     ),

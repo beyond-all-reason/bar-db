@@ -41,6 +41,7 @@ class BARDB {
         };
         this.db = new database_1.Database(this.config.db);
         this.mapProcessor = new map_processor_1.MapProcessor({
+            bardbConfig: this.config,
             db: this.db,
             dir: this.config.mapsDir,
             fileExt: [".sd7", ".sdz"],
@@ -53,6 +54,7 @@ class BARDB {
             (_a = this.memoryStore) === null || _a === void 0 ? void 0 : _a.saveMapsToMemory();
         });
         this.demoProcessor = new demo_processor_1.DemoProcessor({
+            bardbConfig: this.config,
             db: this.db,
             dir: this.config.demosDir,
             fileExt: [".sdfz"],

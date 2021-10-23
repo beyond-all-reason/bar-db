@@ -21,10 +21,13 @@ export declare namespace Demo {
         mapSettings: {
             [key: string]: string;
         };
+        spadsSettings?: {
+            [key: string]: string;
+        };
         gameEndedNormally: boolean;
         chatlog: DemoModel.ChatMessage[];
         hasBots?: boolean;
-        preset?: "duel" | "team" | "ffa";
+        preset?: string;
         reported?: boolean;
     }
     interface CreationAttributes extends Schema {

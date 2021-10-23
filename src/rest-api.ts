@@ -69,8 +69,13 @@ export class RestAPI {
         this.fastify.register(fastifySensible);
 
         this.fastify.register(fastifyRatelimit, {
-            max: 100,
-            timeWindow: '1 minute'
+            redis: this.redis,
+            allowList: [
+                "127.0.0.1",
+                "0.0.0.0",
+                "localhost",
+                "bar-rts.com"
+            ]
         });
 
         this.fastify.register(fastifyAutoload, {

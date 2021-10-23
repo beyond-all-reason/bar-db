@@ -1,5 +1,4 @@
 import { FastifyPluginCallback } from "fastify";
-import { JSONSchema7 } from "json-schema";
 import { Database } from "~/database";
 import { DBSchema } from "~/model/db";
 import { paginateReplySchema, PaginateReplyType, paginationQuerySchema, PaginationQueryType } from "~/model/rest-api/pagination";

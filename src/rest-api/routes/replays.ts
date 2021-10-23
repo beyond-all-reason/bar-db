@@ -1,5 +1,4 @@
 import { FastifyPluginCallback } from "fastify";
-import { JSONSchema7 } from "json-schema";
 import { AndOperator, FindAndCountOptions, Op, OrOperator, Sequelize, WhereAttributeHash } from "sequelize";
 import { Database } from "~/database";
 import { DBSchema } from "~/model/db";
@@ -23,7 +22,6 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
         },
         handler: async (request, reply) => {
             const { page, limit, preset, endedNormally, hasBots, date: dateRangeStr, durationRangeMins, maps, players, reported, tsRange } = request.query;
-            console.log(request.query);
 
             const demoWhere: WhereAttributeHash<DBSchema.Demo.Schema> | AndOperator<DBSchema.Demo.Schema> | OrOperator<DBSchema.Demo.Schema> = {};
             const mapWhere: WhereAttributeHash<DBSchema.SpringMap.Schema> | AndOperator<DBSchema.SpringMap.Schema> | OrOperator<DBSchema.SpringMap.Schema> = {};
@@ -91,12 +89,12 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
                 attributes: ["id", "startTime", "durationMs"],
                 distinct: true,
                 where: demoWhere,
+                order: [["startTime", "DESC"]],
                 include: [
                     {
                         model: db.schema.map,
                         attributes: ["fileName", "scriptName"],
                         where: mapWhere,
-                        //subQuery: true
                     },
                     {
                         model: db.schema.allyTeam, // TODO: only include total player counts instead of objects
@@ -117,7 +115,6 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
                             }
                         ],
                         required: true,
-                        //subQuery: false
                     }
                 ],
             };

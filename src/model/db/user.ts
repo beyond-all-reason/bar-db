@@ -13,6 +13,9 @@ export namespace User {
         skillUncertainty?: number;
         skill?: string;
         trueSkill?: number;
+        privacyMode?: boolean;
+        trueSkillMu?: number;
+        trueSkillSigma?: number;
     }
     
     export interface CreationAttributes extends Schema { }
@@ -60,6 +63,9 @@ export namespace User {
         skill: { type: DataTypes.STRING },
         trueSkill: { type: DataTypes.FLOAT, allowNull: true },
         skillUncertainty: { type: DataTypes.FLOAT },
+        privacyMode: { type: DataTypes.BOOLEAN, allowNull: true },
+        trueSkillMu: { type: DataTypes.FLOAT, allowNull: true },
+        trueSkillSigma: { type: DataTypes.FLOAT, allowNull: true },
     };
 
     export const sequelizeOptions: ModelOptions = {

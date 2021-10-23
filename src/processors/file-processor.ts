@@ -4,8 +4,10 @@ import * as path from "path";
 import axios, { AxiosResponse } from "axios";
 
 import { Database } from "~/database";
+import { BARDBConfig } from "~/bar-db-config";
 
 export interface FileProcessorConfig {
+    bardbConfig: BARDBConfig;
     db: Database;
     dir: string;
     fileExt: string[];

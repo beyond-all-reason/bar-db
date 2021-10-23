@@ -17,7 +17,6 @@ const plugin = async function (app, { db, redis, schemaManager }) {
         },
         handler: async (request, reply) => {
             const { page, limit, preset, endedNormally, hasBots, date: dateRangeStr, durationRangeMins, maps, players, reported, tsRange } = request.query;
-            console.log(request.query);
             const demoWhere = {};
             const mapWhere = {};
             if (preset !== undefined) {
@@ -72,12 +71,12 @@ const plugin = async function (app, { db, redis, schemaManager }) {
                 attributes: ["id", "startTime", "durationMs"],
                 distinct: true,
                 where: demoWhere,
+                order: [["startTime", "DESC"]],
                 include: [
                     {
                         model: db.schema.map,
                         attributes: ["fileName", "scriptName"],
                         where: mapWhere,
-                        //subQuery: true
                     },
                     {
                         model: db.schema.allyTeam,
@@ -98,7 +97,6 @@ const plugin = async function (app, { db, redis, schemaManager }) {
                             }
                         ],
                         required: true,
-                        //subQuery: false
                     }
                 ],
             };

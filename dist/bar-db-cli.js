@@ -26,8 +26,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __importStar(require("fs"));
 const yargs_1 = __importDefault(require("yargs"));
 const bar_db_1 = require("./bar-db");
-const args = yargs_1.default.option("config", { type: "string", description: "Path to config.json file", demandOption: true }).demandOption("config");
-const config = JSON.parse(fs.readFileSync(args.argv.config, { encoding: "utf-8" }));
-const barDb = new bar_db_1.BARDB(config);
-barDb.init();
+(async () => {
+    const args = yargs_1.default.option("config", { type: "string", description: "Path to config.json file", demandOption: true }).demandOption("config");
+    const argv = await args.argv;
+    const config = JSON.parse(fs.readFileSync(argv.config, { encoding: "utf-8" }));
+    const barDb = new bar_db_1.BARDB(config);
+    barDb.init();
+})();
 //# sourceMappingURL=bar-db-cli.js.map

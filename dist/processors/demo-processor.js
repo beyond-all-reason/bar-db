@@ -24,12 +24,14 @@ const fs = __importStar(require("fs"));
 const jaz_ts_utils_1 = require("jaz-ts-utils");
 const path = __importStar(require("path"));
 const sdfz_demo_parser_1 = require("sdfz-demo-parser");
+const sldbts_1 = require("sldbts");
 const file_processor_1 = require("./file-processor");
 class DemoProcessor extends file_processor_1.FileProcessor {
     constructor(config) {
         super(config);
         this.onDemoProcessed = new jaz_ts_utils_1.Signal();
         this.db = config.db;
+        this.sldbClient = new sldbts_1.SLDBClient(this.config.bardbConfig.sldb);
     }
     async processFile(filePath) {
         const fileBytes1 = (await fs.promises.stat(filePath)).size;
@@ -41,6 +43,14 @@ class DemoProcessor extends file_processor_1.FileProcessor {
         const demoParser = new sdfz_demo_parser_1.DemoParser();
         const demoData = await demoParser.parseDemo(filePath);
         const mapScriptName = demoData.info.hostSettings.mapname;
+        let sldbMatchData;
+        try {
+            sldbMatchData = await this.getSLDBMatchData(demoData.header.gameId);
+        }
+        catch (err) {
+            console.log(err);
+            console.log(`Error grabbing match data from SLDB for: ${demoData.header.gameId}`);
+        }
         const [map] = await this.db.schema.map.findOrCreate({
             where: { scriptName: mapScriptName },
             defaults: {
@@ -64,6 +74,9 @@ class DemoProcessor extends file_processor_1.FileProcessor {
         else if (numOfPlayers === 2) {
             preset = "duel";
         }
+        if (sldbMatchData === null || sldbMatchData === void 0 ? void 0 : sldbMatchData.gameType) {
+            preset = sldbMatchData.gameType.toLowerCase();
+        }
         let reported = false;
         if (demoData.chatlog && demoData.chatlog.length) {
             for (const line of demoData.chatlog) {
@@ -84,6 +97,7 @@ class DemoProcessor extends file_processor_1.FileProcessor {
             hostSettings: demoData.info.hostSettings,
             gameSettings: demoData.info.gameSettings,
             mapSettings: demoData.info.mapSettings,
+            spadsSettings: demoData.info.spadsSettings,
             gameEndedNormally: demoData.info.meta.winningAllyTeamIds.length > 0,
             chatlog: demoData.chatlog || [],
             preset,
@@ -102,6 +116,7 @@ class DemoProcessor extends file_processor_1.FileProcessor {
         const playerAndSpecs = [...demoData.info.players, ...demoData.info.spectators];
         for (const playerOrSpecData of playerAndSpecs) {
             let user;
+            const sldbTrueSkillData = sldbMatchData === null || sldbMatchData === void 0 ? void 0 : sldbMatchData.players.find(player => player.accountId === playerOrSpecData.userId);
             if (playerOrSpecData.userId !== undefined) {
                 [user] = await this.db.schema.user.findOrCreate({
                     where: { id: playerOrSpecData.userId },
@@ -112,7 +127,7 @@ class DemoProcessor extends file_processor_1.FileProcessor {
                         rank: playerOrSpecData.rank,
                         skill: playerOrSpecData.skill,
                         trueSkill: Number(playerOrSpecData.skill) || undefined,
-                        skillUncertainty: playerOrSpecData.skillUncertainty
+                        skillUncertainty: playerOrSpecData.skillUncertainty,
                     }
                 });
                 user.username = playerOrSpecData.name;
@@ -123,6 +138,11 @@ class DemoProcessor extends file_processor_1.FileProcessor {
                     user.trueSkill = Number(playerOrSpecData.skill);
                 }
                 user.skillUncertainty = playerOrSpecData.skillUncertainty;
+                if (sldbTrueSkillData) {
+                    user.trueSkill = sldbTrueSkillData.skills.after.estimated;
+                    user.skillUncertainty = sldbTrueSkillData.skills.after.uncertainty;
+                    user.privacyMode = sldbTrueSkillData.privacyMode === 1;
+                }
                 await user.save();
                 const [alias] = await user.getAliases({
                     where: { alias: playerOrSpecData.name }
@@ -147,7 +167,12 @@ class DemoProcessor extends file_processor_1.FileProcessor {
                     skillUncertainty: playerOrSpecData.skillUncertainty,
                     skill: playerOrSpecData.skill,
                     trueSkill: Number(playerOrSpecData.skill) || undefined,
-                    startPos: playerOrSpecData.startPos
+                    startPos: playerOrSpecData.startPos,
+                    clanId: playerOrSpecData.clanId,
+                    trueSkillMuBefore: sldbTrueSkillData === null || sldbTrueSkillData === void 0 ? void 0 : sldbTrueSkillData.skills.before.estimated,
+                    trueSkillSigmaBefore: sldbTrueSkillData === null || sldbTrueSkillData === void 0 ? void 0 : sldbTrueSkillData.skills.before.uncertainty,
+                    trueSkillMuAfter: sldbTrueSkillData === null || sldbTrueSkillData === void 0 ? void 0 : sldbTrueSkillData.skills.after.estimated,
+                    trueSkillSigmaAfter: sldbTrueSkillData === null || sldbTrueSkillData === void 0 ? void 0 : sldbTrueSkillData.skills.after.uncertainty,
                 });
                 if (user) {
                     await user.addPlayer(player);
@@ -181,6 +206,10 @@ class DemoProcessor extends file_processor_1.FileProcessor {
             });
         }
         this.onDemoProcessed.dispatch(demo);
+    }
+    async getSLDBMatchData(matchId) {
+        const matchResults = await this.sldbClient.getMatchSkills([matchId]);
+        return matchResults[0];
     }
     async uploadFileToObjectStorage(filePath, prefix = "/") {
         return super.uploadFileToObjectStorage(filePath, "/demos");

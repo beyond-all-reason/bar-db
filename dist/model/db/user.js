@@ -12,6 +12,9 @@ var User;
         skill: { type: sequelize_1.DataTypes.STRING },
         trueSkill: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
         skillUncertainty: { type: sequelize_1.DataTypes.FLOAT },
+        privacyMode: { type: sequelize_1.DataTypes.BOOLEAN, allowNull: true },
+        trueSkillMu: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
+        trueSkillSigma: { type: sequelize_1.DataTypes.FLOAT, allowNull: true },
     };
     User.sequelizeOptions = {
         indexes: [
