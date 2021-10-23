@@ -68,15 +68,15 @@ export class RestAPI {
 
         this.fastify.register(fastifySensible);
 
-        this.fastify.register(fastifyRatelimit, {
-            redis: this.redis,
-            allowList: [
-                "127.0.0.1",
-                "0.0.0.0",
-                "localhost",
-                "bar-rts.com"
-            ]
-        });
+        // this.fastify.register(fastifyRatelimit, {
+        //     redis: this.redis,
+        //     allowList: [
+        //         "127.0.0.1",
+        //         "0.0.0.0",
+        //         "localhost",
+        //         "bar-rts.com"
+        //     ]
+        // });
 
         this.fastify.register(fastifyAutoload, {
             dir: path.join(__dirname, "rest-api/routes"),
@@ -91,7 +91,7 @@ export class RestAPI {
         });
 
         this.fastify.register(fastifyStatic, {
-            root: path.join(this.config.mapsDir, "processed"),
+            root: path.resolve(path.join(this.config.mapsDir, "processed")),
             prefix: "/maps/"
         });
 
