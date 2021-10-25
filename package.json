@@ -33,7 +33,7 @@
     "@types/json-schema": "^7.0.9",
     "@types/node": "^14.14.22",
     "@types/pg": "^7.14.9",
-    "@types/yargs": "^17.0.4",
+    "@types/yargs": "^15.0.13",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
     "@zerollup/ts-transform-paths": "^1.7.18",
@@ -67,6 +67,6 @@
     "ts-node": "^9.1.1",
     "ttypescript": "^1.5.12",
     "typescript": "^4.4.4",
-    "yargs": "^17.2.1"
+    "yargs": "^16.2.0"
   }
 }
