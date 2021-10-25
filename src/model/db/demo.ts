@@ -23,6 +23,20 @@ export namespace Demo {
         hasBots?: boolean;
         preset?: string;
         reported?: boolean;
+        awards?: {
+            econDestroyed: Award[];
+            fightingUnitsDestroyed: Award[];
+            resourceEfficiency: Award[];
+            mostResourcesProduced: Award;
+            mostDamageTaken: Award;
+            sleep: Award;
+            cow: Omit<Award, "value">;
+        }
+    }
+
+    export interface Award {
+        teamId: number;
+        value: number;
     }
     
     export interface CreationAttributes extends Schema { }
@@ -74,6 +88,7 @@ export namespace Demo {
         hasBots: { type: DataTypes.BOOLEAN, allowNull: true },
         preset: { type: DataTypes.STRING, allowNull: true },
         reported: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: true },
+        awards: { type: DataTypes.JSON, allowNull: true },
     };
 
     export const sequelizeOptions: ModelOptions = {

@@ -64,6 +64,8 @@ export class RestAPI {
             }
         });
 
+        // TODO: https://github.com/sinclairzx81/fastify-typebox
+
         this.fastify.register(fastifyCors);
 
         this.fastify.register(fastifySensible);

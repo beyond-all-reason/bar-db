@@ -21,6 +21,7 @@ var Demo;
         hasBots: { type: sequelize_1.DataTypes.BOOLEAN, allowNull: true },
         preset: { type: sequelize_1.DataTypes.STRING, allowNull: true },
         reported: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false, allowNull: true },
+        awards: { type: sequelize_1.DataTypes.JSON, allowNull: true },
     };
     Demo.sequelizeOptions = {};
 })(Demo = exports.Demo || (exports.Demo = {}));

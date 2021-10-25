@@ -41,6 +41,12 @@ class DemoProcessor extends file_processor_1.FileProcessor {
             return "delete";
         }
         const demoParser = new sdfz_demo_parser_1.DemoParser();
+        let awards;
+        demoParser.onPacket.add((packet) => {
+            if ((0, sdfz_demo_parser_1.isPacket)(packet, sdfz_demo_parser_1.DemoModel.Packet.ID.LUAMSG) && packet.data.data.name === "AWARDS") {
+                awards = packet.data.data.data;
+            }
+        });
         const demoData = await demoParser.parseDemo(filePath);
         const mapScriptName = demoData.info.hostSettings.mapname;
         let sldbMatchData;
@@ -102,7 +108,8 @@ class DemoProcessor extends file_processor_1.FileProcessor {
             chatlog: demoData.chatlog || [],
             preset,
             hasBots: demoData.info.ais.length > 0,
-            reported
+            reported,
+            awards
         });
         const allyTeams = {};
         for (const allyTeamData of demoData.info.allyTeams) {

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Signal } from "jaz-ts-utils";
 import * as path from "path";
-import { DemoModel, DemoParser } from "sdfz-demo-parser";
+import { DemoModel, DemoParser, isPacket } from "sdfz-demo-parser";
 import { SLDBClient, SLDBModel } from "sldbts";
 
 import { Database } from "~/database";
@@ -31,6 +31,13 @@ export class DemoProcessor extends FileProcessor {
         }
 
         const demoParser = new DemoParser();
+
+        let awards: DBSchema.Demo.Schema["awards"] | undefined;
+        demoParser.onPacket.add((packet) => {
+            if (isPacket(packet, DemoModel.Packet.ID.LUAMSG) && packet.data.data.name === "AWARDS") {
+                awards = packet.data.data.data;
+            }
+        });
 
         const demoData = await demoParser.parseDemo(filePath);
         const mapScriptName = demoData.info.hostSettings.mapname;
@@ -98,7 +105,8 @@ export class DemoProcessor extends FileProcessor {
             chatlog: demoData.chatlog || [],
             preset,
             hasBots: demoData.info.ais.length > 0,
-            reported
+            reported,
+            awards
         });
 
         const allyTeams: { [allyTeamId: number]: DBSchema.AllyTeam.Instance } = {};

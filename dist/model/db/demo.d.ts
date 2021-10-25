@@ -29,6 +29,19 @@ export declare namespace Demo {
         hasBots?: boolean;
         preset?: string;
         reported?: boolean;
+        awards?: {
+            econDestroyed: Award[];
+            fightingUnitsDestroyed: Award[];
+            resourceEfficiency: Award[];
+            mostResourcesProduced: Award;
+            mostDamageTaken: Award;
+            sleep: Award;
+            cow: Omit<Award, "value">;
+        };
+    }
+    interface Award {
+        teamId: number;
+        value: number;
     }
     interface CreationAttributes extends Schema {
     }

@@ -60,6 +60,7 @@ class RestAPI {
                 }
             }
         });
+        // TODO: https://github.com/sinclairzx81/fastify-typebox
         this.fastify.register(fastify_cors_1.default);
         this.fastify.register(fastify_sensible_1.default);
         this.fastify.register(fastify_rate_limit_1.default, {
