@@ -54,6 +54,9 @@ export class LobbyService {
 
             this.lobbyClient.onResponse("REMOVEUSER").add((data) => {
                 const player = this.players[data.userName];
+                if (!player) {
+                    return;
+                }
                 if (player.battleId) {
                     delete this.battles[player.battleId].players[player.username];
                 }
