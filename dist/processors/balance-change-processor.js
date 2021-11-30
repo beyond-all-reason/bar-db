@@ -27,7 +27,7 @@ class BalanceChangeProcessor {
                 console.log("Polling for balance changes...");
                 const changes = await this.balanceChangeFetcher.fetchLatestBalanceChanges({
                     excludeShas: this.processedShas,
-                    page: 10
+                    page: 0
                 });
                 for (const change of changes) {
                     if (!this.processedShas.includes(change.sha)) {

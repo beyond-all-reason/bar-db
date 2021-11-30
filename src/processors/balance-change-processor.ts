@@ -46,7 +46,7 @@ export class BalanceChangeProcessor {
 
                 const changes = await this.balanceChangeFetcher.fetchLatestBalanceChanges({
                     excludeShas: this.processedShas,
-                    page: 10
+                    page: 0
                 });
                 
                 for (const change of changes) {
