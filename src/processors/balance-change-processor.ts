@@ -50,16 +50,18 @@ export class BalanceChangeProcessor {
                 });
 
                 for (const change of changes) {
-                    if (!this.processedShas.includes(change.sha)) {
-                        console.log(`Processing balance change: ${change.sha} - ${change.message}`);
-                        await this.saveChange(change);
-                        console.log("Balance change processed");
+                    try {
+                        if (!this.processedShas.includes(change.sha)) {
+                            console.log(`Processing balance change: ${change.sha} - ${change.message}`);
+                            await this.saveChange(change);
+                            console.log("Balance change processed");
+                        }
+                    } catch (err) {
+                        console.log("Error processing balance change:", err);
                     }
                 }
             } catch (err) {
-                //this.config.errorLoggingFunction!(err);
-                console.log(err);
-                console.log("There was an error processing balance changes");
+                console.log("There was an error processing balance changes", err);
             }
 
             await delay(this.config.pollIntervalMs!);
