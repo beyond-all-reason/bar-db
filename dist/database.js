@@ -20,8 +20,20 @@ class Database {
     }
     async initDatabase() {
         console.time("db init");
-        const pgClient = new pg_1.default.Client({ host: this.config.host, port: this.config.port, user: this.config.username, password: this.config.password });
-        await pgClient.connect();
+        const pgClient = new pg_1.default.Client({
+            host: this.config.host,
+            port: this.config.port,
+            user: this.config.username,
+            password: this.config.password,
+            connectionTimeoutMillis: 3000,
+        });
+        try {
+            await pgClient.connect();
+        }
+        catch (err) {
+            console.log("Couldn't connect to postgres db");
+            console.log(err);
+        }
         const dbExistsQuery = await pgClient.query("SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = 'bar';");
         const dbExists = dbExistsQuery.rowCount > 0;
         if (!dbExists) {

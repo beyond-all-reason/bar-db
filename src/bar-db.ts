@@ -5,8 +5,8 @@ import { BARDBConfig, defaultBARDBConfig } from "~/bar-db-config";
 import { Database } from "~/database";
 import { MemoryStore } from "~/memory-store";
 import { BalanceChangeProcessor } from "~/processors/balance-change-processor";
-import { MapProcessor } from "~/processors/map-processor";
 import { DemoProcessor } from "~/processors/demo-processor";
+import { MapProcessor } from "~/processors/map-processor";
 
 export class BARDB {
     protected config: BARDBConfig;

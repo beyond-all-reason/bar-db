@@ -57,7 +57,7 @@ export class BalanceChangeProcessor {
                             console.log("Balance change processed");
                         }
                     } catch (err) {
-                        console.log("Error processing balance change:", err);
+                        console.log("Error processing balance change", err);
                     }
                 }
             } catch (err) {

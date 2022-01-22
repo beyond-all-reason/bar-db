@@ -26,8 +26,8 @@ const bar_db_config_1 = require("./bar-db-config");
 const database_1 = require("./database");
 const memory_store_1 = require("./memory-store");
 const balance_change_processor_1 = require("./processors/balance-change-processor");
-const map_processor_1 = require("./processors/map-processor");
 const demo_processor_1 = require("./processors/demo-processor");
+const map_processor_1 = require("./processors/map-processor");
 class BARDB {
     constructor(config) {
         this.config = Object.assign({}, bar_db_config_1.defaultBARDBConfig, config);

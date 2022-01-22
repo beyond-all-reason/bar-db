@@ -38,7 +38,7 @@ class BalanceChangeProcessor {
                         }
                     }
                     catch (err) {
-                        console.log("Error processing balance change:", err);
+                        console.log("Error processing balance change", err);
                     }
                 }
             }
