@@ -20,9 +20,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LobbyService = void 0;
+const jaz_ts_utils_1 = require("jaz-ts-utils");
 const net = __importStar(require("net"));
 const sluts_1 = require("sluts");
-const jaz_ts_utils_1 = require("jaz-ts-utils");
 class LobbyService {
     constructor(config, redis) {
         this.onBattleUpdate = new jaz_ts_utils_1.Signal();
@@ -206,7 +206,7 @@ class LobbyService {
                 }
             }
             catch (err) {
-                console.error(err);
+                console.log(err);
                 console.log("error with spads query");
                 continue;
             }

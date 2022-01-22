@@ -1,10 +1,10 @@
-import { SpringLobbyProtocolClient } from "sluts";
-import { Signal } from "jaz-ts-utils";
 import Redis from "ioredis";
+import { Signal } from "jaz-ts-utils";
+import { SpringLobbyProtocolClient } from "sluts";
+import { BARDBConfig } from "../bar-db-config";
 import { Battle } from "../model/rest-api/battle";
 import { Player } from "../model/rest-api/player";
 import { SpadsBattleData } from "../model/rest-api/spads";
-import { BARDBConfig } from "../bar-db-config";
 export declare type Battles = {
     [battleId: number]: Battle<{
         [username: string]: Player;

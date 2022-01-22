@@ -48,7 +48,7 @@ export class BalanceChangeProcessor {
                     excludeShas: this.processedShas,
                     page: 0
                 });
-                
+
                 for (const change of changes) {
                     if (!this.processedShas.includes(change.sha)) {
                         console.log(`Processing balance change: ${change.sha} - ${change.message}`);
@@ -58,7 +58,7 @@ export class BalanceChangeProcessor {
                 }
             } catch (err) {
                 //this.config.errorLoggingFunction!(err);
-                console.error(err);
+                console.log(err);
                 console.log("There was an error processing balance changes");
             }
 

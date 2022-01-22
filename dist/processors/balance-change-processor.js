@@ -39,7 +39,7 @@ class BalanceChangeProcessor {
             }
             catch (err) {
                 //this.config.errorLoggingFunction!(err);
-                console.error(err);
+                console.log(err);
                 console.log("There was an error processing balance changes");
             }
             await (0, jaz_ts_utils_1.delay)(this.config.pollIntervalMs);

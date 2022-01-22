@@ -2,8 +2,8 @@ import { FastifyInstance } from "fastify";
 import Redis from "ioredis";
 import { BARDBConfig } from "./bar-db-config";
 import { Database } from "./database";
-import { SLDBService } from "./rest-api/sldb-service";
 import { LobbyService } from "./rest-api/lobby-service";
+import { SLDBService } from "./rest-api/sldb-service";
 export interface PluginOptions {
     config: BARDBConfig;
     db: Database;

@@ -23,18 +23,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestAPI = void 0;
-const path = __importStar(require("path"));
 const fastify_1 = __importDefault(require("fastify"));
-const fastify_rate_limit_1 = __importDefault(require("fastify-rate-limit"));
 const fastify_autoload_1 = __importDefault(require("fastify-autoload"));
-const fastify_static_1 = __importDefault(require("fastify-static"));
-const fastify_sensible_1 = __importDefault(require("fastify-sensible"));
 const fastify_cors_1 = __importDefault(require("fastify-cors"));
+const fastify_rate_limit_1 = __importDefault(require("fastify-rate-limit"));
+const fastify_sensible_1 = __importDefault(require("fastify-sensible"));
+const fastify_static_1 = __importDefault(require("fastify-static"));
 const ioredis_1 = __importDefault(require("ioredis"));
-const { JsonSchemaManager } = require('@alt3/sequelize-to-json-schemas');
+const path = __importStar(require("path"));
+const { JsonSchemaManager } = require("@alt3/sequelize-to-json-schemas");
 const database_1 = require("./database");
-const sldb_service_1 = require("./rest-api/sldb-service");
 const lobby_service_1 = require("./rest-api/lobby-service");
+const sldb_service_1 = require("./rest-api/sldb-service");
 class RestAPI {
     constructor(config) {
         this.config = config;
@@ -94,7 +94,7 @@ class RestAPI {
             console.log(`Server is now listening on ${address}`);
         }
         catch (err) {
-            console.error(err);
+            console.log(err);
             process.exit(1);
         }
     }

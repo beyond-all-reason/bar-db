@@ -23,10 +23,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileProcessor = void 0;
+const axios_1 = __importDefault(require("axios"));
 const fs = __importStar(require("fs"));
 const jaz_ts_utils_1 = require("jaz-ts-utils");
 const path = __importStar(require("path"));
-const axios_1 = __importDefault(require("axios"));
 const defaultFileProcessorConfig = {
     verbose: false,
     filePollMs: 5000,
@@ -156,7 +156,7 @@ class FileProcessor {
             this.authToken = response.headers["x-subject-token"];
         }
         else {
-            console.error(response);
+            console.log(response);
             throw new Error("Unable to get auth token");
         }
     }

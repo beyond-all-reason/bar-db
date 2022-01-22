@@ -1,10 +1,10 @@
+import axios, { AxiosResponse } from "axios";
 import * as fs from "fs";
 import { delay } from "jaz-ts-utils";
 import * as path from "path";
-import axios, { AxiosResponse } from "axios";
 
-import { Database } from "~/database";
 import { BARDBConfig } from "~/bar-db-config";
+import { Database } from "~/database";
 
 export interface FileProcessorConfig {
     bardbConfig: BARDBConfig;
@@ -52,7 +52,7 @@ export abstract class FileProcessor {
 
             console.log(`processing file: ${fileName}`);
             console.time("process file");
-            
+
             try {
                 const outPath = await this.processFile(unprocessedPath);
 
@@ -76,14 +76,14 @@ export abstract class FileProcessor {
                     if (outPath && outPath !== "delete") {
                         await fs.promises.copyFile(unprocessedPath, path.join(outPath, fileName));
                     } else if (outPath === "delete") {
-                        
+
                     } else {
                         await fs.promises.copyFile(unprocessedPath, processedPath);
                     }
                 }
 
                 console.timeEnd("process file");
-                
+
                 console.log(`deleting file: ${unprocessedPath}`);
                 await fs.promises.unlink(unprocessedPath);
             } catch (err) {
@@ -161,11 +161,11 @@ export abstract class FileProcessor {
                 }
             }
         });
-    
+
         if (response.status === 201 || response.status === 200) {
             this.authToken = response.headers["x-subject-token"];
         } else {
-            console.error(response);
+            console.log(response);
             throw new Error("Unable to get auth token");
         }
     }

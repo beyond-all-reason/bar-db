@@ -3,8 +3,8 @@ import pg from "pg";
 import { ModelCtor, Sequelize } from "sequelize";
 const sequelizeErd = require("sequelize-erd");
 
-import { DBSchema } from "~/model/db";
 import { BARDBConfig, defaultBARDBConfig } from "~/bar-db-config";
+import { DBSchema } from "~/model/db";
 
 export class Database {
     public sequelize!: Sequelize;
@@ -60,7 +60,7 @@ export class Database {
             await this.sequelize.authenticate();
             console.log("Connection has been established successfully.");
         } catch (error) {
-            console.error("Unable to connect to the database:", error);
+            console.log("Unable to connect to the database:", error);
             throw error;
         }
 

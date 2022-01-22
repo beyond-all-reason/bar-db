@@ -8,8 +8,8 @@ const fs_1 = require("fs");
 const pg_1 = __importDefault(require("pg"));
 const sequelize_1 = require("sequelize");
 const sequelizeErd = require("sequelize-erd");
-const db_1 = require("./model/db");
 const bar_db_config_1 = require("./bar-db-config");
+const db_1 = require("./model/db");
 class Database {
     constructor(config) {
         this.config = Object.assign({}, bar_db_config_1.defaultBARDBConfig.db, config);
@@ -44,7 +44,7 @@ class Database {
             console.log("Connection has been established successfully.");
         }
         catch (error) {
-            console.error("Unable to connect to the database:", error);
+            console.log("Unable to connect to the database:", error);
             throw error;
         }
         console.timeEnd("db init");

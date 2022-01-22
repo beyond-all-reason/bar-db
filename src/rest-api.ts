@@ -1,17 +1,17 @@
-import * as path from "path";
 import fastify, { FastifyInstance } from "fastify";
-import fastifyRatelimit from "fastify-rate-limit";
 import fastifyAutoload from "fastify-autoload";
-import fastifyStatic from "fastify-static";
-import fastifySensible from "fastify-sensible";
 import fastifyCors from "fastify-cors";
+import fastifyRatelimit from "fastify-rate-limit";
+import fastifySensible from "fastify-sensible";
+import fastifyStatic from "fastify-static";
 import Redis from "ioredis";
-const { JsonSchemaManager } = require('@alt3/sequelize-to-json-schemas');
+import * as path from "path";
+const { JsonSchemaManager } = require("@alt3/sequelize-to-json-schemas");
 
 import { BARDBConfig } from "~/bar-db-config";
 import { Database } from "~/database";
-import { SLDBService } from "~/rest-api/sldb-service";
 import { LobbyService } from "~/rest-api/lobby-service";
+import { SLDBService } from "~/rest-api/sldb-service";
 
 export interface PluginOptions {
     config: BARDBConfig;
@@ -25,7 +25,7 @@ export interface PluginOptions {
 export class RestAPI {
     protected config: BARDBConfig;
     protected db: Database;
-    protected redis: Redis.Redis; 
+    protected redis: Redis.Redis;
     protected fastify!: FastifyInstance;
     protected schemaManager: any;
     protected sldbService: SLDBService;
@@ -104,7 +104,7 @@ export class RestAPI {
 
             console.log(`Server is now listening on ${address}`);
         } catch (err) {
-            console.error(err);
+            console.log(err);
             process.exit(1);
         }
     }

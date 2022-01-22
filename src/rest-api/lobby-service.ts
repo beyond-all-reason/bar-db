@@ -1,12 +1,12 @@
+import Redis from "ioredis";
+import { Signal } from "jaz-ts-utils";
 import * as net from "net";
 import { SpringLobbyProtocolClient } from "sluts";
-import { Signal } from "jaz-ts-utils";
-import Redis from "ioredis";
 
+import { BARDBConfig } from "~/bar-db-config";
 import { Battle } from "~/model/rest-api/battle";
 import { Player } from "~/model/rest-api/player";
 import { SpadsBattleData } from "~/model/rest-api/spads";
-import { BARDBConfig } from "~/bar-db-config";
 
 export type Battles = { [battleId: number]: Battle<{ [username: string]: Player }> };
 export type Players = { [key: string]: Player };
@@ -24,7 +24,7 @@ export class LobbyService {
 
     constructor(config: BARDBConfig["lobby"], redis: Redis.Redis) {
         this.config = config;
-        
+
         this.redis = redis;
 
         this.lobbyClient = new SpringLobbyProtocolClient(this.config);
@@ -190,19 +190,19 @@ export class LobbyService {
                     continue;
                 }
                 //battle.spadsInfo = spadsInfo;
-    
+
                 if (spadsInfo?.battleLobby?.status) {
                     battle.lobbyStatus = spadsInfo.battleLobby.status.battleStatus;
                     battle.gameType = spadsInfo.battleLobby.status["Game type"];
                     battle.preset = spadsInfo.battleLobby.status.Preset;
                     battle.delaySinceLastGame = spadsInfo.battleLobby.status.delaySinceLastGame;
                 }
-    
+
                 if (spadsInfo?.game?.status) {
                     battle.gameStatus = spadsInfo.game.status.gameStatus;
                     battle.gameTime = spadsInfo.game.status.gameTime;
                 }
-    
+
                 if (spadsInfo?.battleLobby?.clients) {
                     for (const client of spadsInfo.battleLobby.clients) {
                         const player = this.players[client.Name];
@@ -214,7 +214,7 @@ export class LobbyService {
                         }
                     }
                 }
-    
+
                 if (spadsInfo?.game?.clients) {
                     for (const client of spadsInfo.game.clients) {
                         let clientName = client.Name;
@@ -232,7 +232,7 @@ export class LobbyService {
                     }
                 }
             } catch (err) {
-                console.error(err);
+                console.log(err);
                 console.log("error with spads query");
                 continue;
             }

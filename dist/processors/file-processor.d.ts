@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
-import { Database } from "../database";
 import { BARDBConfig } from "../bar-db-config";
+import { Database } from "../database";
 export interface FileProcessorConfig {
     bardbConfig: BARDBConfig;
     db: Database;
