@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
 import { Signal } from "jaz-ts-utils";
 import Jimp from "jimp";
-import { MapParser, StartPos } from "spring-map-parser";
+import { MapParser, SpringMap, StartPos } from "spring-map-parser";
 
-import { DBSchema } from "~/model/db";
 import { Database } from "~/database";
+import { DBSchema } from "~/model/db";
 import { FileProcessor, FileProcessorConfig } from "~/processors/file-processor";
 
 export class MapProcessor extends FileProcessor {
@@ -42,37 +42,7 @@ export class MapProcessor extends FileProcessor {
             await mapData.specularMap.clone().writeAsync(`${destDir}/specular.png`);
         }
 
-        const startPositions = (mapData.mapInfo?.teams?.map(obj => obj!.startPos) ?? mapData.smd?.startPositions) as Array<StartPos>;
-
-        const newMap: Omit<DBSchema.SpringMap.Schema, "id"> = {
-            fileName: mapData.fileName,
-            fileNameWithExt: mapData.fileNameWithExt,
-            scriptName: mapData.scriptName.trim(),
-            description: mapData.mapInfo?.description || mapData.smd?.description || null,
-            mapHardness: mapData.mapInfo?.maphardness ?? mapData.smd?.mapHardness,
-            gravity: mapData.mapInfo?.gravity ?? mapData.smd?.gravity,
-            tidalStrength: mapData.mapInfo?.tidalStrength ?? mapData.smd?.tidalStrength,
-            maxMetal: mapData.mapInfo?.maxMetal ?? mapData.smd?.maxMetal,
-            extractorRadius: mapData.mapInfo?.extractorRadius ?? mapData.smd?.extractorRadius,
-            minWind: mapData.mapInfo?.atmosphere?.minWind ?? mapData.smd?.minWind,
-            maxWind: mapData.mapInfo?.atmosphere?.maxWind ?? mapData.smd?.maxWind,
-            startPositions,
-            width: mapData.smf!.mapWidthUnits * 2,
-            height: mapData.smf!.mapHeightUnits * 2,
-            minDepth: mapData.minHeight,
-            maxDepth: mapData.maxHeight,
-            name: mapData.mapInfo?.name,
-            shortname: mapData.mapInfo?.shortname,
-            author: mapData.mapInfo?.author,
-            version: mapData.mapInfo?.version,
-            mapfile: mapData.mapInfo?.mapfile,
-            modtype: mapData.mapInfo?.modtype,
-            notDeformable: mapData.mapInfo?.notDeformable,
-            voidWater: mapData.mapInfo?.voidWater,
-            voidGround: mapData.mapInfo?.voidGround,
-            autoShowMetal: mapData.mapInfo?.autoShowMetal,
-            mapInfo: mapData.mapInfo
-        };
+        const newMap = mapDataToMapSchema(mapData);
 
         if (newMap.minWind === NaN) {
             newMap.minWind = 5;
@@ -92,7 +62,7 @@ export class MapProcessor extends FileProcessor {
         } else {
             storedMap = await this.db.schema.map.create(newMap);
         }
-        
+
         this.onMapProcessed.dispatch(storedMap);
 
         return destDir;
@@ -101,4 +71,36 @@ export class MapProcessor extends FileProcessor {
     protected async uploadFileToObjectStorage(filePath: string, prefix: string = "/") {
         return super.uploadFileToObjectStorage(filePath, "/maps");
     }
+}
+
+export function mapDataToMapSchema(mapData: SpringMap) : Omit<DBSchema.SpringMap.Schema, "id"> {
+    return {
+        fileName: mapData.fileName,
+        fileNameWithExt: mapData.fileNameWithExt,
+        scriptName: mapData.scriptName.trim(),
+        description: mapData.mapInfo?.description || mapData.smd?.description || null,
+        mapHardness: mapData.mapInfo?.maphardness ?? mapData.smd?.mapHardness,
+        gravity: mapData.mapInfo?.gravity ?? mapData.smd?.gravity,
+        tidalStrength: mapData.mapInfo?.tidalStrength ?? mapData.smd?.tidalStrength,
+        maxMetal: mapData.mapInfo?.maxMetal ?? mapData.smd?.maxMetal,
+        extractorRadius: mapData.mapInfo?.extractorRadius ?? mapData.smd?.extractorRadius,
+        minWind: mapData.mapInfo?.atmosphere?.minWind ?? mapData.smd?.minWind,
+        maxWind: mapData.mapInfo?.atmosphere?.maxWind ?? mapData.smd?.maxWind,
+        startPositions: (mapData.mapInfo?.teams?.map(obj => obj!.startPos) ?? mapData.smd?.startPositions) as Array<StartPos>,
+        width: mapData.smf!.mapWidthUnits * 2,
+        height: mapData.smf!.mapHeightUnits * 2,
+        minDepth: mapData.minHeight,
+        maxDepth: mapData.maxHeight,
+        name: mapData.mapInfo?.name,
+        shortname: mapData.mapInfo?.shortname,
+        author: mapData.mapInfo?.author,
+        version: mapData.mapInfo?.version,
+        mapfile: mapData.mapInfo?.mapfile,
+        modtype: mapData.mapInfo?.modtype,
+        notDeformable: mapData.mapInfo?.notDeformable,
+        voidWater: mapData.mapInfo?.voidWater,
+        voidGround: mapData.mapInfo?.voidGround,
+        autoShowMetal: mapData.mapInfo?.autoShowMetal,
+        mapInfo: mapData.mapInfo
+    };
 }

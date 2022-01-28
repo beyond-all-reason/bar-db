@@ -18,7 +18,7 @@ export class DemoProcessor extends FileProcessor {
         super(config);
 
         this.db = config.db;
-        
+
         this.sldbClient = new SLDBClient(this.config.bardbConfig.sldb);
     }
 
@@ -74,7 +74,7 @@ export class DemoProcessor extends FileProcessor {
         } else if (numOfPlayers === 2) {
             preset = "duel";
         }
-        
+
         if (sldbMatchData?.gameType) {
             preset = sldbMatchData.gameType.toLowerCase();
         }
