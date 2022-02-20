@@ -1,4 +1,4 @@
-import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, ModelOptions, Optional } from "sequelize";
+import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, Optional } from "sequelize";
 
 import { BalanceChangeAuthor } from "./balance-change-author";
 import { BalanceChangeUnitDef } from "./balance-change-unit-def";
@@ -35,13 +35,9 @@ export namespace BalanceChange {
 
     export const sequelizeDefinition: ModelAttributes<BalanceChange.Instance, BalanceChange.Schema> = {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-        sha: { type: DataTypes.STRING, unique: true },
+        sha: { type: DataTypes.STRING },
         url: { type: DataTypes.STRING },
         date: { type: DataTypes.DATE },
         message: { type: DataTypes.TEXT },
-    };
-
-    export const sequelizeOptions: ModelOptions = {
-        indexes: [{ unique: true, fields: ["sha"] }]
     };
 }

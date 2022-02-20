@@ -6,13 +6,10 @@ var BalanceChange;
 (function (BalanceChange) {
     BalanceChange.sequelizeDefinition = {
         id: { type: sequelize_1.DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-        sha: { type: sequelize_1.DataTypes.STRING, unique: true },
+        sha: { type: sequelize_1.DataTypes.STRING },
         url: { type: sequelize_1.DataTypes.STRING },
         date: { type: sequelize_1.DataTypes.DATE },
         message: { type: sequelize_1.DataTypes.TEXT },
-    };
-    BalanceChange.sequelizeOptions = {
-        indexes: [{ unique: true, fields: ["sha"] }]
     };
 })(BalanceChange = exports.BalanceChange || (exports.BalanceChange = {}));
 //# sourceMappingURL=balance-change.js.map

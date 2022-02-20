@@ -93,7 +93,7 @@ export class Database {
             user: this.sequelize.define<DBSchema.User.Instance>("User", DBSchema.User.sequelizeDefinition, DBSchema.User.sequelizeOptions),
             alias: this.sequelize.define<DBSchema.Alias.Instance>("Alias", DBSchema.Alias.sequelizeDefinition, DBSchema.Alias.sequelizeOptions),
             balanceChangeAuthor: this.sequelize.define<DBSchema.BalanceChangeAuthor.Instance>("BalanceChangeAuthor", DBSchema.BalanceChangeAuthor.sequelizeDefinition, DBSchema.BalanceChangeAuthor.sequelizeOptions),
-            balanceChange: this.sequelize.define<DBSchema.BalanceChange.Instance>("BalanceChange", DBSchema.BalanceChange.sequelizeDefinition, DBSchema.BalanceChange.sequelizeOptions),
+            balanceChange: this.sequelize.define<DBSchema.BalanceChange.Instance>("BalanceChange", DBSchema.BalanceChange.sequelizeDefinition),
             balanceChangeUnitDef: this.sequelize.define<DBSchema.BalanceChangeUnitDef.Instance>("BalanceChangeUnitDef", DBSchema.BalanceChangeUnitDef.sequelizeDefinition, DBSchema.BalanceChangeUnitDef.sequelizeOptions),
         };
 

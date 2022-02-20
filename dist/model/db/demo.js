@@ -6,7 +6,7 @@ var Demo;
 (function (Demo) {
     Demo.sequelizeDefinition = {
         id: { type: sequelize_1.DataTypes.STRING, primaryKey: true },
-        fileName: { type: sequelize_1.DataTypes.STRING, unique: true, allowNull: false },
+        fileName: { type: sequelize_1.DataTypes.STRING, allowNull: false },
         engineVersion: { type: sequelize_1.DataTypes.STRING, allowNull: false },
         gameVersion: { type: sequelize_1.DataTypes.STRING, allowNull: false },
         startTime: { type: sequelize_1.DataTypes.DATE, allowNull: false },

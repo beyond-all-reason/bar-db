@@ -73,7 +73,7 @@ class Database {
             user: this.sequelize.define("User", db_1.DBSchema.User.sequelizeDefinition, db_1.DBSchema.User.sequelizeOptions),
             alias: this.sequelize.define("Alias", db_1.DBSchema.Alias.sequelizeDefinition, db_1.DBSchema.Alias.sequelizeOptions),
             balanceChangeAuthor: this.sequelize.define("BalanceChangeAuthor", db_1.DBSchema.BalanceChangeAuthor.sequelizeDefinition, db_1.DBSchema.BalanceChangeAuthor.sequelizeOptions),
-            balanceChange: this.sequelize.define("BalanceChange", db_1.DBSchema.BalanceChange.sequelizeDefinition, db_1.DBSchema.BalanceChange.sequelizeOptions),
+            balanceChange: this.sequelize.define("BalanceChange", db_1.DBSchema.BalanceChange.sequelizeDefinition),
             balanceChangeUnitDef: this.sequelize.define("BalanceChangeUnitDef", db_1.DBSchema.BalanceChangeUnitDef.sequelizeDefinition, db_1.DBSchema.BalanceChangeUnitDef.sequelizeOptions),
         };
         this.schema.map.hasMany(this.schema.demo, { foreignKey: "mapId" });

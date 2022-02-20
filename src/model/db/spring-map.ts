@@ -1,5 +1,5 @@
-import { DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, ModelOptions, Optional } from "sequelize";
 import { DeepPartial } from "jaz-ts-utils";
+import { DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, ModelOptions, Optional } from "sequelize";
 import { MapInfo } from "spring-map-parser";
 
 import { Demo } from "./demo";
@@ -38,9 +38,9 @@ export namespace SpringMap {
         autoShowMetal?: boolean;
         mapInfo?: DeepPartial<MapInfo>;
     }
-    
+
     export interface CreationAttributes extends Optional<Schema, "id"> { }
-    
+
     export interface Instance extends Model<Schema, CreationAttributes>, Schema {
         getDemos: HasManyGetAssociationsMixin<Demo.Instance>;
         setDemos: HasManySetAssociationsMixin<Demo.Instance, Demo.Instance["id"]>;

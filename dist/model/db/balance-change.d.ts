@@ -1,4 +1,4 @@
-import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, ModelOptions, Optional } from "sequelize";
+import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, Optional } from "sequelize";
 import { BalanceChangeAuthor } from "./balance-change-author";
 import { BalanceChangeUnitDef } from "./balance-change-unit-def";
 export declare namespace BalanceChange {
@@ -28,5 +28,4 @@ export declare namespace BalanceChange {
         countChanges: HasManyCountAssociationsMixin;
     }
     const sequelizeDefinition: ModelAttributes<BalanceChange.Instance, BalanceChange.Schema>;
-    const sequelizeOptions: ModelOptions;
 }

@@ -1,5 +1,5 @@
-import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, ModelOptions } from "sequelize";
 import { DemoModel } from "sdfz-demo-parser";
+import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, ModelOptions } from "sequelize";
 
 import { AllyTeam } from "./ally-team";
 import { Spectator } from "./spectator";
@@ -38,16 +38,16 @@ export namespace Demo {
         teamId: number;
         value: number;
     }
-    
+
     export interface CreationAttributes extends Schema { }
-    
+
     export interface Instance extends Model<Schema, CreationAttributes>, Schema {
         mapId: number;
-    
+
         getMap: BelongsToGetAssociationMixin<SpringMap.Instance>;
         setMap: BelongsToSetAssociationMixin<SpringMap.Instance, SpringMap.Instance["id"]>;
         createMap: (map: SpringMap.CreationAttributes) => Promise<SpringMap.Instance>;
-    
+
         getAllyTeams: HasManyGetAssociationsMixin<AllyTeam.Instance>;
         setAllyTeams: HasManySetAssociationsMixin<AllyTeam.Instance, AllyTeam.Instance["id"]>;
         addAllyTeams: HasManyAddAssociationsMixin<AllyTeam.Instance, AllyTeam.Instance["id"]>;
@@ -58,7 +58,7 @@ export namespace Demo {
         hasAllyTeam: HasManyHasAssociationMixin<AllyTeam.Instance, AllyTeam.Instance["id"]>;
         hasAllyTeams: HasManyHasAssociationsMixin<AllyTeam.Instance, AllyTeam.Instance["id"]>;
         countAllyTeams: HasManyCountAssociationsMixin;
-    
+
         getSpectators: HasManyGetAssociationsMixin<Spectator.Instance>;
         setSpectators: HasManySetAssociationsMixin<Spectator.Instance, Spectator.Instance["id"]>;
         addSpectators: HasManyAddAssociationsMixin<Spectator.Instance, Spectator.Instance["id"]>;
@@ -73,7 +73,7 @@ export namespace Demo {
 
     export const sequelizeDefinition: ModelAttributes<Demo.Instance, Demo.Schema> = {
         id: { type: DataTypes.STRING, primaryKey: true },
-        fileName: { type: DataTypes.STRING, unique: true, allowNull: false },
+        fileName: { type: DataTypes.STRING, allowNull: false },
         engineVersion: { type: DataTypes.STRING, allowNull: false },
         gameVersion: { type: DataTypes.STRING, allowNull: false },
         startTime: { type: DataTypes.DATE, allowNull: false },
