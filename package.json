@@ -63,7 +63,7 @@
     "sldbts": "^1.1.0",
     "sluts": "^3.4.1",
     "source-map-support": "^0.5.20",
-    "spring-map-parser": "^4.3.0",
+    "spring-map-parser": "^4.3.4",
     "ts-node": "^9.1.1",
     "ttypescript": "^1.5.12",
     "typescript": "^4.4.4",
