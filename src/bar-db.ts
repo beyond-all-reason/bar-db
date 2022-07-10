@@ -13,7 +13,7 @@ export class BARDB {
     protected db: Database;
     protected mapProcessor: MapProcessor;
     protected demoProcessor: DemoProcessor;
-    protected balanceChangeProcessor: BalanceChangeProcessor;
+    protected balanceChangeProcessor?: BalanceChangeProcessor;
     protected memoryStore?: MemoryStore;
 
     constructor(config: BARDBConfig) {
@@ -59,7 +59,9 @@ export class BARDB {
             this.memoryStore?.saveUsersToMemory();
         });
 
-        this.balanceChangeProcessor = new BalanceChangeProcessor({ ...this.config.balanceChanges }, this.db);
+        if (this.config.processBalanceChanges) {
+            this.balanceChangeProcessor = new BalanceChangeProcessor({ ...this.config.balanceChanges }, this.db);
+        }
 
         if (this.config.db.initMemoryStore) {
             this.memoryStore = new MemoryStore(this.db);
@@ -70,7 +72,7 @@ export class BARDB {
         await this.db.init();
         await this.mapProcessor.init();
         await this.demoProcessor.init();
-        await this.balanceChangeProcessor.init();
+        await this.balanceChangeProcessor?.init();
 
         if (this.memoryStore) {
             await this.memoryStore.init();
@@ -82,6 +84,8 @@ export class BARDB {
         console.log("Polling for demos...");
         this.demoProcessor.processFiles();
 
-        this.balanceChangeProcessor.processBalanceChanges();
+        if (this.config.processBalanceChanges) {
+            this.balanceChangeProcessor?.processBalanceChanges();
+        }
     }
 }

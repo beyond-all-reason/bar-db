@@ -1,6 +1,7 @@
 import { SpringLobbyProtocolClientConfig } from "sluts";
 
 export interface BARDBConfig {
+    processBalanceChanges: boolean;
     db: {
         host: string;
         port: number;
@@ -47,6 +48,7 @@ export interface BARDBConfig {
 };
 
 export const defaultBARDBConfig: BARDBConfig = {
+    processBalanceChanges: true,
     db: {
         host: "localhost",
         port: 5432,
