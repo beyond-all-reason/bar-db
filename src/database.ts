@@ -1,5 +1,4 @@
 import { promises as fs } from "fs";
-import pg from "pg";
 import { ModelCtor, Sequelize } from "sequelize";
 const sequelizeErd = require("sequelize-erd");
 
@@ -34,6 +33,8 @@ export class Database {
 
     protected async initDatabase() {
         console.time("db init");
+
+        const pg = await import("pg");
 
         const pgClient = new pg.Client({
             host: this.config.host,
