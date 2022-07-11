@@ -16,7 +16,7 @@ export class BARDB {
     protected balanceChangeProcessor?: BalanceChangeProcessor;
     protected memoryStore?: MemoryStore;
 
-    constructor(config: BARDBConfig) {
+    constructor(config: Partial<BARDBConfig>) {
         this.config = Object.assign({}, defaultBARDBConfig, config);
 
         if (!fs.existsSync("logs")) {
