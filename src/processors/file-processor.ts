@@ -3,11 +3,9 @@ import * as fs from "fs";
 import { delay } from "jaz-ts-utils";
 import * as path from "path";
 
-import { BARDBConfig } from "~/bar-db-config";
 import { Database } from "~/database";
 
 export interface FileProcessorConfig {
-    bardbConfig: BARDBConfig;
     db: Database;
     dir: string;
     fileExt: string[];

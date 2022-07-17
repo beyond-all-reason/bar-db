@@ -32,7 +32,6 @@ export class BARDB {
         this.db = new Database(this.config.db);
 
         this.mapProcessor = new MapProcessor({
-            bardbConfig: this.config,
             db: this.db,
             dir: this.config.mapsDir,
             fileExt: [".sd7", ".sdz"],
@@ -46,13 +45,13 @@ export class BARDB {
         });
 
         this.demoProcessor = new DemoProcessor({
-            bardbConfig: this.config,
             db: this.db,
             dir: this.config.demosDir,
             fileExt: [".sdfz"],
             verbose: this.config.verbose,
             objectStorage: this.config.objectStorage,
-            storeFile: this.config.storeDemos || "internal"
+            storeFile: this.config.storeDemos || "internal",
+            sldbConfig: this.config.sldb
         });
 
         this.demoProcessor.onDemoProcessed.add(() => {

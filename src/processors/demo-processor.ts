@@ -4,22 +4,30 @@ import * as path from "path";
 import { DemoModel, DemoParser, isPacket } from "sdfz-demo-parser";
 import { SLDBClient, SLDBModel } from "sldbts";
 
+import { BARDBConfig } from "~/bar-db-config";
 import { Database } from "~/database";
 import { DBSchema } from "~/model/db";
 import { FileProcessor as FileProcessor, FileProcessorConfig } from "~/processors/file-processor";
+
+export interface DemoProcessConfig extends FileProcessorConfig {
+    sldbConfig?: BARDBConfig["sldb"];
+    deleteOnError?: boolean;
+}
 
 export class DemoProcessor extends FileProcessor {
     public onDemoProcessed: Signal<DBSchema.Demo.Instance> = new Signal();
 
     protected db: Database;
-    protected sldbClient: SLDBClient;
+    protected sldbClient?: SLDBClient;
 
-    constructor(config: FileProcessorConfig) {
+    constructor(config: DemoProcessConfig) {
         super(config);
 
         this.db = config.db;
 
-        this.sldbClient = new SLDBClient(this.config.bardbConfig.sldb);
+        if (config.sldbConfig) {
+            this.sldbClient = new SLDBClient(config.sldbConfig);
+        }
     }
 
     protected async processFile(filePath: string) {
@@ -43,11 +51,13 @@ export class DemoProcessor extends FileProcessor {
         const mapScriptName = demoData.info.hostSettings.mapname;
 
         let sldbMatchData: SLDBModel.MatchResult | undefined;
-        try {
-            sldbMatchData = await this.getSLDBMatchData(demoData.header.gameId);
-        } catch (err) {
-            console.log(err);
-            console.log(`Error grabbing match data from SLDB for: ${demoData.header.gameId}`);
+        if (this.sldbClient) {
+            try {
+                sldbMatchData = await this.getSLDBMatchData(demoData.header.gameId);
+            } catch (err) {
+                console.log(err);
+                console.log(`Error grabbing match data from SLDB for: ${demoData.header.gameId}`);
+            }
         }
 
         const [ map ] = await this.db.schema.map.findOrCreate({
@@ -226,7 +236,7 @@ export class DemoProcessor extends FileProcessor {
     }
 
     protected async getSLDBMatchData(matchId: string): Promise<SLDBModel.MatchResult> {
-        const matchResults = await this.sldbClient.getMatchSkills([matchId]);
+        const matchResults = await this.sldbClient!.getMatchSkills([matchId]);
         return matchResults[0];
     }
 
