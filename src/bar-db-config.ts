@@ -19,7 +19,7 @@ export interface BARDBConfig {
         auth: string,
         pollIntervalMs: number
     };
-    sldb: {
+    sldb?: {
         host: string,
         port: number,
         username: string,
@@ -65,15 +65,6 @@ export const defaultBARDBConfig: BARDBConfig = {
         repo: "beyond-all-reason",
         auth: "1234",
         pollIntervalMs: 1800000
-    },
-    sldb: {
-        host: "112.213.34.51",
-        port: 8300,
-        username: "xmlrpcUsername",
-        password: "xmlrpcPassword",
-        leaderboards: ["Duel", "Team", "FFA"],
-        pollIntervalMs: 60000,
-        verbose: false
     },
     lobby: {
         host: "bar.teifion.co.uk",

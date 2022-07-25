@@ -9,7 +9,7 @@ export class SLDBService {
     protected config: BARDBConfig["sldb"];
     protected sldbClient: SLDBClient;
 
-    constructor(config: BARDBConfig["sldb"]) {
+    constructor(config: NonNullable<BARDBConfig["sldb"]>) {
         this.config = config;
 
         this.sldbClient = new SLDBClient({
@@ -27,12 +27,12 @@ export class SLDBService {
     protected async updateLeaderboards() {
         while (true) {
             try {
-                this.leaderboards = await this.sldbClient.getLeaderboards("BYAR", this.config.leaderboards as SLDBModel.GameType[]);
+                this.leaderboards = await this.sldbClient.getLeaderboards("BYAR", this.config!.leaderboards as SLDBModel.GameType[]);
             } catch (err) {
                 console.log(err);
             }
 
-            await delay(this.config.pollIntervalMs);
+            await delay(this.config!.pollIntervalMs);
         }
     }
 }
