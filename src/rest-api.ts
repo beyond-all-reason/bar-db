@@ -18,7 +18,7 @@ export interface PluginOptions {
     db: Database;
     redis: Redis.Redis;
     schemaManager: any;
-    sldbService: SLDBService,
+    sldbService?: SLDBService,
     lobbyService: LobbyService
 }
 
@@ -28,7 +28,7 @@ export class RestAPI {
     protected redis: Redis.Redis;
     protected fastify!: FastifyInstance;
     protected schemaManager: any;
-    protected sldbService: SLDBService;
+    protected sldbService?: SLDBService;
     protected lobbyService: LobbyService;
 
     constructor(config: BARDBConfig) {
@@ -44,14 +44,16 @@ export class RestAPI {
 
         this.schemaManager = new JsonSchemaManager();
 
-        this.sldbService = new SLDBService(config.sldb);
+        if (config.sldb) {
+            this.sldbService = new SLDBService(config.sldb);
+        }
 
         this.lobbyService = new LobbyService(config.lobby, this.redis);
     }
 
     public async init() {
         await this.db.init();
-        await this.sldbService.init();
+        await this.sldbService?.init();
         await this.lobbyService.init();
 
         this.fastify = await fastify({

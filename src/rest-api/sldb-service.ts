@@ -1,5 +1,6 @@
-import { delay, Optionals } from "jaz-ts-utils";
+import { delay } from "jaz-ts-utils";
 import { SLDBClient, SLDBModel } from "sldbts";
+
 import { BARDBConfig } from "~/bar-db-config";
 
 export class SLDBService {
@@ -27,7 +28,7 @@ export class SLDBService {
         while (true) {
             try {
                 this.leaderboards = await this.sldbClient.getLeaderboards("BYAR", this.config.leaderboards as SLDBModel.GameType[]);
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
             }
 
