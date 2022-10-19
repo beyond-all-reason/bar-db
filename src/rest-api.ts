@@ -11,14 +11,14 @@ const { JsonSchemaManager } = require("@alt3/sequelize-to-json-schemas");
 import { BARDBConfig } from "~/bar-db-config";
 import { Database } from "~/database";
 import { LobbyService } from "~/rest-api/lobby-service";
-import { SLDBService } from "~/rest-api/sldb-service";
+import { TeiserverService } from "~/rest-api/teiserver-service";
 
 export interface PluginOptions {
     config: BARDBConfig;
     db: Database;
     redis: Redis.Redis;
     schemaManager: any;
-    sldbService?: SLDBService,
+    teiserverService?: TeiserverService,
     lobbyService: LobbyService
 }
 
@@ -28,7 +28,7 @@ export class RestAPI {
     protected redis: Redis.Redis;
     protected fastify!: FastifyInstance;
     protected schemaManager: any;
-    protected sldbService?: SLDBService;
+    protected teiserverService?: TeiserverService;
     protected lobbyService: LobbyService;
 
     constructor(config: BARDBConfig) {
@@ -44,16 +44,14 @@ export class RestAPI {
 
         this.schemaManager = new JsonSchemaManager();
 
-        if (config.sldb) {
-            this.sldbService = new SLDBService(config.sldb);
-        }
+        this.teiserverService = new TeiserverService(this.config);
 
         this.lobbyService = new LobbyService(config.lobby, this.redis);
     }
 
     public async init() {
         await this.db.init();
-        await this.sldbService?.init();
+        await this.teiserverService?.init();
         await this.lobbyService.init();
 
         this.fastify = await fastify({
@@ -84,16 +82,18 @@ export class RestAPI {
             ]
         });
 
+        const pluginOptions: PluginOptions = {
+            config: this.config,
+            db: this.db,
+            redis: this.redis,
+            schemaManager: this.schemaManager,
+            teiserverService: this.teiserverService,
+            lobbyService: this.lobbyService,
+        };
+
         this.fastify.register(fastifyAutoload, {
             dir: path.join(__dirname, "rest-api/routes"),
-            options: {
-                config: this.config,
-                db: this.db,
-                redis: this.redis,
-                schemaManager: this.schemaManager,
-                sldbService: this.sldbService,
-                lobbyService: this.lobbyService
-            }
+            options: pluginOptions
         });
 
         this.fastify.register(fastifyStatic, {

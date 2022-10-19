@@ -13,8 +13,7 @@
     "test": "jest --passWithNoTests",
     "processor": "node -r source-map-support/register ./dist/bar-db-cli.js --config config.json",
     "rest-api": "node -r source-map-support/register ./dist/rest-api-cli.js --config config.json",
-    "rest-api-watch": "nodemon --watch src/ -e ts -r source-map-support/register -- ./dist/rest-api-cli.js --config config.json",
-    "start": "npm run processor && npm run rest-api"
+    "rest-api-watch": "nodemon --watch src/ -e ts -r source-map-support/register -- ./dist/rest-api-cli.js --config config.json"
   },
   "repository": {
     "type": "git",
