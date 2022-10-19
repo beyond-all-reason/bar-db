@@ -2,17 +2,10 @@ import axios from "axios";
 import { delay } from "jaz-ts-utils";
 
 import { BARDBConfig } from "~/index";
-
-export type Rating = {
-    age: number;
-    colour: string;
-    icon: string;
-    name: string;
-    rating: number;
-}
+import { Leaderboards, Rating } from "~/model/rest-api/leaderboards";
 
 export class TeiserverService {
-    public leaderboards: Record<string, Rating[]> = {};
+    public leaderboards: Leaderboards = {};
 
     protected config: BARDBConfig;
 
