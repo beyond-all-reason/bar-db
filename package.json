@@ -38,7 +38,7 @@
     "@zerollup/ts-transform-paths": "^1.7.18",
     "ajv-formats": "^2.1.1",
     "axios": "^0.21.4",
-    "bar-balance-changes": "^1.7.0",
+    "bar-balance-changes": "^1.8.0",
     "eslint": "^7.19.0",
     "eslint-plugin-simple-import-sort": "^6.0.1",
     "eslint-plugin-unused-imports": "^1.0.0",
