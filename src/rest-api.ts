@@ -16,7 +16,7 @@ import { TeiserverService } from "~/rest-api/teiserver-service";
 export interface PluginOptions {
     config: BARDBConfig;
     db: Database;
-    redis: Redis.Redis;
+    redis: Redis;
     schemaManager: any;
     teiserverService?: TeiserverService,
     lobbyService: LobbyService
@@ -25,7 +25,7 @@ export interface PluginOptions {
 export class RestAPI {
     protected config: BARDBConfig;
     protected db: Database;
-    protected redis: Redis.Redis;
+    protected redis: Redis;
     protected fastify!: FastifyInstance;
     protected schemaManager: any;
     protected teiserverService?: TeiserverService;

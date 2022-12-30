@@ -20,9 +20,9 @@ export class LobbyService {
     public players: Players = {};
     public activeBattles: Battle<Player[]>[] = [];
 
-    protected redis: Redis.Redis;
+    protected redis: Redis;
 
-    constructor(config: BARDBConfig["lobby"], redis: Redis.Redis) {
+    constructor(config: BARDBConfig["lobby"], redis: Redis) {
         this.config = config;
 
         this.redis = redis;

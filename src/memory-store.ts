@@ -4,11 +4,17 @@ import { Database } from "~/database";
 
 export class MemoryStore {
     protected db: Database;
-    protected redis: Redis.Redis;
-    
+    protected redis: Redis;
+
     constructor(db: Database) {
         this.db = db;
-        this.redis = new Redis();
+        this.redis = new Redis({
+            host: "127.0.0.1",
+            port: 6379,
+            retryStrategy: (times) => {
+                throw "Could not connect to Redis";
+            }
+        });
     }
 
     public async init() {

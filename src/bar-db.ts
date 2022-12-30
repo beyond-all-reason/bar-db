@@ -71,7 +71,10 @@ export class BARDB {
         await this.db.init();
         await this.mapProcessor.init();
         await this.demoProcessor.init();
-        await this.balanceChangeProcessor?.init();
+
+        if (this.balanceChangeProcessor) {
+            await this.balanceChangeProcessor.init();
+        }
 
         if (this.memoryStore) {
             await this.memoryStore.init();
