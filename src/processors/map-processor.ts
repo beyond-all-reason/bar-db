@@ -38,16 +38,12 @@ export class MapProcessor extends FileProcessor {
             await mapData.textureMap!.clone().cover(250, 250).quality(80).writeAsync(`${destDir}/texture-thumb.jpg`);
         }
 
-        if (mapData.specularMap) {
-            await mapData.specularMap.clone().writeAsync(`${destDir}/specular.png`);
-        }
-
         const newMap = mapDataToMapSchema(mapData);
 
-        if (newMap.minWind === NaN) {
+        if (Number.isNaN(newMap.minWind)) {
             newMap.minWind = 5;
         }
-        if (newMap.maxWind === NaN) {
+        if (Number.isNaN(newMap.maxWind)) {
             newMap.maxWind = 25;
         }
 
