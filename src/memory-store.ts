@@ -6,11 +6,11 @@ export class MemoryStore {
     protected db: Database;
     protected redis: Redis;
 
-    constructor(db: Database) {
+    constructor(db: Database, redisOpts: { host: string, port: number }) {
         this.db = db;
         this.redis = new Redis({
-            host: "127.0.0.1",
-            port: 6379,
+            host: redisOpts.host,
+            port: redisOpts.port,
             retryStrategy: (times) => {
                 throw "Could not connect to Redis";
             }

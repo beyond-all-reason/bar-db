@@ -13,6 +13,10 @@ export interface BARDBConfig {
         syncModel: boolean;
         initMemoryStore: boolean;
     };
+    redis: {
+        host: string;
+        port: number;
+    }
     balanceChanges: {
         owner: string,
         repo: string,
@@ -59,6 +63,10 @@ export const defaultBARDBConfig: BARDBConfig = {
         alterDbSchema: false,
         syncModel: true,
         initMemoryStore: true,
+    },
+    redis: {
+        host: "localhost",
+        port: 6379,
     },
     balanceChanges: {
         owner: "beyond-all-reason",

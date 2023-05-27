@@ -63,7 +63,7 @@ export class BARDB {
         }
 
         if (this.config.db.initMemoryStore) {
-            this.memoryStore = new MemoryStore(this.db);
+            this.memoryStore = new MemoryStore(this.db, this.config.redis);
         }
     }
 
