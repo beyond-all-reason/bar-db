@@ -37,6 +37,11 @@ export interface BARDBConfig {
         googleSheetsId: string,
         googleSheetsAPIKey: string
     },
+    pollMapsFromMapsMetadata: boolean
+    mapsMetadataPoller: {
+        url: string;
+        pollIntervalMs: number;
+    }
     mapsDir: string;
     demosDir: string;
     objectStorage?: {
@@ -84,6 +89,11 @@ export const defaultBARDBConfig: BARDBConfig = {
     maplists: {
         googleSheetsId: "1rn4kIIc9Nnyv_ZiBxXvNXdhUSnh15aLrLsQXmtUBJt8",
         googleSheetsAPIKey: "123454"
+    },
+    pollMapsFromMapsMetadata: false,
+    mapsMetadataPoller: {
+        url: "https://maps-metadata.beyondallreason.dev/latest/live_maps.validated.json",
+        pollIntervalMs: 5 * 60 * 1000
     },
     mapsDir: "/var/www/maps",
     demosDir: "/var/www/demos",
