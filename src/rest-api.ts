@@ -40,7 +40,10 @@ export class RestAPI {
 
         this.db = new Database(config.db);
 
-        this.redis = new Redis();
+        this.redis = new Redis({
+            host: config.redis.host,
+            port: config.redis.port,
+        });
 
         this.schemaManager = new JsonSchemaManager();
 
