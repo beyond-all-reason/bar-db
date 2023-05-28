@@ -6,6 +6,7 @@ import { Database } from "~/database";
 import { MemoryStore } from "~/memory-store";
 import { BalanceChangeProcessor } from "~/processors/balance-change-processor";
 import { DemoProcessor } from "~/processors/demo-processor";
+import { MapsMetadataMapPoller } from "~/processors/map-poller";
 import { MapProcessor } from "~/processors/map-processor";
 
 export class BARDB {
@@ -15,6 +16,7 @@ export class BARDB {
     protected demoProcessor: DemoProcessor;
     protected balanceChangeProcessor?: BalanceChangeProcessor;
     protected memoryStore?: MemoryStore;
+    protected mapPoller?: MapsMetadataMapPoller;
 
     constructor(config: Partial<BARDBConfig>) {
         this.config = Object.assign({}, defaultBARDBConfig, config);
@@ -43,6 +45,16 @@ export class BARDB {
         this.mapProcessor.onMapProcessed.add(() => {
             this.memoryStore?.saveMapsToMemory();
         });
+
+        if (this.config.pollMapsFromMapsMetadata) {
+            this.mapPoller = new MapsMetadataMapPoller({
+                db: this.db,
+                pollUrl: this.config.mapsMetadataPoller.url,
+                pollIntervalMs: this.config.mapsMetadataPoller.pollIntervalMs,
+                processorDir: this.config.mapsDir,
+                verbose: this.config.verbose,
+            });
+        }
 
         this.demoProcessor = new DemoProcessor({
             db: this.db,
@@ -85,6 +97,11 @@ export class BARDB {
 
         console.log("Polling for demos...");
         this.demoProcessor.processFiles();
+
+        if (this.mapPoller) {
+            console.log("Polling for maps from maps metadata...");
+            this.mapPoller.startPolling();
+        }
 
         if (this.config.processBalanceChanges) {
             this.balanceChangeProcessor?.processBalanceChanges();
