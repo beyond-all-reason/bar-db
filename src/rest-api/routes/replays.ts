@@ -21,7 +21,19 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
             }
         },
         handler: async (request, reply) => {
-            const { page, limit, preset, endedNormally, hasBots, date: dateRangeStr, durationRangeMins, maps, players, reported, tsRange } = request.query;
+            const {
+                page,
+                limit,
+                preset,
+                endedNormally,
+                hasBots,
+                date: dateRangeStr,
+                durationRangeMins,
+                maps, players,
+                reported,
+                tsRange,
+                computeTotalResults,
+            } = request.query;
 
             const demoWhere: WhereAttributeHash<DBSchema.Demo.Schema> | AndOperator<DBSchema.Demo.Schema> | OrOperator<DBSchema.Demo.Schema> = {};
             const mapWhere: WhereAttributeHash<DBSchema.SpringMap.Schema> | AndOperator<DBSchema.SpringMap.Schema> | OrOperator<DBSchema.SpringMap.Schema> = {};
@@ -120,8 +132,14 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
             };
 
             try {
-                const data = await db.schema.demo.findAll(query);
-                return { totalResults: -1, page, limit, data };
+                let data, totalResults;
+                if (computeTotalResults) {
+                    ({ count: totalResults, rows: data } = await db.schema.demo.findAndCountAll(query));
+                } else {
+                    data = await db.schema.demo.findAll(query);
+                    totalResults = -1;
+                }
+                return { totalResults, page, limit, data };
             } catch (err) {
                 console.log(err);
                 throw err;
