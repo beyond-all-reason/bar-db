@@ -120,8 +120,8 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
             };
 
             try {
-                const { count: totalResults, rows: data } = await db.schema.demo.findAndCountAll(query);
-                return { totalResults, page, limit, data };
+                const data = await db.schema.demo.findAll(query);
+                return { totalResults: -1, page, limit, data };
             } catch (err) {
                 console.log(err);
                 throw err;
