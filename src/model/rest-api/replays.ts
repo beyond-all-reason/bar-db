@@ -37,6 +37,7 @@ export const replaysQuerySchema = paginateQuerySchema(Type.Object({
             Type.Number()
         ])
     ),
+    computeTotalResults: Type.Boolean({ default: false }),
 }));
 
 export type ReplaysQueryType = Static<typeof replaysQuerySchema>;
