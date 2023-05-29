@@ -57,5 +57,8 @@ export namespace AllyTeam {
     };
 
     export const sequelizeOptions: ModelOptions = {
+        indexes: [
+            { fields: ["demoId"] },
+        ]
     };
 }
