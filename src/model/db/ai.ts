@@ -38,5 +38,8 @@ export namespace AI {
     };
 
     export const sequelizeOptions: ModelOptions = {
+        indexes: [
+            { fields: ["allyTeamId"] },
+        ]
     };
 }

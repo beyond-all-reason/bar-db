@@ -92,5 +92,8 @@ export namespace Demo {
     };
 
     export const sequelizeOptions: ModelOptions = {
+        indexes: [
+            { fields: ["startTime"] },
+        ]
     };
 }

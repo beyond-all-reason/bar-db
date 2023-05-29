@@ -62,5 +62,9 @@ export namespace Player {
     };
 
     export const sequelizeOptions: ModelOptions = {
+        indexes: [
+            { fields: ["allyTeamId"] },
+            { fields: ["userId"] },
+        ]
     };
 }
