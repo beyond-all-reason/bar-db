@@ -89,6 +89,10 @@ export class MapsMetadataMapPoller {
             !parsedMapSpringNames.has(m.springName) &&
             !erroredMapsFileNames.has(m.fileName) &&
             !unprocessedMapsFileNames.has(m.fileName));
+        if (this.verbose) {
+            console.log(`Found ${missingMaps.length} missing maps: ${missingMaps.map(m => m.springName).join(", ")}`);
+        }
+        let error = null;
         for (const map of missingMaps) {
             const mapFilePath = `${this.processorDir}/unprocessed/${map.fileName}`;
             const tmpMapFilePath = `${mapFilePath}.tmp`;
@@ -100,11 +104,17 @@ export class MapsMetadataMapPoller {
                     console.log(`Downloaded ${map.springName}: ${map.fileName}`);
                 }
             } catch (err) {
+                // Catch and log errors, but continue downloading other maps.
                 console.error(`Error downloading ${map.springName}: ${map.fileName}`);
                 console.error(err);
+                error = err;
             } finally {
                 await fs.promises.rm(tmpMapFilePath, { force: true });
             }
+        }
+        // Throw the last error if any.
+        if (error) {
+            throw error;
         }
     }
 }
