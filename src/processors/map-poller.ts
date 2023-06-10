@@ -69,7 +69,13 @@ export class MapsMetadataMapPoller {
     }
 
     private async poll(): Promise<void> {
-        const liveMaps = (await axios.get<[LiveMapEntry]>(this.pollUrl, { responseType: "json", timeout: 5000 })).data;
+        const liveMaps = (await axios.get<[LiveMapEntry]>(this.pollUrl, {
+            responseType: "json",
+            timeout: 5000,
+            headers: {
+                "cache-control": "no-cache"
+            }
+        })).data;
 
         // Fetch spring names of maps that have been parsed successfully.
         const parsedMaps = await this.db.schema.map.findAll({
