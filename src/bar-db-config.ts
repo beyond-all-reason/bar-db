@@ -41,6 +41,8 @@ export interface BARDBConfig {
     mapsMetadataPoller: {
         url: string;
         pollIntervalMs: number;
+        // healthchecks.io compatible check base url
+        healthCheckUrl?: string;
     }
     mapsDir: string;
     demosDir: string;

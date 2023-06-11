@@ -53,6 +53,7 @@ export class BARDB {
                 pollIntervalMs: this.config.mapsMetadataPoller.pollIntervalMs,
                 processorDir: this.config.mapsDir,
                 verbose: this.config.verbose,
+                healthCheckUrl: this.config.mapsMetadataPoller.healthCheckUrl,
             });
         }
 

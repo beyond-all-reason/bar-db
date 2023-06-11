@@ -16,6 +16,8 @@ export interface MapsMetadataMapPollerConfig {
     pollIntervalMs: number;
     processorDir: string;
     verbose?: boolean;
+    // healthchecks.io compatible check base url
+    healthCheckUrl?: string;
 }
 
 // As defined in maps-metadata repo.
@@ -41,12 +43,45 @@ async function verifyFileMd5(filePath: string, expected: string): Promise<void> 
     }
 }
 
+function formatError(err: any): string {
+    if (err instanceof Error) {
+        return err.stack || err.message;
+    } else {
+        return String(err);
+    }
+}
+
+async function swallowError<T>(body: () => Promise<T>): Promise<T | undefined> {
+    try {
+        return await body();
+    } catch (err) {
+        console.warn(`WARNING: swallowing error: ${formatError(err)}`);
+        return undefined;
+    }
+}
+
+async function healthChecked(healthCheckUrl: string, body: () => Promise<void>): Promise<void> {
+    const opts = {
+        params: { rid: crypto.randomUUID() },
+        timeout: 2000
+    };
+    try {
+        await swallowError(() => axios.get(`${healthCheckUrl}/start`, opts));
+        await body();
+        await swallowError(() => axios.get(`${healthCheckUrl}`, opts));
+    } catch (err) {
+        await swallowError(() => axios.post(`${healthCheckUrl}/fail`, formatError(err), opts));
+        throw err;
+    }
+}
+
 export class MapsMetadataMapPoller {
     private pollIntervalMs: number;
     private pollUrl: string;
     private db: Database;
     private processorDir: string;
     private verbose: boolean;
+    private healthCheckUrl?: string;
 
     constructor(opts: MapsMetadataMapPollerConfig) {
         this.db = opts.db;
@@ -54,12 +89,17 @@ export class MapsMetadataMapPoller {
         this.pollUrl = opts.pollUrl;
         this.processorDir = opts.processorDir;
         this.verbose = !!opts.verbose;
+        this.healthCheckUrl = opts.healthCheckUrl;
     }
 
     public async startPolling(): Promise<never> {
         while (true) {
             try {
-                await this.poll();
+                if (this.healthCheckUrl) {
+                    await healthChecked(this.healthCheckUrl, () => this.poll());
+                } else {
+                    await this.poll();
+                }
             } catch (err) {
                 console.log("Error polling new maps");
                 console.log(err);
@@ -95,7 +135,7 @@ export class MapsMetadataMapPoller {
             !parsedMapSpringNames.has(m.springName) &&
             !erroredMapsFileNames.has(m.fileName) &&
             !unprocessedMapsFileNames.has(m.fileName));
-        if (this.verbose) {
+        if (this.verbose && missingMaps.length > 0 ) {
             console.log(`Found ${missingMaps.length} missing maps: ${missingMaps.map(m => m.springName).join(", ")}`);
         }
         let error = null;
