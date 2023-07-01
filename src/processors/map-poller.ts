@@ -120,7 +120,10 @@ export class MapsMetadataMapPoller {
         // Fetch spring names of maps that have been parsed successfully.
         const parsedMaps = await this.db.schema.map.findAll({
             attributes: ["scriptName"],
-            where: { scriptName: { [Op.in]: liveMaps.map(m => m.springName) } }
+            where: {
+                scriptName: { [Op.in]: liveMaps.map(m => m.springName) },
+                fileName: { [Op.not]: null },
+            }
         });
         const parsedMapSpringNames = new Set(parsedMaps.map(m => m.scriptName));
 
@@ -135,7 +138,7 @@ export class MapsMetadataMapPoller {
             !parsedMapSpringNames.has(m.springName) &&
             !erroredMapsFileNames.has(m.fileName) &&
             !unprocessedMapsFileNames.has(m.fileName));
-        if (this.verbose && missingMaps.length > 0 ) {
+        if (this.verbose && missingMaps.length > 0) {
             console.log(`Found ${missingMaps.length} missing maps: ${missingMaps.map(m => m.springName).join(", ")}`);
         }
         let error = null;
