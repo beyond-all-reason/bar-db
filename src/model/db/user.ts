@@ -9,7 +9,7 @@ export namespace User {
         id: number;
         username: string;
         countryCode: string;
-        rank: number;
+        rank: number | null;
         skillUncertainty?: number;
         skill?: string;
         trueSkill?: number;
@@ -17,9 +17,9 @@ export namespace User {
         trueSkillMu?: number;
         trueSkillSigma?: number;
     }
-    
+
     export interface CreationAttributes extends Schema { }
-    
+
     export interface Instance extends Model<Schema, CreationAttributes>, Schema {
         getPlayers: HasManyGetAssociationsMixin<Player.Instance>;
         setPlayers: HasManySetAssociationsMixin<Player.Instance, Player.Instance["id"]>;
@@ -31,7 +31,7 @@ export namespace User {
         hasPlayer: HasManyHasAssociationMixin<Player.Instance, Player.Instance["id"]>;
         hasPlayers: HasManyHasAssociationsMixin<Player.Instance, Player.Instance["id"]>;
         countPlayers: HasManyCountAssociationsMixin;
-    
+
         getAliases: HasManyGetAssociationsMixin<Alias.Instance>;
         setAliases: HasManySetAssociationsMixin<Alias.Instance, Alias.Instance["id"]>;
         addAliases: HasManyAddAssociationsMixin<Alias.Instance, Alias.Instance["id"]>;
@@ -42,7 +42,7 @@ export namespace User {
         hasAlias: HasManyHasAssociationMixin<Alias.Instance, Alias.Instance["id"]>;
         hasAliases: HasManyHasAssociationsMixin<Alias.Instance, Alias.Instance["id"]>;
         countAliases: HasManyCountAssociationsMixin;
-    
+
         getSpectators: HasManyGetAssociationsMixin<Spectator.Instance>;
         setSpectators: HasManySetAssociationsMixin<Spectator.Instance, Spectator.Instance["id"]>;
         addSpectators: HasManyAddAssociationsMixin<Spectator.Instance, Spectator.Instance["id"]>;
@@ -59,7 +59,7 @@ export namespace User {
         id: { type: DataTypes.INTEGER, primaryKey: true },
         username: { type: DataTypes.STRING },
         countryCode: { type: DataTypes.STRING },
-        rank: { type: DataTypes.INTEGER },
+        rank: { type: DataTypes.INTEGER, allowNull: true },
         skill: { type: DataTypes.STRING },
         trueSkill: { type: DataTypes.FLOAT, allowNull: true },
         skillUncertainty: { type: DataTypes.FLOAT },

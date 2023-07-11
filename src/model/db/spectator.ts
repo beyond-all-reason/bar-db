@@ -8,17 +8,17 @@ export namespace Spectator {
         playerId: number;
         name: string;
         countryCode: string;
-        rank: number;
+        rank: number | null;
         skill: string;
         skillUncertainty?: number;
     }
-    
+
     export interface CreationAttributes extends Optional<Schema, "id"> { }
-    
+
     export interface Instance extends Model<Schema, CreationAttributes>, Schema {
         demoId: string;
         userId: number;
-    
+
         getUser: BelongsToGetAssociationMixin<User.Instance>;
         setUser: BelongsToSetAssociationMixin<User.Instance, User.Instance["id"]>;
         createUser: (user: User.CreationAttributes) => Promise<User.Instance>;
@@ -29,7 +29,7 @@ export namespace Spectator {
         playerId: { type: DataTypes.INTEGER },
         name: { type: DataTypes.STRING },
         countryCode: { type: DataTypes.STRING },
-        rank: { type: DataTypes.INTEGER },
+        rank: { type: DataTypes.INTEGER, allowNull: true },
         skillUncertainty: { type: DataTypes.INTEGER },
         skill: { type: DataTypes.STRING }
     };

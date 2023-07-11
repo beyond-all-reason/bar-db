@@ -1,9 +1,9 @@
 import { FastifyPluginCallback } from "fastify";
-import { Database } from "~/database";
+
 import { DBSchema } from "~/model/db";
 import { mapParamsSchema, MapParamsType } from "~/model/rest-api/map";
 import { PluginOptions } from "~/rest-api";
-const { JsonSchema7Strategy } = require('@alt3/sequelize-to-json-schemas');
+const { JsonSchema7Strategy } = require("@alt3/sequelize-to-json-schemas");
 
 const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, redis, schemaManager }) {
     const mapSchema = schemaManager.generate(db.schema.map, new JsonSchema7Strategy(), {
@@ -27,7 +27,7 @@ const plugin: FastifyPluginCallback<PluginOptions> = async function(app, { db, r
             });
 
             if (map === null) {
-                throw app.httpErrors.notFound(`Map not found`);
+                throw app.httpErrors.notFound("Map not found");
             }
 
             return map;

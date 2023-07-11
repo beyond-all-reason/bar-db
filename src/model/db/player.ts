@@ -13,7 +13,7 @@ export namespace Player {
         faction: string;
         countryCode: string;
         rgbColor: { r: number, g: number, b: number };
-        rank: number;
+        rank: number | null;
         skill: string;
         trueSkill?: number;
         skillUncertainty?: number;
@@ -24,17 +24,17 @@ export namespace Player {
         trueSkillMuAfter?: number;
         trueSkillSigmaAfter?: number;
     }
-    
+
     export interface CreationAttributes extends Optional<Schema, "id"> { }
-    
+
     export interface Instance extends Model<Schema, CreationAttributes>, Schema {
         allyTeamId: number;
         userId: number;
-    
+
         getAllyTeam: BelongsToGetAssociationMixin<AllyTeam.Instance>;
         setAllyTeam: BelongsToSetAssociationMixin<AllyTeam.Instance, AllyTeam.Instance["id"]>;
         createAllyTeam: (allyTeam: AllyTeam.CreationAttributes) => Promise<AllyTeam.Instance>;
-    
+
         getUser: BelongsToGetAssociationMixin<User.Instance>;
         setUser: BelongsToSetAssociationMixin<User.Instance, User.Instance["id"]>;
         createUser: (user: User.CreationAttributes) => Promise<User.Instance>;
@@ -49,7 +49,7 @@ export namespace Player {
         faction: { type: DataTypes.STRING },
         countryCode: { type: DataTypes.STRING },
         rgbColor: { type: DataTypes.JSON },
-        rank: { type: DataTypes.INTEGER },
+        rank: { type: DataTypes.INTEGER, allowNull: true },
         skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
         skill: { type: DataTypes.STRING },
         trueSkill: { type: DataTypes.FLOAT, allowNull: true },

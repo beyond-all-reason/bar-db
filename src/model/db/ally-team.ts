@@ -16,16 +16,16 @@ export namespace AllyTeam {
         };
         winningTeam: boolean;
     }
-    
+
     export interface CreationAttributes extends Optional<Schema, "id"> { }
-    
+
     export interface Instance extends Model<Schema, CreationAttributes>, Schema {
         demoId: string;
-    
+
         getDemo: BelongsToGetAssociationMixin<Demo.Instance>;
         setDemo: BelongsToSetAssociationMixin<Demo.Instance, Demo.Instance["id"]>;
         createDemo: (demo: Demo.CreationAttributes) => Promise<Demo.Instance>;
-    
+
         getPlayers: HasManyGetAssociationsMixin<Player.Instance>;
         setPlayers: HasManySetAssociationsMixin<Player.Instance, Player.Instance["id"]>;
         addPlayers: HasManyAddAssociationsMixin<Player.Instance, Player.Instance["id"]>;
@@ -36,7 +36,7 @@ export namespace AllyTeam {
         hasPlayer: HasManyHasAssociationMixin<Player.Instance, Player.Instance["id"]>;
         hasPlayers: HasManyHasAssociationsMixin<Player.Instance, Player.Instance["id"]>;
         countPlayers: HasManyCountAssociationsMixin;
-    
+
         getAIs: HasManyGetAssociationsMixin<AI.Instance>;
         setAIs: HasManySetAssociationsMixin<AI.Instance, AI.Instance["id"]>;
         addAIs: HasManyAddAssociationsMixin<AI.Instance, AI.Instance["id"]>;
