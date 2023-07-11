@@ -13,6 +13,10 @@ export interface BARDBConfig {
         syncModel: boolean;
         initMemoryStore: boolean;
     };
+    redis: {
+        host: string;
+        port: number;
+    }
     balanceChanges: {
         owner: string,
         repo: string,
@@ -33,6 +37,13 @@ export interface BARDBConfig {
         googleSheetsId: string,
         googleSheetsAPIKey: string
     },
+    pollMapsFromMapsMetadata: boolean
+    mapsMetadataPoller: {
+        url: string;
+        pollIntervalMs: number;
+        // healthchecks.io compatible check base url
+        healthCheckUrl?: string;
+    }
     mapsDir: string;
     demosDir: string;
     objectStorage?: {
@@ -60,6 +71,10 @@ export const defaultBARDBConfig: BARDBConfig = {
         syncModel: true,
         initMemoryStore: true,
     },
+    redis: {
+        host: "localhost",
+        port: 6379,
+    },
     balanceChanges: {
         owner: "beyond-all-reason",
         repo: "beyond-all-reason",
@@ -76,6 +91,11 @@ export const defaultBARDBConfig: BARDBConfig = {
     maplists: {
         googleSheetsId: "1rn4kIIc9Nnyv_ZiBxXvNXdhUSnh15aLrLsQXmtUBJt8",
         googleSheetsAPIKey: "123454"
+    },
+    pollMapsFromMapsMetadata: false,
+    mapsMetadataPoller: {
+        url: "https://maps-metadata.beyondallreason.dev/latest/live_maps.validated.json",
+        pollIntervalMs: 5 * 60 * 1000
     },
     mapsDir: "/var/www/maps",
     demosDir: "/var/www/demos",

@@ -12,6 +12,7 @@ export namespace BalanceChangeUnitDef {
     export interface CreationAttributes extends Optional<Schema, "id"> { }
     
     export interface Instance extends Model<Schema, CreationAttributes>, Schema {
+        balanceChangeId: number;
     }
 
     export const sequelizeDefinition: ModelAttributes<BalanceChangeUnitDef.Instance, BalanceChangeUnitDef.Schema> = {
@@ -22,6 +23,9 @@ export namespace BalanceChangeUnitDef {
     };
 
     export const sequelizeOptions: ModelOptions = {
-        indexes: [{ fields: ["unitDefId"] }]
+        indexes: [
+            { fields: ["unitDefId"] },
+            { fields: ["balanceChangeId"] },
+        ]
     };
 }

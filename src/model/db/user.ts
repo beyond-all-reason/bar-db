@@ -70,9 +70,7 @@ export namespace User {
 
     export const sequelizeOptions: ModelOptions = {
         indexes: [
-            {
-                fields: ["username"]
-            }
+            { fields: ["username"] },
         ]
     };
 }

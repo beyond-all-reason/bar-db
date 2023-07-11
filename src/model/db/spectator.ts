@@ -35,5 +35,8 @@ export namespace Spectator {
     };
 
     export const sequelizeOptions: ModelOptions = {
+        indexes: [
+            { fields: ["demoId"] },
+        ]
     };
 }

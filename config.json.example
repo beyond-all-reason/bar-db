@@ -1,0 +1,43 @@
+{
+    "processBalanceChanges": false,
+    "balanceChanges": {
+        "owner": "beyond-all-reason",
+        "repo": "Beyond-All-Reason",
+        "auth": "disabled-not-used",
+        "pollIntervalMs": 1800000
+    },
+    "db": {
+        "host": "172.17.0.2",
+        "port": 5432,
+        "username": "postgres",
+        "password": "postgres",
+        "createSchemaDiagram": false,
+        "logSQL": false,
+        "alterDbSchema": false,
+        "syncModel": true,
+        "initMemoryStore": true
+    },
+    "redis": {
+        "host": "172.17.0.3",
+        "port": 6379
+    },
+    "lobby": {
+        "host": "server4.beyondallreason.info",
+        "port": 8200,
+        "username": "non-existing-user",
+        "password": "invalid-password",
+        "lobbySignature": "BARDB",
+        "verbose": true,
+        "stayConnected": false
+    },
+    "maplists": {
+        "googleSheetsId": "invalid-id",
+        "googleSheetsAPIKey": "invalid-key"
+    },
+    "mapsDir": "maps",
+    "demosDir": "demos",
+    "storeDemos": "internal",
+    "storeMaps": "internal",
+    "apiPort": 3001,
+    "verbose": true
+}

@@ -1,4 +1,4 @@
-import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, Optional } from "sequelize";
+import { BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, ModelAttributes, ModelOptions, Optional } from "sequelize";
 
 import { BalanceChangeAuthor } from "./balance-change-author";
 import { BalanceChangeUnitDef } from "./balance-change-unit-def";
@@ -39,5 +39,11 @@ export namespace BalanceChange {
         url: { type: DataTypes.STRING },
         date: { type: DataTypes.DATE },
         message: { type: DataTypes.TEXT },
+    };
+
+    export const sequelizeOptions: ModelOptions = {
+        indexes: [
+            { fields: ["date"] },
+        ]
     };
 }
