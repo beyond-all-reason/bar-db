@@ -50,7 +50,7 @@ export namespace Player {
         countryCode: { type: DataTypes.STRING },
         rgbColor: { type: DataTypes.JSON },
         rank: { type: DataTypes.INTEGER, allowNull: true },
-        skillUncertainty: { type: DataTypes.INTEGER, allowNull: true },
+        skillUncertainty: { type: DataTypes.FLOAT, allowNull: true },
         skill: { type: DataTypes.STRING },
         trueSkill: { type: DataTypes.FLOAT, allowNull: true },
         startPos: { type: DataTypes.JSON, allowNull: true },
