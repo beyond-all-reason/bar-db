@@ -13,6 +13,7 @@ export namespace User {
         skillUncertainty?: number;
         skill?: string;
         trueSkill?: number;
+        openSkillMu?: number;
         privacyMode?: boolean;
         trueSkillMu?: number;
         trueSkillSigma?: number;
@@ -66,6 +67,7 @@ export namespace User {
         privacyMode: { type: DataTypes.BOOLEAN, allowNull: true },
         trueSkillMu: { type: DataTypes.FLOAT, allowNull: true },
         trueSkillSigma: { type: DataTypes.FLOAT, allowNull: true },
+        openSkillMu: { type: DataTypes.FLOAT, allowNull: true }
     };
 
     export const sequelizeOptions: ModelOptions = {

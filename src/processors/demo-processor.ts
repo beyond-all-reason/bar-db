@@ -154,8 +154,8 @@ export class DemoProcessor extends FileProcessor {
                 user.countryCode = playerOrSpecData.countryCode!;
                 user.rank = playerOrSpecData.rank;
                 user.skill = playerOrSpecData.skill;
-                if (Number(playerOrSpecData.skill)) {
-                    user.trueSkill = Number(playerOrSpecData.skill);
+                if (playerOrSpecData.skill?.startsWith("[") && playerOrSpecData.skill.endsWith("]") && Number(playerOrSpecData.skill.slice(1, -1))) {
+                    user.openSkillMu = Number(playerOrSpecData.skill.slice(1, -1));
                 }
                 user.skillUncertainty = playerOrSpecData.skillUncertainty;
 
