@@ -30,7 +30,7 @@ export namespace Spectator {
         name: { type: DataTypes.STRING },
         countryCode: { type: DataTypes.STRING },
         rank: { type: DataTypes.INTEGER, allowNull: true },
-        skillUncertainty: { type: DataTypes.INTEGER },
+        skillUncertainty: { type: DataTypes.FLOAT },
         skill: { type: DataTypes.STRING }
     };
 
