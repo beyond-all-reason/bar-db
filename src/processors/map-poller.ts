@@ -60,21 +60,6 @@ async function swallowError<T>(body: () => Promise<T>): Promise<T | undefined> {
     }
 }
 
-async function healthChecked(healthCheckUrl: string, body: () => Promise<void>): Promise<void> {
-    const opts = {
-        params: { rid: crypto.randomUUID() },
-        timeout: 2000
-    };
-    try {
-        await swallowError(() => axios.get(`${healthCheckUrl}/start`, opts));
-        await body();
-        await swallowError(() => axios.get(`${healthCheckUrl}`, opts));
-    } catch (err) {
-        await swallowError(() => axios.post(`${healthCheckUrl}/fail`, formatError(err), opts));
-        throw err;
-    }
-}
-
 export class MapsMetadataMapPoller {
     private pollIntervalMs: number;
     private pollUrl: string;
@@ -95,10 +80,9 @@ export class MapsMetadataMapPoller {
     public async startPolling(): Promise<never> {
         while (true) {
             try {
+                await this.poll();
                 if (this.healthCheckUrl) {
-                    await healthChecked(this.healthCheckUrl, () => this.poll());
-                } else {
-                    await this.poll();
+                    await swallowError(() => axios.get(this.healthCheckUrl!, { timeout: 2000 }));
                 }
             } catch (err) {
                 console.log("Error polling new maps");
