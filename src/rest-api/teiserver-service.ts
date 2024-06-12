@@ -20,7 +20,7 @@ export class TeiserverService {
     protected async updateLeaderboards() {
         while (true) {
             try {
-                const leaderboardNames = ["Duel", "Team", "FFA"] as const;
+                const leaderboardNames = ["Duel", "Small Team", "Large Team", "FFA"] as const;
 
                 for (const leaderboardName of leaderboardNames) {
                     const response = await axios.request<{ ratings: Rating[] }>({
