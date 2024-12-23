@@ -6,14 +6,14 @@ export class MemoryStore {
     protected db: Database;
     protected redis: Redis;
 
-    constructor(db: Database, redisOpts: { host: string, port: number }) {
+    constructor(db: Database, redisOpts: { host: string; port: number }) {
         this.db = db;
         this.redis = new Redis({
             host: redisOpts.host,
             port: redisOpts.port,
             retryStrategy: (times) => {
                 throw "Could not connect to Redis";
-            }
+            },
         });
     }
 
@@ -31,7 +31,8 @@ export class MemoryStore {
 
         const results = await this.db.schema.user.findAll({
             raw: true,
-            attributes: ["id", "username", "countryCode"]
+            attributes: ["id", "username", "countryCode"],
+            order: [["username", "ASC"]],
         });
 
         await this.redis.set("users", JSON.stringify(results));
@@ -44,7 +45,7 @@ export class MemoryStore {
 
         const results = await this.db.schema.map.findAll({
             raw: true,
-            attributes: ["id", "scriptName", "fileName"]
+            attributes: ["id", "scriptName", "fileName"],
         });
 
         await this.redis.set("maps", JSON.stringify(results));
